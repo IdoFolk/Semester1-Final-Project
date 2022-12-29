@@ -11,9 +11,9 @@ namespace ConsoleDungeonCrawler.Level_Elements
     class Chest
     {
         public Vector2 Pos = new Vector2();
-        public ItemType Reward()
-        {
-            return ItemType.Weapon;
-        }
+        //public ItemType Reward()
+        //{
+        //    return ItemType.Weapon;
+        //}
     }
 }
