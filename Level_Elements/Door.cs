@@ -10,11 +10,6 @@ namespace ConsoleDungeonCrawler.Level_Elements
     {
         public Vector2 Pos = new Vector2();
         public ConsoleColor Color;
-        public bool IsOpen { get; private set; } = false;
-        public void Open()
-        {
-            if (IsOpen) return;
-            IsOpen = true;
-        }
+
     }
 }

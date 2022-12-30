@@ -8,21 +8,15 @@ using ConsoleDungeonCrawler.Level_Elements;
 
 namespace ConsoleDungeonCrawler.Character
 {
-    enum ItemType
-    {
-        Weapon,
-        Potion,
-        Armor,
-    }
     class Player
     {
         public string Name { get; private set; }
         public int MaxHP { get; private set; }
         public int CurrentHP { get; private set; }
+        public Range AgroRange { get; private set; }
         public float Evasion { get; private set; } = 0f;
         //Inventory:
         public List<Weapon> PlayerWeapons = new List<Weapon>();
-        public List<Key> PlayerKeys = new List<Key>();
         public Weapon EquippedWeapon;
         public Vector2 Pos = new Vector2();
         public Player(string name, int hp)
@@ -33,6 +27,7 @@ namespace ConsoleDungeonCrawler.Character
             PlayerWeapons = new List<Weapon>();
             PlayerWeapons.Add(Game.Weapons[0]); //starting weapon
             EquippedWeapon = PlayerWeapons[0];
+            AgroRange = new Range(10,5);
         }
         public int Attack()
         {
@@ -59,7 +54,7 @@ namespace ConsoleDungeonCrawler.Character
                     DontMove(key);
                     break;
                 case Tile.Door:
-                    CheckDoor(level, key);
+                    TryOpenDoor(level);
                     DontMove(key);
                     break;
                 case Tile.Key:
@@ -75,7 +70,7 @@ namespace ConsoleDungeonCrawler.Character
                     DontMove(key);
                     break;
                 case Tile.Exit:
-                    level.Complete = true;
+                    level.Complete();
                     break;
             }
 
@@ -147,12 +142,6 @@ namespace ConsoleDungeonCrawler.Character
                 if (level.Enemies[enemyNum].Pos.Y == Pos.Y && level.Enemies[enemyNum].Pos.X == Pos.X)
                     level.Combat(level.Enemies[enemyNum], enemyNum);
             }
-            //Problem*
-            //foreach (Enemy enemy in level.Enemies)
-            //{
-            //    if (enemy.Pos.Y == Pos.Y && enemy.Pos.X == Pos.X)
-            //        level.Combat(enemy);
-            //}
         }
         private void OpenChest(Level level)
         {
@@ -161,50 +150,61 @@ namespace ConsoleDungeonCrawler.Character
                 Chest chest = level.Chests[chestNum]; 
                 if (level.Chests[chestNum].Pos.Y == Pos.Y && level.Chests[chestNum].Pos.X == Pos.X)
                 {
+                    Printer.HUD.OpenChestLog();
+                    GetReward(chest);
                     level.Chests.RemoveAt(chestNum);
                 }
             }
-            //foreach (Chest chest in level.Chests)
-            //{
-            //    if (chest.Pos.Y == Pos.Y && chest.Pos.X == Pos.X)
-            //    {
-            //        level.Chests.Remove();
-            //    }
-            //}
+        }
+        private void GetReward(Chest chest)
+        {
+            ItemType item = chest.RewardType();
+            switch (item)
+            {
+                case ItemType.Weapon:
+                    Weapon weapon = chest.WeaponReward();
+                    PlayerWeapons.Add(weapon);
+                    Printer.HUD.GotWeaponLog(weapon);
+                    break;
+                case ItemType.Potion:
+                    break;
+                case ItemType.Armor:
+                    break;
+                case ItemType.Coin:
+                    break;
+                default:
+                    break;
+            }
         }
         private void GetKey(Level level)
         {
             for (int keyNum = 0; keyNum < level.Keys.Count; keyNum++)
             {
-                if (level.Keys[keyNum].Pos.X == Pos.X && level.Keys[keyNum].Pos.Y == Pos.Y)
+                Key key = level.Keys[keyNum];
+                if (key.Pos.X == Pos.X && key.Pos.Y == Pos.Y)
                 {
-                    PlayerKeys.Add(new Key());
-                    PlayerKeys[PlayerKeys.Count-1].Color = level.Keys[keyNum].Color;
+                    level.PlayerKeys.Add(new Key());
+                    Printer.HUD.GotKeyLog(key);
+                    level.PlayerKeys[level.PlayerKeys.Count-1].Color = level.Keys[keyNum].Color;
                     level.Keys.RemoveAt(keyNum);
                 }
             }
         }
-        private void CheckDoor(Level level, ConsoleKey key)
-        {
-            foreach (Door door in level.Doors)
-            {
-                if (door.Pos.X == Pos.X && door.Pos.Y == Pos.Y)
-                    if (door.IsOpen) return;
-                TryOpenDoor(level);
-            }
-        }
         private void TryOpenDoor(Level level)
         {
-            foreach (Door door in level.Doors)
+            for (int doorNum = 0; doorNum < level.Doors.Count; doorNum++)
             {
-                foreach (Key key in PlayerKeys)
-                {
-                    if (door.Pos.X == Pos.X && door.Pos.Y == Pos.Y)
+                Door door = level.Doors[doorNum];
+                for (int keyNum = 0; keyNum < level.PlayerKeys.Count; keyNum++)
+                { 
+                    Key key = level.PlayerKeys[keyNum];
+                    if (door.Pos.Y == Pos.Y && door.Pos.X == Pos.X)
                     {
                         if (key.Color == door.Color)
                         {
-                            door.Open();
+                            level.OpenDoor(door, doorNum);
                             key.UseKey();
+                            Printer.HUD.OpenDoorLog(door);
                         }
                     }
                 }

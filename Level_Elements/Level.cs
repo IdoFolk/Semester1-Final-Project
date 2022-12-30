@@ -35,11 +35,12 @@ namespace ConsoleDungeonCrawler.Level_Elements
         public Vector2 EntryPos = new Vector2();
         public Vector2 ExitPos = new Vector2();
         public Tile[,] Map { get; private set; }
-        public bool Complete { get; set; } = false;
+        public bool IsComplete { get; private set; } = false;
         public List<Enemy> Enemies { get; private set; }
         public List<Chest> Chests { get; private set; }
         public List<Door> Doors { get; private set; }
         public List<Key> Keys { get; private set; }
+        public List<Key> PlayerKeys { get; private set; }
         public int EnemiesKilled { get; private set; }
         private Player _player;
         public Level(int levelNum, Player player)
@@ -50,6 +51,7 @@ namespace ConsoleDungeonCrawler.Level_Elements
             Chests = new List<Chest>();
             Doors = new List<Door>();
             Keys = new List<Key>();
+            PlayerKeys = new List<Key>();
             MapLength = new Vector2();
             switch (levelNum)
             {
@@ -164,13 +166,6 @@ namespace ConsoleDungeonCrawler.Level_Elements
             {
                 if (door.Pos.Y == i && door.Pos.X == j)
                 {
-                    if (door.IsOpen)
-                    {
-                        door.Pos.Y = -1;
-                        door.Pos.X = -1;
-                        Map[i, j] = Tile.Empty;
-                    }
-                    else
                         Map[i, j] = Tile.Door;
                 }
             }
@@ -191,6 +186,10 @@ namespace ConsoleDungeonCrawler.Level_Elements
             _player.Pos.X = EntryPos.X;
             _player.Pos.Y = EntryPos.Y;
         }
+        public void Complete()
+        {
+            IsComplete = true;
+        }
         public void Combat(Enemy enemy, int enemyNum)
         {
             int playersAttack = _player.Attack();
@@ -203,18 +202,15 @@ namespace ConsoleDungeonCrawler.Level_Elements
             if (enemy.IsDead())
             {
                 Map[enemy.Pos.Y, enemy.Pos.X] = Tile.Empty;
-                //Problem*
-                //Enemies.RemoveAt(enemy.Id)
                 Enemies.RemoveAt(enemyNum);
                 EnemiesKilled++;
             }
         }
-        //public void EnemyAttack(Enemy enemy, Player player)
-        //{
-        //    int enemysAttack = enemy.Attack(player);
-        //    player.TakeDamage(enemysAttack);
-        //    Printer.HUD.CombatLog(enemy,player,enemysAttack);
-        //}
+        public void OpenDoor(Door door, int doorNum)
+        {
+            Map[door.Pos.Y, door.Pos.X] = Tile.Empty;
+            Doors.RemoveAt(doorNum);
+        }
         
     }
 }

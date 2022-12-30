@@ -22,9 +22,9 @@ namespace ConsoleDungeonCrawler.Printer
                 {
                     for (int j = 0; j < level.MapLength.X; j++)
                     {
-                        if (player.Pos.Y - Game.FogOfWar.RangeHeight < i && i < player.Pos.Y + Game.FogOfWar.RangeHeight)
+                        if (player.Pos.Y - Game.FogOfWar.Height < i && i < player.Pos.Y + Game.FogOfWar.Height)
                         {
-                            if (player.Pos.X - Game.FogOfWar.RangeWidth < j && j < player.Pos.X + Game.FogOfWar.RangeWidth)
+                            if (player.Pos.X - Game.FogOfWar.Width < j && j < player.Pos.X + Game.FogOfWar.Width)
                             {
                                 MapLayout(level, i, j);
                             }

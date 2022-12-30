@@ -11,27 +11,33 @@ using ConsoleDungeonCrawler.Level_Elements;
 
 namespace ConsoleDungeonCrawler
 {
-    struct FogofWar
+    struct Range
     {
-        public bool On { get; private set; }
-        public int RangeWidth { get; private set; }
-        public int RangeHeight { get; private set; }
-        public FogofWar(bool on,int rangeWidth, int rangeHeight)
+        public bool On;
+        public int Width { get; private set; }
+        public int Height { get; private set; }
+        public Range(bool on,int rangeWidth, int rangeHeight)
         {
             On = on; 
-            RangeWidth = rangeWidth;
-            RangeHeight = rangeHeight;
+            Width = rangeWidth;
+            Height = rangeHeight;
+        }
+        public Range(int rangeWidth, int rangeHeight)
+        {
+            Width = rangeWidth;
+            Height = rangeHeight;
+            On = true;
         }
     }
     static class Game
     {
         public static readonly int[] LevelNumber = new int[2] { 1, 2 };
         public static List<Weapon> Weapons = new List<Weapon>();
-        public static FogofWar FogOfWar;
+        public static Range FogOfWar;
         public static void Start()
         {
             LoadWeapons();
-            FogOfWar = new FogofWar(true,7,4);
+            FogOfWar = new Range(false,7,4);
             Player player = new Player("Ido", 10);
             for (int i = 0; i < LevelNumber.Length; i++) //Level Gameplay
             {
@@ -46,7 +52,7 @@ namespace ConsoleDungeonCrawler
         }
         public static void PlayLevel(Level level, Player player)
         {
-            while (!(level.Complete || player.IsDead()))
+            while (!(level.IsComplete || player.IsDead()))
             {
                 Printer.HUD.GameState(level, player);
                 EnemiesActions(level, player);
@@ -59,19 +65,23 @@ namespace ConsoleDungeonCrawler
         {
             foreach (Enemy enemy in level.Enemies)
             {
-                Direction direction = enemy.MovePattern(level, player);
-                foreach (Enemy enemy1 in level.Enemies)
+                if (enemy.IsClose(player))
                 {
-                    if (enemy.Id == enemy1.Id) continue;
-                    else if (enemy.Pos.X == enemy1.Pos.X && enemy.Pos.Y == enemy1.Pos.Y)
-                        enemy.DontMove(direction);
+                    Direction direction = enemy.MovePattern(level, player);
+                    foreach (Enemy enemy1 in level.Enemies)
+                    {
+                        if (enemy.Id == enemy1.Id) continue;
+                        else if (enemy.Pos.X == enemy1.Pos.X && enemy.Pos.Y == enemy1.Pos.Y)
+                            enemy.DontMove(direction);
+                    }
                 }
             }
         }
         public static void LoadWeapons()
         {
             Weapons.Add(new Weapon("Fists", 1, 60f));
-
+            Weapons.Add(new Weapon("Sword", 2, 80f));
+            Weapons.Add(new Weapon("Great Axe", 4, 50f));
         }
         public static void Result(Player player)
         {

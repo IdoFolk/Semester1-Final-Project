@@ -10,15 +10,15 @@ namespace ConsoleDungeonCrawler.Printer
 {
     static class HUD
     {
-        private const ConsoleColor TextColor = ConsoleColor.Gray;
-        private const ConsoleColor BackgroundColor = ConsoleColor.Black;
+        private const ConsoleColor DefaultForeground = ConsoleColor.Gray;
+        private const ConsoleColor DefaultBackground = ConsoleColor.Black;
         private static int _logIndicator;
         public static void GameState(Level level, Player player)
         {
             Map.PrintMap(level, player);
             LevelStats(level);
             PlayerStats(player);
-            Inventory(player);
+            Inventory(player, level);
         }
         public static void Log()
         {
@@ -50,7 +50,7 @@ namespace ConsoleDungeonCrawler.Printer
             Console.ForegroundColor = ConsoleColor.Red;
             Log();
             Console.Write($"{player.Name} attacks {enemy.Name} for {player.EquippedWeapon.Damage} damage.");
-            Console.ForegroundColor = TextColor;
+            Console.ForegroundColor = DefaultForeground;
 
         }
         public static void CombatLog(Enemy enemy, Player player, int attack)
@@ -65,8 +65,35 @@ namespace ConsoleDungeonCrawler.Printer
             Console.ForegroundColor = ConsoleColor.Red;
             Log();
             Console.Write($"{enemy.Name} attacks {player.Name} for {enemy.Damage} damage.");
-            Console.ForegroundColor = TextColor;
+            Console.ForegroundColor = DefaultForeground;
             Log();
+
+        }
+        public static void OpenDoorLog(Door door)
+        {
+            Log();
+            Console.ForegroundColor = door.Color;
+            Console.Write("You have opened a door");
+            Console.ForegroundColor = DefaultForeground;
+            Log();
+        }
+        public static void GotKeyLog(Key key)
+        {
+            Log();
+            Console.ForegroundColor = key.Color;
+            Console.Write("You got a key");
+            Console.ForegroundColor = DefaultForeground;
+            Log();
+        }
+        public static void OpenChestLog()
+        {
+            Log();
+            Console.Write("You have opened a chest and got ");
+        }
+        public static void GotWeaponLog(Weapon weapon)
+        {
+            Log();
+            Console.Write($"A {weapon.Name}!");
 
         }
         public static void LevelStats(Level level)
@@ -149,7 +176,7 @@ namespace ConsoleDungeonCrawler.Printer
                     }
                     break;
             }
-            Console.ForegroundColor = TextColor;
+            Console.ForegroundColor = DefaultForeground;
 
         }
         public static void EnemyStats(Enemy enemy)
@@ -225,27 +252,32 @@ namespace ConsoleDungeonCrawler.Printer
                     }
                     break;
             }
-            Console.ForegroundColor = TextColor;
+            Console.ForegroundColor = DefaultForeground;
 
         }
-        public static void Inventory(Player player)
+        public static void Inventory(Player player, Level level)
         {
-            OwnedKeys(player);
+            OwnedKeys(level);
         }
-        public static void OwnedKeys(Player player)
+        public static void OwnedKeys(Level level)
         {
             
             Console.SetCursorPosition(UI.InventoryBox.PosX+1, UI.InventoryBox.PosY+18);
             Console.Write("Keys:");
+            Console.SetCursorPosition(UI.InventoryBox.PosX+1, UI.InventoryBox.PosY+19);
+            for (int i = 0; i < UI.InventoryBox.Width-1; i++)
+            {
+                Console.Write(" ");
+            }
             int j = 0;  
-            foreach (Key key in player.PlayerKeys)
+            foreach (Key key in level.PlayerKeys)
             {
                 Console.SetCursorPosition(UI.InventoryBox.PosX + 4 + j, UI.InventoryBox.PosY + 19);
                 if (key.Used)
                 {
                     Console.ForegroundColor = key.UsedColor;
                     Console.Write("¶");
-                    Console.BackgroundColor = BackgroundColor;
+                    Console.BackgroundColor = DefaultBackground;
                 }
                 else
                 {
@@ -255,8 +287,8 @@ namespace ConsoleDungeonCrawler.Printer
                 j += 4;
             }
             
-            Console.BackgroundColor = BackgroundColor;
-            Console.ForegroundColor = TextColor;
+            Console.BackgroundColor = DefaultBackground;
+            Console.ForegroundColor = DefaultForeground;
         }
 
     }

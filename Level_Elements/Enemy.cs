@@ -46,14 +46,14 @@ namespace ConsoleDungeonCrawler.Level_Elements
         public Direction MovePattern(Level level, Player player)
         {
             Direction move;
-            int rand = Random.Shared.Next(1,101);
+            int rand = Random.Shared.Next(1, 101);
             if (rand < ChaseChance)
             {
                 move = ChasePlayer(player);
                 Move(move);
                 Interaction(level, player, move);
             }
-            else 
+            else
             {
                 move = MoveRandom();
                 Move(move);
@@ -61,7 +61,17 @@ namespace ConsoleDungeonCrawler.Level_Elements
             }
             return move;
         }
-
+        public bool IsClose(Player player)
+        {
+            if (player.Pos.Y - player.AgroRange.Height < Pos.Y && Pos.Y < player.Pos.Y + player.AgroRange.Height)
+            {
+                if (player.Pos.X - player.AgroRange.Width < Pos.X && Pos.X < player.Pos.X + player.AgroRange.Width)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
         public Direction ChasePlayer(Player player)
         {
             int rand = Random.Shared.Next(1,3);
@@ -157,14 +167,7 @@ namespace ConsoleDungeonCrawler.Level_Elements
                     break;
             }
         }
-        //private void FightPlayer(Level level, Player player)
-        //{
-        //    foreach (Enemy enemy in level.Enemies)
-        //    {
-        //        if (enemy.Pos.X == player.Pos.X && enemy.Pos.Y == player.Pos.Y)
-        //            level.Combat(enemy);
-        //    }
-        //}
+        
         
     }
 }
