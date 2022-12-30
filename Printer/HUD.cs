@@ -257,14 +257,56 @@ namespace ConsoleDungeonCrawler.Printer
         }
         public static void Inventory(Player player, Level level)
         {
+            OwnedWeapons(player);
+            OwnedPotions(player);
+            OwnedArmor(player);
             OwnedKeys(level);
+        }
+        public static void OwnedWeapons(Player player)
+        {
+            Console.SetCursorPosition(UI.InventoryBox.PosX+1, UI.InventoryBox.PosY+3);
+            Console.Write("WEAPONS: Damage, HitChance");
+            int i = 0;
+            foreach (Weapon weapon in player.PlayerWeapons)
+            {
+                if (weapon.IsEquipped)
+                {
+                    Console.BackgroundColor = ConsoleColor.White;
+                    Console.ForegroundColor = ConsoleColor.Black;
+                }
+                Console.SetCursorPosition(UI.InventoryBox.PosX+1, UI.InventoryBox.PosY+4+i);
+                Console.Write($"{weapon.Name}:");
+                Console.BackgroundColor = DefaultBackground;
+                Console.ForegroundColor = DefaultForeground;
+                Console.Write($" {weapon.Damage}, {weapon.HitChance}%");
+                i++;
+            }
+
+        }
+        public static void OwnedPotions(Player player)
+        {
+            Console.SetCursorPosition(UI.InventoryBox.PosX + 1, UI.InventoryBox.PosY + 8);
+            Console.Write("POTIONS:");
+
+        }
+        public static void OwnedArmor(Player player)
+        {
+            Console.SetCursorPosition(UI.InventoryBox.PosX + 1, UI.InventoryBox.PosY + 10);
+            Console.Write("ARMOR:");
+            Console.SetCursorPosition(UI.InventoryBox.PosX + 1, UI.InventoryBox.PosY + 11);
+            Console.Write("Head:");
+            Console.SetCursorPosition(UI.InventoryBox.PosX + 1, UI.InventoryBox.PosY + 12);
+            Console.Write("Chest:");
+            Console.SetCursorPosition(UI.InventoryBox.PosX + 1, UI.InventoryBox.PosY + 13);
+            Console.Write("Legs:");
+
         }
         public static void OwnedKeys(Level level)
         {
             
-            Console.SetCursorPosition(UI.InventoryBox.PosX+1, UI.InventoryBox.PosY+18);
-            Console.Write("Keys:");
             Console.SetCursorPosition(UI.InventoryBox.PosX+1, UI.InventoryBox.PosY+19);
+            Console.Write("KEYS:");
+            Console.SetCursorPosition(UI.InventoryBox.PosX+1, UI.InventoryBox.PosY+20);
             for (int i = 0; i < UI.InventoryBox.Width-1; i++)
             {
                 Console.Write(" ");
@@ -272,7 +314,7 @@ namespace ConsoleDungeonCrawler.Printer
             int j = 0;  
             foreach (Key key in level.PlayerKeys)
             {
-                Console.SetCursorPosition(UI.InventoryBox.PosX + 4 + j, UI.InventoryBox.PosY + 19);
+                Console.SetCursorPosition(UI.InventoryBox.PosX + 2 + j, UI.InventoryBox.PosY + 20);
                 if (key.Used)
                 {
                     Console.ForegroundColor = key.UsedColor;

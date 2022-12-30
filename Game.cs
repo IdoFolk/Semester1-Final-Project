@@ -36,7 +36,7 @@ namespace ConsoleDungeonCrawler
         public static Range FogOfWar;
         public static void Start()
         {
-            LoadWeapons();
+            LoadItems();
             FogOfWar = new Range(false,7,4);
             Player player = new Player("Ido", 10);
             for (int i = 0; i < LevelNumber.Length; i++) //Level Gameplay
@@ -50,7 +50,7 @@ namespace ConsoleDungeonCrawler
             }
             Result(player);
         }
-        public static void PlayLevel(Level level, Player player)
+        private static void PlayLevel(Level level, Player player)
         {
             while (!(level.IsComplete || player.IsDead()))
             {
@@ -61,7 +61,7 @@ namespace ConsoleDungeonCrawler
                 level.UpdateGrid();
             }
         }
-        public static void EnemiesActions(Level level, Player player)
+        private static void EnemiesActions(Level level, Player player)
         {
             foreach (Enemy enemy in level.Enemies)
             {
@@ -77,13 +77,17 @@ namespace ConsoleDungeonCrawler
                 }
             }
         }
-        public static void LoadWeapons()
+        private static void LoadItems()
+        {
+            LoadWeapons();
+        }
+        private static void LoadWeapons()
         {
             Weapons.Add(new Weapon("Fists", 1, 60f));
             Weapons.Add(new Weapon("Sword", 2, 80f));
             Weapons.Add(new Weapon("Great Axe", 4, 50f));
         }
-        public static void Result(Player player)
+        private static void Result(Player player)
         {
             if (player.IsDead())
             {

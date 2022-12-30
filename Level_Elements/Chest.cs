@@ -10,10 +10,10 @@ namespace ConsoleDungeonCrawler.Level_Elements
 {
     enum ItemType
     {
-        Weapon,
-        Potion,
-        Armor,
-        Coin
+        Weapon = 1,
+        Potion = 2,
+        Armor = 3,
+        Coin = 4
     }
     class Chest
     {

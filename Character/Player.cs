@@ -10,15 +10,16 @@ namespace ConsoleDungeonCrawler.Character
 {
     class Player
     {
+        public Vector2 Pos = new Vector2();
+        public Range AgroRange { get; private set; }
         public string Name { get; private set; }
         public int MaxHP { get; private set; }
         public int CurrentHP { get; private set; }
-        public Range AgroRange { get; private set; }
         public float Evasion { get; private set; } = 0f;
         //Inventory:
+        private Inventory _inventory;
         public List<Weapon> PlayerWeapons = new List<Weapon>();
         public Weapon EquippedWeapon;
-        public Vector2 Pos = new Vector2();
         public Player(string name, int hp)
         {
             Name = name;
@@ -27,6 +28,7 @@ namespace ConsoleDungeonCrawler.Character
             PlayerWeapons = new List<Weapon>();
             PlayerWeapons.Add(Game.Weapons[0]); //starting weapon
             EquippedWeapon = PlayerWeapons[0];
+            EquippedWeapon.Equip();
             AgroRange = new Range(10,5);
         }
         public int Attack()
@@ -46,7 +48,7 @@ namespace ConsoleDungeonCrawler.Character
         }
         public void Action(Level level)
         {
-            ConsoleKey key = (Console.ReadKey(true).Key);
+            ConsoleKey key = Console.ReadKey(true).Key;
             Move(key);
             switch (level.Map[Pos.Y, Pos.X])
             {
@@ -135,6 +137,14 @@ namespace ConsoleDungeonCrawler.Character
                     break;
             }
         }
+        private void OpenInventory(ConsoleKey key)
+        {
+            if (key == ConsoleKey.I)
+            {
+                //open inventory
+            }
+        }
+
         private void FightEnemy(Level level)
         {
             for(int enemyNum = 0; enemyNum < level.Enemies.Count; enemyNum++)
