@@ -5,6 +5,7 @@ using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 using ConsoleDungeonCrawler.Level_Elements;
+using ConsoleDungeonCrawler.Printer;
 
 namespace ConsoleDungeonCrawler.Character
 {
@@ -16,24 +17,34 @@ namespace ConsoleDungeonCrawler.Character
         public int MaxHP { get; private set; }
         public int CurrentHP { get; private set; }
         public float Evasion { get; private set; } = 0f;
-        //Inventory:
-        private Inventory _inventory;
+        //PrintInventory:
         public List<Weapon> PlayerWeapons = new List<Weapon>();
-        public Weapon EquippedWeapon;
+        public Weapon EquippedWeapon { get; private set; }
+        public Weapon DefaultWeapon { get; private set; }
         public Player(string name, int hp)
         {
             Name = name;
             MaxHP = hp;
             CurrentHP = MaxHP;
             PlayerWeapons = new List<Weapon>();
-            PlayerWeapons.Add(Game.Weapons[0]); //starting weapon
-            EquippedWeapon = PlayerWeapons[0];
-            EquippedWeapon.Equip();
+            DefaultWeapon = Game.Weapons[0];
+            PlayerWeapons.Add(DefaultWeapon); //starting weapon
+            EquipWeapon(Game.Weapons[0]);
             AgroRange = new Range(10,5);
         }
         public int Attack()
         {
-            return EquippedWeapon.Attack();
+            int attack = EquippedWeapon.Attack();
+            if (attack == 0) return attack;
+            if (EquippedWeapon.Durability == 0)
+            {
+                if (EquippedWeapon == DefaultWeapon)
+                    return attack;
+                WeaponBreak(EquippedWeapon);
+                return 0;
+            }
+            EquippedWeapon.Tear();
+            return attack;
         }
         public void TakeDamage(int damage)
         {
@@ -49,6 +60,7 @@ namespace ConsoleDungeonCrawler.Character
         public void Action(Level level)
         {
             ConsoleKey key = Console.ReadKey(true).Key;
+            OpenInventory(key);
             Move(key);
             switch (level.Map[Pos.Y, Pos.X])
             {
@@ -76,6 +88,15 @@ namespace ConsoleDungeonCrawler.Character
                     break;
             }
 
+        }
+        public void EquipWeapon(Weapon weapon)
+        {
+            foreach (Weapon otherWeapon in PlayerWeapons)
+            {
+                otherWeapon.RemoveEquipped();
+            }
+            EquippedWeapon = weapon;
+            weapon.SetEquipped();
         }
         private void Move(ConsoleKey key)
         {
@@ -141,7 +162,7 @@ namespace ConsoleDungeonCrawler.Character
         {
             if (key == ConsoleKey.I)
             {
-                //open inventory
+                Inventory.MenuNav(this);
             }
         }
 
@@ -220,5 +241,12 @@ namespace ConsoleDungeonCrawler.Character
                 }
             }
         }
+        private void WeaponBreak(Weapon weapon)
+        {
+            EquipWeapon(Game.Weapons[0]);
+            HUD.WeaponBreakLog(weapon);
+            PlayerWeapons.Remove(weapon);
+        }
+        
     }
 }

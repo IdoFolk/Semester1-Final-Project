@@ -28,9 +28,8 @@ namespace ConsoleDungeonCrawler.Level_Elements
                 case 2:
                     return Game.Weapons[2];
                 default:
-                    break;
+                    return Game.Weapons[0];
             }
-            return Game.Weapons[0];
         }
         public ItemType RewardType()
         {

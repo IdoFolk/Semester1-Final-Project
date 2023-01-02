@@ -10,13 +10,15 @@ namespace ConsoleDungeonCrawler.Character
     {
         public string Name { get; private set; }
         public int Damage { get; private set; }
+        public int Durability { get; private set; }
         public float HitChance { get; private set; }
         public bool IsEquipped { get; private set; } = false;
-        public Weapon(string name, int damage, float hitChance)
+        public Weapon(string name, int damage, float hitChance, int durability)
         {
             Name = name;
             Damage = damage;
             HitChance = hitChance;
+            Durability = durability;
         }
         public int Attack()
         {
@@ -25,9 +27,18 @@ namespace ConsoleDungeonCrawler.Character
                 return 0;
             return Damage;
         }
-        public void Equip()
+        public void SetEquipped()
         {
             IsEquipped = true;
+        }
+        public void RemoveEquipped()
+        {
+            IsEquipped = false;
+        }
+        public void Tear()
+        {
+            Durability--;
+            if (Durability < 0) Durability = 0;
         }
     }
 }

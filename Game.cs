@@ -83,9 +83,11 @@ namespace ConsoleDungeonCrawler
         }
         private static void LoadWeapons()
         {
-            Weapons.Add(new Weapon("Fists", 1, 60f));
-            Weapons.Add(new Weapon("Sword", 2, 80f));
-            Weapons.Add(new Weapon("Great Axe", 4, 50f));
+            Weapons.Add(new Weapon("Fists", 1, 60f, 0));
+            Weapons.Add(new Weapon("Dagger", 2, 70f, 2));
+            Weapons.Add(new Weapon("Sword", 2, 90f, 2));
+            Weapons.Add(new Weapon("", 2, 90f, 2));
+            Weapons.Add(new Weapon("Great Axe", 4, 50f, 2));
         }
         private static void Result(Player player)
         {

@@ -1,4 +1,5 @@
-﻿using ConsoleDungeonCrawler.Character;
+﻿
+using ConsoleDungeonCrawler.Character;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +20,7 @@ namespace ConsoleDungeonCrawler.Level_Elements
     class Enemy
     {
         public Vector2 Pos = new Vector2();
-        public string Name;
+        public string Name = " ";
         public int Id;
         public ConsoleColor Color;
         public int MaxHP;
