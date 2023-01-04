@@ -16,9 +16,12 @@ namespace ConsoleDungeonCrawler.Character
         public string Name { get; private set; }
         public int MaxHP { get; private set; }
         public int CurrentHP { get; private set; }
-        public float Evasion { get; private set; } = 0f;
-        //PrintInventory:
+        //Inventory:
         public List<Weapon> PlayerWeapons = new List<Weapon>();
+        public List<Potion> PlayerPotions = new List<Potion>();
+        public List<Armor> PlayerArmors = new List<Armor>();
+        public Armor EquippedArmor { get; private set; }
+        public Armor DefaultArmor { get; private set; }
         public Weapon EquippedWeapon { get; private set; }
         public Weapon DefaultWeapon { get; private set; }
         public Player(string name, int hp)
@@ -26,10 +29,12 @@ namespace ConsoleDungeonCrawler.Character
             Name = name;
             MaxHP = hp;
             CurrentHP = MaxHP;
-            PlayerWeapons = new List<Weapon>();
             DefaultWeapon = Game.Weapons[0];
             PlayerWeapons.Add(DefaultWeapon); //starting weapon
-            EquipWeapon(Game.Weapons[0]);
+            EquipWeapon(DefaultWeapon);
+            DefaultArmor = Game.Armors[0];
+            PlayerArmors.Add(DefaultArmor); //starting armor
+            EquipArmor(DefaultArmor);
             AgroRange = new Range(10,5);
         }
         public int Attack()
@@ -41,6 +46,7 @@ namespace ConsoleDungeonCrawler.Character
                 if (EquippedWeapon == DefaultWeapon)
                     return attack;
                 WeaponBreak(EquippedWeapon);
+                HUD.ClearInventory();
                 return 0;
             }
             EquippedWeapon.Tear();
@@ -48,8 +54,25 @@ namespace ConsoleDungeonCrawler.Character
         }
         public void TakeDamage(int damage)
         {
+            if (EquippedArmor.ArmorPoints > 0)
+            {
+                int block = EquippedArmor.ArmorPoints;
+                EquippedArmor.TakeDamage(damage);
+                if (EquippedArmor.ArmorPoints == 0)
+                {
+                    ArmorBreak(EquippedArmor);
+                    HUD.ClearInventory();
+                }
+                damage -= block;
+                if (damage < 0) damage = 0;
+            }
             CurrentHP -= damage;
             if (CurrentHP < 0) CurrentHP = 0;
+        }
+        public void Heal(int heal)
+        {
+            CurrentHP += heal;
+            if (CurrentHP > MaxHP) CurrentHP = MaxHP;
         }
         public bool IsDead()
         {
@@ -88,15 +111,6 @@ namespace ConsoleDungeonCrawler.Character
                     break;
             }
 
-        }
-        public void EquipWeapon(Weapon weapon)
-        {
-            foreach (Weapon otherWeapon in PlayerWeapons)
-            {
-                otherWeapon.RemoveEquipped();
-            }
-            EquippedWeapon = weapon;
-            weapon.SetEquipped();
         }
         private void Move(ConsoleKey key)
         {
@@ -158,13 +172,6 @@ namespace ConsoleDungeonCrawler.Character
                     break;
             }
         }
-        private void OpenInventory(ConsoleKey key)
-        {
-            if (key == ConsoleKey.I)
-            {
-                Inventory.MenuNav(this);
-            }
-        }
 
         private void FightEnemy(Level level)
         {
@@ -193,13 +200,34 @@ namespace ConsoleDungeonCrawler.Character
             switch (item)
             {
                 case ItemType.Weapon:
-                    Weapon weapon = chest.WeaponReward();
+                    if (PlayerWeapons.Count > 6)
+                    {
+                        HUD.ItemCappedLog(item);
+                        return;
+                    }
+                    Weapon weapon = new Weapon(chest.WeaponReward());
                     PlayerWeapons.Add(weapon);
-                    Printer.HUD.GotWeaponLog(weapon);
+                    HUD.GotWeaponLog(weapon);
                     break;
                 case ItemType.Potion:
+                    if (PlayerPotions.Count+1 > 8)
+                    {
+                        HUD.ItemCappedLog(item);
+                        return;
+                    }
+                    Potion potion = new Potion(chest.PotionReward());
+                    PlayerPotions.Add(potion);
+                    HUD.GotPotionLog(potion);
                     break;
                 case ItemType.Armor:
+                    if (PlayerArmors.Count > 3)
+                    {
+                        HUD.ItemCappedLog(item);
+                        return;
+                    }
+                    Armor armor = new Armor(chest.ArmorReward());
+                    PlayerArmors.Add(armor);
+                    HUD.GotArmorLog(armor);
                     break;
                 case ItemType.Coin:
                     break;
@@ -214,9 +242,8 @@ namespace ConsoleDungeonCrawler.Character
                 Key key = level.Keys[keyNum];
                 if (key.Pos.X == Pos.X && key.Pos.Y == Pos.Y)
                 {
-                    level.PlayerKeys.Add(new Key());
+                    level.PlayerKeys.Add(new Key(key.Color));
                     Printer.HUD.GotKeyLog(key);
-                    level.PlayerKeys[level.PlayerKeys.Count-1].Color = level.Keys[keyNum].Color;
                     level.Keys.RemoveAt(keyNum);
                 }
             }
@@ -241,12 +268,65 @@ namespace ConsoleDungeonCrawler.Character
                 }
             }
         }
+        private void OpenInventory(ConsoleKey key)
+        {
+            if (key == ConsoleKey.I)
+            {
+                Inventory.MenuNav(this);
+            }
+        }
+        public void EquipWeapon(Weapon weapon)
+        {
+            foreach (Weapon otherWeapon in PlayerWeapons)
+            {
+                otherWeapon.RemoveEquipped();
+            }
+            EquippedWeapon = weapon;
+            weapon.SetEquipped();
+            HUD.ClearPlayerStats();
+        }
         private void WeaponBreak(Weapon weapon)
         {
-            EquipWeapon(Game.Weapons[0]);
+            EquipWeapon(DefaultWeapon);
             HUD.WeaponBreakLog(weapon);
             PlayerWeapons.Remove(weapon);
         }
-        
+        public void EquipArmor(Armor armor)
+        {
+            foreach (Armor otherArmor in PlayerArmors)
+            {
+                otherArmor.RemoveEquipped();
+            }
+            EquippedArmor = armor;
+            armor.SetEquipped();
+            HUD.ClearPlayerStats();
+        }
+        private void ArmorBreak(Armor armor)
+        {
+            EquipArmor(DefaultArmor);
+            HUD.ArmorBreakLog(armor);
+            PlayerArmors.Remove(armor);
+        }
+        public void UsePotion(Potion potion)
+        {
+            Heal(potion.Heal);
+            PlayerPotions.Remove(potion);
+        }
+        public void DropWeapon(Weapon weapon)
+        {
+            PlayerWeapons.Remove(weapon);
+            HUD.DropWeaponLog(weapon);
+        }
+        public void DropPotion(Potion potion)
+        {
+            PlayerPotions.Remove(potion);
+            HUD.DropPotionLog(potion);
+        }
+        public void DropArmor(Armor armor)
+        {
+            PlayerArmors.Remove(armor);
+            HUD.DropArmorLog(armor);
+        }
+
     }
 }

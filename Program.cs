@@ -1,4 +1,6 @@
-﻿namespace ConsoleDungeonCrawler
+﻿using ConsoleDungeonCrawler.Printer;
+
+namespace ConsoleDungeonCrawler
 {
     class Program
     {
@@ -11,3 +13,4 @@
         }
     }
 }
+

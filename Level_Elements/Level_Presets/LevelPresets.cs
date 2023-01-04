@@ -33,7 +33,8 @@ namespace ConsoleDungeonCrawler.Level_Elements
             switch (levelNum)
             {
                 case 1:
-                    SetEnemies(EnemyType.Goblin, 2);
+                    SetEnemies(EnemyType.Goblin, 3);
+                    SetEnemies(EnemyType.Orc, 2);
                     SetDoor(ConsoleColor.Blue);
                     SetDoor(ConsoleColor.Red);
                     SetDoor(ConsoleColor.Yellow);
@@ -52,7 +53,7 @@ namespace ConsoleDungeonCrawler.Level_Elements
         }
         private static void SetKey(ConsoleColor color)
         {
-            _level.Keys[_keyIndicator].Color = color;
+            _level.Keys[_keyIndicator].SetColor(color);
             _keyIndicator++;
         }
         private static void SetDoor(ConsoleColor color)
@@ -81,7 +82,7 @@ namespace ConsoleDungeonCrawler.Level_Elements
                         _level.Enemies[enemy].MaxHP = 2;
                         _level.Enemies[enemy].CurrentHP = _level.Enemies[enemy].MaxHP;
                         _level.Enemies[enemy].Damage = 1;
-                        _level.Enemies[enemy].ChaseChance = 90f;
+                        _level.Enemies[enemy].ChaseChance = 0.9f;
                         break;
                     case EnemyType.Orc:
                         _level.Enemies[enemy].Name = "Orc";
@@ -90,7 +91,7 @@ namespace ConsoleDungeonCrawler.Level_Elements
                         _level.Enemies[enemy].MaxHP = 4;
                         _level.Enemies[enemy].CurrentHP = _level.Enemies[enemy].MaxHP;
                         _level.Enemies[enemy].Damage = 1;
-                        _level.Enemies[enemy].ChaseChance = 90f;
+                        _level.Enemies[enemy].ChaseChance = 0.9f;
                         break;
                     default:
                         break;

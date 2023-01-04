@@ -110,7 +110,7 @@ namespace ConsoleDungeonCrawler.Level_Elements
                             break;
                         case '¶':
                             map[i, j] = Tile.Key;
-                            Keys.Add(new Key());
+                            Keys.Add(new Key(ConsoleColor.White));
                             Keys[Keys.Count - 1].Pos.Y = i;
                             Keys[Keys.Count - 1].Pos.X = j;
                             break;

@@ -34,8 +34,8 @@ namespace ConsoleDungeonCrawler.Level_Elements
         }
         public int Attack(Player player)
         {
-            int hit = Random.Shared.Next(1, 101);
-            if (hit < player.Evasion) return 0;
+            float hit = Random.Shared.NextSingle();
+            if (hit < player.EquippedArmor.Evasion) return 0;
             return Damage;
         }
         public bool IsDead()
@@ -47,7 +47,7 @@ namespace ConsoleDungeonCrawler.Level_Elements
         public Direction MovePattern(Level level, Player player)
         {
             Direction move;
-            int rand = Random.Shared.Next(1, 101);
+            float rand = Random.Shared.NextSingle();
             if (rand < ChaseChance)
             {
                 move = ChasePlayer(player);

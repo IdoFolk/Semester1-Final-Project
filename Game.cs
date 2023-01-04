@@ -33,6 +33,8 @@ namespace ConsoleDungeonCrawler
     {
         public static readonly int[] LevelNumber = new int[2] { 1, 2 };
         public static List<Weapon> Weapons = new List<Weapon>();
+        public static List<Potion> Potions = new List<Potion>();
+        public static List<Armor> Armors = new List<Armor>();
         public static Range FogOfWar;
         public static void Start()
         {
@@ -80,14 +82,31 @@ namespace ConsoleDungeonCrawler
         private static void LoadItems()
         {
             LoadWeapons();
+            LoadPotions();
+            LoadArmors();
         }
         private static void LoadWeapons()
         {
-            Weapons.Add(new Weapon("Fists", 1, 60f, 0));
-            Weapons.Add(new Weapon("Dagger", 2, 70f, 2));
-            Weapons.Add(new Weapon("Sword", 2, 90f, 2));
-            Weapons.Add(new Weapon("", 2, 90f, 2));
-            Weapons.Add(new Weapon("Great Axe", 4, 50f, 2));
+            Weapons.Add(new Weapon("Fists", 1, 0.6f, 0));
+            Weapons.Add(new Weapon("Dagger", 2, 0.7f, 2));
+            Weapons.Add(new Weapon("Sword", 2, 0.8f, 4));
+            Weapons.Add(new Weapon("Spear", 3, 0.9f, 3));
+            Weapons.Add(new Weapon("Mace", 4, 0.5f, 5));
+            Weapons.Add(new Weapon("GreatAxe", 5, 0.4f, 5));
+        }
+        private static void LoadPotions()
+        {
+            Potions.Add(new Potion(ConsoleColor.Green, 2));
+            Potions.Add(new Potion(ConsoleColor.Blue, 4));
+            Potions.Add(new Potion(ConsoleColor.Magenta, 6));
+        }
+        private static void LoadArmors()
+        {
+            Armors.Add(new Armor("Underwear",0,0,0));
+            Armors.Add(new Armor("Cloth",0.5f,2,0.4f));
+            Armors.Add(new Armor("Leather",0.4f,3,0.7f));
+            Armors.Add(new Armor("Plate",0,5,0.9f));
+            Armors.Add(new Armor("Cloak",0.9f,1,1f));
         }
         private static void Result(Player player)
         {

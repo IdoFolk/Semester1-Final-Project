@@ -3,6 +3,7 @@ using ConsoleDungeonCrawler.Level_Elements;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,7 +23,7 @@ namespace ConsoleDungeonCrawler.Printer
         }
         public static void Log()
         {
-            if (_logIndicator > UI.LogBox.Height - 3) LogReset();
+            if (_logIndicator > UI.LogBox.Height - 4) LogReset();
             Console.SetCursorPosition(UI.LogBox.PosX + 1, UI.LogBox.PosY + 3 + _logIndicator);
             _logIndicator++;
         }
@@ -88,7 +89,7 @@ namespace ConsoleDungeonCrawler.Printer
         public static void OpenChestLog()
         {
             Log();
-            Console.Write("You have opened a chest and got ");
+            Console.Write("You have opened a chest and got:");
         }
         public static void GotWeaponLog(Weapon weapon)
         {
@@ -97,10 +98,70 @@ namespace ConsoleDungeonCrawler.Printer
             Log();
 
         }
+        public static void GotPotionLog(Potion potion)
+        {
+            Log();
+            Console.ForegroundColor = potion.Color;
+            Console.Write($"A {potion.Name} Potion!");
+            Console.ForegroundColor = DefaultForeground;
+            Log();
+
+        }
+        public static void GotArmorLog(Armor armor)
+        {
+            Log();
+            Console.Write($"A {armor.Name}!");
+            Log();
+        }
         public static void WeaponBreakLog(Weapon weapon)
         {
             Log();
             Console.Write($"{weapon.Name} broke...");
+            Log();
+        }
+        public static void DropWeaponLog(Weapon weapon)
+        {
+            Log();
+            Console.Write($"{weapon.Name} Dropped...");
+            Log();
+        }
+        public static void ArmorBreakLog(Armor armor)
+        {
+            Log();
+            if (armor.Name == "Plate Armor") Console.Write($"{armor.Name} Broke...");
+            else Console.Write($"{armor.Name} Ripped...");
+            Log();
+        }
+        public static void DropArmorLog(Armor armor)
+        {
+            Log();
+            Console.Write($"{armor.Name} Dropped...");
+            Log();
+        }
+        public static void DropPotionLog(Potion potion)
+        {
+            Log();
+            Console.Write($"{potion.Name} Potion Dropped...");
+            Log();
+        }
+        public static void ItemCappedLog(ItemType itemType)
+        {
+            Log();
+            switch (itemType)
+            {
+                case ItemType.Weapon:
+                    Console.Write("Weapon ");
+                    break;
+                case ItemType.Potion:
+                    Console.Write("Potion ");
+                    break;
+                case ItemType.Armor:
+                    Console.Write("Armor ");
+                    break;
+                case ItemType.Coin:
+                    break;
+            }
+            Console.Write("Limit Reached...");
             Log();
         }
         public static void LevelStats(Level level)
@@ -112,78 +173,73 @@ namespace ConsoleDungeonCrawler.Printer
         }
         public static void PlayerStats(Player player)
         {
-
-
+            //HP
             Console.SetCursorPosition(UI.PlayerStatBox.PosX + 1, UI.PlayerStatBox.PosY + 3);
-            Console.Write($"{player.Name} HP: ");
+            Console.Write("HP: ");
             Console.ForegroundColor = ConsoleColor.Black;
             Console.Write("♥♥♥♥♥♥♥♥♥♥");
-            Console.SetCursorPosition(UI.PlayerStatBox.PosX + 5 + player.Name.Length, UI.PlayerStatBox.PosY + 3);
+            Console.SetCursorPosition(UI.PlayerStatBox.PosX + 5, UI.PlayerStatBox.PosY + 3);
             Console.ForegroundColor = ConsoleColor.Red;
-            switch (player.CurrentHP)
+            for (int i = 0; i < player.CurrentHP; i++)
             {
-                case 1:
-                    for (int i = 0; i < 1; i++)
-                    {
-                        Console.Write('♥');
-                    }
-                    break;
-                case 2:
-                    for (int i = 0; i < 2; i++)
-                    {
-                        Console.Write('♥');
-                    }
-                    break;
-                case 3:
-                    for (int i = 0; i < 3; i++)
-                    {
-                        Console.Write('♥');
-                    }
-                    break;
-                case 4:
-                    for (int i = 0; i < 4; i++)
-                    {
-                        Console.Write('♥');
-                    }
-                    break;
-                case 5:
-                    for (int i = 0; i < 5; i++)
-                    {
-                        Console.Write('♥');
-                    }
-                    break;
-                case 6:
-                    for (int i = 0; i < 6; i++)
-                    {
-                        Console.Write('♥');
-                    }
-                    break;
-                case 7:
-                    for (int i = 0; i < 7; i++)
-                    {
-                        Console.Write('♥');
-                    }
-                    break;
-                case 8:
-                    for (int i = 0; i < 8; i++)
-                    {
-                        Console.Write('♥');
-                    }
-                    break;
-                case 9:
-                    for (int i = 0; i < 9; i++)
-                    {
-                        Console.Write('♥');
-                    }
-                    break;
-                case 10:
-                    for (int i = 0; i < 10; i++)
-                    {
-                        Console.Write('♥');
-                    }
-                    break;
+                Console.Write('♥');
             }
             Console.ForegroundColor = DefaultForeground;
+            //Shield
+            Console.SetCursorPosition(UI.PlayerStatBox.PosX + 1, UI.PlayerStatBox.PosY + 4);
+            Console.Write($"Shield: ");
+            Console.ForegroundColor = ConsoleColor.Black;
+            Console.Write("♦♦♦♦♦");
+            Console.SetCursorPosition(UI.PlayerStatBox.PosX + 8, UI.PlayerStatBox.PosY + 4);
+            Console.ForegroundColor = ConsoleColor.Blue;
+            for (int i = 0; i < player.EquippedArmor.ArmorPoints; i++)
+            {
+                Console.Write('♦');
+            }
+            Console.ForegroundColor = DefaultForeground;
+
+            for (int i = 0; i < 5; i++)
+            {
+                Console.SetCursorPosition(UI.PlayerStatBox.PosX + 13, UI.PlayerStatBox.PosY + 5 + i);
+                Console.Write("|");
+            }
+            for (int i = 0; i < UI.PlayerStatBox.Width-1; i++)
+            {
+                Console.SetCursorPosition(UI.PlayerStatBox.PosX + 1 + i, UI.PlayerStatBox.PosY + 5);
+                Console.Write("─");
+            }
+            Console.SetCursorPosition(UI.PlayerStatBox.PosX + 13, UI.PlayerStatBox.PosY + 5);
+            Console.Write("┬");
+            Console.SetCursorPosition(UI.PlayerStatBox.PosX + 13, UI.PlayerStatBox.PosY + 10);
+            Console.Write("┴");
+
+            Console.SetCursorPosition(UI.PlayerStatBox.PosX + 4, UI.PlayerStatBox.PosY + 5);
+            Console.Write("Weapon");
+
+            Console.SetCursorPosition(UI.PlayerStatBox.PosX + 17, UI.PlayerStatBox.PosY + 5);
+            Console.Write("Armor");
+            
+            Console.SetCursorPosition(UI.PlayerStatBox.PosX + 4, UI.PlayerStatBox.PosY + 6);
+            Console.Write($"{player.EquippedWeapon.Name}");
+
+            Console.SetCursorPosition(UI.PlayerStatBox.PosX + 1, UI.PlayerStatBox.PosY + 7);
+            Console.Write($"Damage: {player.EquippedWeapon.Damage}");
+
+            Console.SetCursorPosition(UI.PlayerStatBox.PosX + 1, UI.PlayerStatBox.PosY + 8);
+            Console.Write($"Hit: {(player.EquippedWeapon.HitChance * 10) * 10}%");
+
+            Console.SetCursorPosition(UI.PlayerStatBox.PosX + 1, UI.PlayerStatBox.PosY + 9);
+            Console.Write($"Status: {player.EquippedWeapon.Durability * 20}%");
+
+            Console.SetCursorPosition(UI.PlayerStatBox.PosX + 15, UI.PlayerStatBox.PosY + 6);
+            Console.Write($"{player.EquippedArmor.Name}");
+            
+            Console.SetCursorPosition(UI.PlayerStatBox.PosX + 14, UI.PlayerStatBox.PosY + 8);
+            Console.Write($"Evasion: {player.EquippedArmor.Evasion*100}%");
+
+            Console.SetCursorPosition(UI.PlayerStatBox.PosX + 14, UI.PlayerStatBox.PosY + 9);
+            Console.Write($"Status: {player.EquippedArmor.ArmorPoints * 20}%");
+
 
         }
         public static void EnemyStats(Enemy enemy)
@@ -275,60 +331,75 @@ namespace ConsoleDungeonCrawler.Printer
             Console.SetCursorPosition(UI.InventoryBox.PosX + 1, UI.InventoryBox.PosY + 1);
             Console.Write("Inventory:                  ");
             Console.SetCursorPosition(UI.InventoryBox.PosX + 1, UI.InventoryBox.PosY + 3);
-            Console.Write("WEAPONS: Damage, HitChance");
+            Console.Write("WEAPONS:");
             Console.SetCursorPosition(UI.InventoryBox.PosX + 1, UI.InventoryBox.PosY + 8);
             Console.Write("POTIONS:");
-            Console.SetCursorPosition(UI.InventoryBox.PosX + 1, UI.InventoryBox.PosY + 10);
+            Console.SetCursorPosition(UI.InventoryBox.PosX + 1, UI.InventoryBox.PosY + 11);
             Console.Write("ARMOR:");
         }
         public static void OwnedWeapons(Player player)
         {
-            Clear(UI.InventoryBox.PosX+1,UI.InventoryBox.PosY+4, UI.InventoryBox.Width-1,4);
-            int w = 0;
-            foreach (Weapon weapon in player.PlayerWeapons)
+            int w = 1;
+            for (int j = 0; j < 15; j+=14)
             {
-                if (weapon.IsEquipped)
+                for (int i = 0; i < 3; i++)
+                {
+                    if (w > player.PlayerWeapons.Count-1) return;
+                    Weapon weapon = player.PlayerWeapons[w];
+                    if (weapon.IsEquipped)
+                    {
+                        Console.BackgroundColor = ConsoleColor.White;
+                        Console.ForegroundColor = ConsoleColor.Black;
+                    }
+                    Console.SetCursorPosition(UI.InventoryBox.PosX + 1 + j, UI.InventoryBox.PosY + 4 + i);
+                    Console.Write($"{w}. {weapon.Name}");
+                    Console.BackgroundColor = DefaultBackground;
+                    Console.ForegroundColor = DefaultForeground;
+                    w++;
+                }
+            }
+        }
+        public static void OwnedPotions(Player player)
+        {
+            Console.SetCursorPosition(UI.InventoryBox.PosX + 1, UI.InventoryBox.PosY + 9);
+            Console.WriteLine("[                          ]");
+            int i = 4;
+            foreach (Potion potion in player.PlayerPotions)
+            {
+                Console.SetCursorPosition(UI.InventoryBox.PosX + i, UI.InventoryBox.PosY + 9);
+                Console.ForegroundColor = potion.Color;
+                Console.Write("♠");
+                Console.ForegroundColor = DefaultForeground;
+                i += 3;
+            }
+        }
+        public static void OwnedArmor(Player player)
+        {
+            for (int i = 1; i < player.PlayerArmors.Count; i++)
+            {
+                Armor armor = player.PlayerArmors[i];
+                if (armor.IsEquipped)
                 {
                     Console.BackgroundColor = ConsoleColor.White;
                     Console.ForegroundColor = ConsoleColor.Black;
                 }
-                Console.SetCursorPosition(UI.InventoryBox.PosX+1, UI.InventoryBox.PosY+4+w);
-                Console.Write($"{weapon.Name}:");
+                Console.SetCursorPosition(UI.InventoryBox.PosX + 1, UI.InventoryBox.PosY + 11 + i);
+                Console.Write($"{i}. {armor.Name}");
                 Console.BackgroundColor = DefaultBackground;
                 Console.ForegroundColor = DefaultForeground;
-                Console.Write($" {weapon.Damage}, {weapon.HitChance}%");
-                w++;
             }
-
-        }
-        public static void OwnedPotions(Player player)
-        {
-
-        }
-        public static void OwnedArmor(Player player)
-        {
-            Console.SetCursorPosition(UI.InventoryBox.PosX + 1, UI.InventoryBox.PosY + 11);
-            Console.Write("Head:");
-            Console.SetCursorPosition(UI.InventoryBox.PosX + 1, UI.InventoryBox.PosY + 12);
-            Console.Write("Chest:");
-            Console.SetCursorPosition(UI.InventoryBox.PosX + 1, UI.InventoryBox.PosY + 13);
-            Console.Write("Legs:");
-
         }
         public static void OwnedKeys(Level level)
         {
             
-            Console.SetCursorPosition(UI.InventoryBox.PosX+1, UI.InventoryBox.PosY+19);
+            Console.SetCursorPosition(UI.InventoryBox.PosX+1, UI.InventoryBox.PosY+16);
             Console.Write("KEYS:");
-            Console.SetCursorPosition(UI.InventoryBox.PosX+1, UI.InventoryBox.PosY+20);
-            for (int i = 0; i < UI.InventoryBox.Width-1; i++)
-            {
-                Console.Write(" ");
-            }
-            int j = 0;  
+            Console.SetCursorPosition(UI.InventoryBox.PosX+1, UI.InventoryBox.PosY+17);
+            Console.WriteLine("[                          ]");
+            int j = 4;  
             foreach (Key key in level.PlayerKeys)
             {
-                Console.SetCursorPosition(UI.InventoryBox.PosX + 2 + j, UI.InventoryBox.PosY + 20);
+                Console.SetCursorPosition(UI.InventoryBox.PosX + j, UI.InventoryBox.PosY + 17);
                 if (key.Used)
                 {
                     Console.ForegroundColor = key.UsedColor;
@@ -340,7 +411,7 @@ namespace ConsoleDungeonCrawler.Printer
                     Console.ForegroundColor = key.Color;
                     Console.Write("¶");
                 }
-                j += 4;
+                j += 3;
             }
             
             Console.BackgroundColor = DefaultBackground;
@@ -351,10 +422,10 @@ namespace ConsoleDungeonCrawler.Printer
             Console.SetCursorPosition(UI.InventoryBox.PosX + 20, UI.InventoryBox.PosY + 1);
             Console.Write("Opened");
             Console.SetCursorPosition(UI.InventoryBox.PosX + 1, UI.InventoryBox.PosY + 3);
-            Console.Write("WEAPONS: Damage, HitChance");
+            Console.Write("WEAPONS:");
             Console.SetCursorPosition(UI.InventoryBox.PosX + 1, UI.InventoryBox.PosY + 8);
             Console.Write("POTIONS:");
-            Console.SetCursorPosition(UI.InventoryBox.PosX + 1, UI.InventoryBox.PosY + 10);
+            Console.SetCursorPosition(UI.InventoryBox.PosX + 1, UI.InventoryBox.PosY + 11);
             Console.Write("ARMOR:");
             switch (Inventory.MenuIndicator)
             {
@@ -377,7 +448,7 @@ namespace ConsoleDungeonCrawler.Printer
                 case 2:
                     Console.BackgroundColor = ConsoleColor.White;
                     Console.ForegroundColor = ConsoleColor.Black;
-                    Console.SetCursorPosition(UI.InventoryBox.PosX + 1, UI.InventoryBox.PosY + 10);
+                    Console.SetCursorPosition(UI.InventoryBox.PosX + 1, UI.InventoryBox.PosY + 11);
                     Console.Write("ARMOR:");
                     Console.BackgroundColor = DefaultBackground;
                     Console.ForegroundColor = DefaultForeground;
@@ -386,21 +457,72 @@ namespace ConsoleDungeonCrawler.Printer
         }
         public static void WeaponNav(Player player)
         {
-            int i = 0;
-            foreach (Weapon weapon in player.PlayerWeapons)
+            int w = 1;
+            for (int j = 0; j < 15; j += 14)
             {
+                for (int i = 0; i < 3; i++)
+                {
+                    if (w > player.PlayerWeapons.Count - 1) return;
+                    Weapon weapon = player.PlayerWeapons[w];
+                    if (Inventory.SubMenuIndicator == w)
+                    {
+                        Console.BackgroundColor = ConsoleColor.White;
+                        Console.ForegroundColor = ConsoleColor.Black;
+                    }
+                    Console.SetCursorPosition(UI.InventoryBox.PosX + 1 + j, UI.InventoryBox.PosY + 4 + i);
+                    Console.Write($"{w}. {weapon.Name}");
+                    Console.BackgroundColor = DefaultBackground;
+                    Console.ForegroundColor = DefaultForeground;
+                    w++;
+                }
+            }
+        }
+        public static void PotionNav(Player player)
+        {
+            int i = 0;
+            int j = 4;
+            foreach (Potion potion in player.PlayerPotions)
+            {
+                if (Inventory.SubMenuIndicator == i)
+                {
+                    Console.BackgroundColor = ConsoleColor.White;
+                    Console.ForegroundColor = potion.Color;
+                }
+                Console.SetCursorPosition(UI.InventoryBox.PosX + j, UI.InventoryBox.PosY + 9);
+                Console.ForegroundColor = potion.Color;
+                Console.Write("♠");
+                Console.BackgroundColor = DefaultBackground;
+                i ++;
+                j += 3;
+            }
+                Console.ForegroundColor = DefaultForeground;
+        }
+        public static void ArmorNav(Player player)
+        {
+            for (int i = 1; i < player.PlayerArmors.Count; i++)
+            {
+                Armor armor = player.PlayerArmors[i];
                 if (Inventory.SubMenuIndicator == i)
                 {
                     Console.BackgroundColor = ConsoleColor.White;
                     Console.ForegroundColor = ConsoleColor.Black;
                 }
-                Console.SetCursorPosition(UI.InventoryBox.PosX + 1, UI.InventoryBox.PosY + 4 + i);
-                Console.Write($"{weapon.Name}:");
+                Console.SetCursorPosition(UI.InventoryBox.PosX + 1, UI.InventoryBox.PosY + 11 + i);
+                Console.Write($"{i}. {armor.Name}");
                 Console.BackgroundColor = DefaultBackground;
                 Console.ForegroundColor = DefaultForeground;
-                Console.Write($" {weapon.Damage}, {weapon.HitChance}%");
-                i++;
             }
+        }
+        public static void ClearInventory()
+        {
+            //Inventory Weapons Clear
+            HUD.Clear(UI.InventoryBox.PosX + 1, UI.InventoryBox.PosY + 4, UI.InventoryBox.Width - 1, 3);
+            //Inventory Armor Clear
+            HUD.Clear(UI.InventoryBox.PosX + 1, UI.InventoryBox.PosY + 12, UI.InventoryBox.Width - 1, 3);
+        }
+        public static void ClearPlayerStats()
+        {
+            HUD.Clear(UI.PlayerStatBox.PosX + 1, UI.PlayerStatBox.PosY + 5, UI.PlayerStatBox.Width - 1, 5);
         }
         public static void Clear(int posX, int posY, int width, int height)
         {

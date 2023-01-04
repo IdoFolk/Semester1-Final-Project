@@ -4,19 +4,58 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace ConsoleDungeonCrawler
 {
     class Key
     {
         public Vector2 Pos = new Vector2();
-        public ConsoleColor Color;
-        public ConsoleColor UsedColor;
+        public string Name { get; private set; }
+        public ConsoleColor Color { get; private set; }
+        public ConsoleColor UsedColor { get; private set; }
         public bool Used { get; private set; } = false;
+        public Key(ConsoleColor color)
+        {
+            Color = color;
+            AssignUsedColor(color);
+            AssignName(color);
+        }
         public void UseKey()
         {
             if (Used) return;
-            switch (Color)
+            
+            Used = true;
+        }
+        public void SetColor(ConsoleColor color)
+        {
+            switch (color)
+            {
+                case ConsoleColor.Blue:
+                    Color = ConsoleColor.Blue;
+                    break;
+                case ConsoleColor.Green:
+                    Color = ConsoleColor.Green;
+                    break;
+                case ConsoleColor.Cyan:
+                    Color = ConsoleColor.Cyan;
+                    break;
+                case ConsoleColor.Red:
+                    Color = ConsoleColor.Red;
+                    break;
+                case ConsoleColor.Magenta:
+                    Color = ConsoleColor.Magenta;
+                    break;
+                case ConsoleColor.Yellow:
+                    Color = ConsoleColor.Yellow;
+                    break;
+                default: throw new ArgumentOutOfRangeException(nameof(color));
+
+            }
+        }
+        private void AssignUsedColor(ConsoleColor color)
+        {
+            switch (color)
             {
                 case ConsoleColor.Blue:
                     UsedColor = ConsoleColor.DarkBlue;
@@ -36,9 +75,41 @@ namespace ConsoleDungeonCrawler
                 case ConsoleColor.Yellow:
                     UsedColor = ConsoleColor.DarkYellow;
                     break;
+                case ConsoleColor.White:
+                    UsedColor = ConsoleColor.Gray;
+                    break;
+                default: throw new ArgumentOutOfRangeException(nameof(color));
 
             }
-            Used = true;
+        }
+        private void AssignName(ConsoleColor color)
+        {
+            switch (color)
+            {
+                case ConsoleColor.Blue:
+                    Name = "Blue";
+                    break;
+                case ConsoleColor.Green:
+                    Name = "Green";
+                    break;
+                case ConsoleColor.Cyan:
+                    Name = "Cyan";
+                    break;
+                case ConsoleColor.Red:
+                    Name = "Red";
+                    break;
+                case ConsoleColor.Magenta:
+                    Name = "Purple";
+                    break;
+                case ConsoleColor.Yellow:
+                    Name = "Yellow";
+                    break;
+                case ConsoleColor.White:
+                    Name = "Default";
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(color));
+            }
         }
     }
 }
