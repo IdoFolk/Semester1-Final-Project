@@ -66,6 +66,9 @@ namespace ConsoleDungeonCrawler.Printer
                 case Tile.Chest:
                     Chest();
                     break;
+                case Tile.Coin:
+                    Coin();
+                    break;
                 case Tile.Key:
                     foreach (Key key in level.Keys)
                     {
@@ -147,6 +150,12 @@ namespace ConsoleDungeonCrawler.Printer
             Console.Write("$");
             Console.ForegroundColor = TextColor;
         }
+        public static void Coin()
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write("♣");
+            Console.ForegroundColor = TextColor;
+        }
         public static void Key(Key key)
         {
             Console.ForegroundColor = key.Color;
@@ -159,7 +168,6 @@ namespace ConsoleDungeonCrawler.Printer
             Console.Write("▓");
             Console.ForegroundColor = TextColor;
         }
-
         public static void Exit()
         {
             Console.ForegroundColor = ConsoleColor.White;

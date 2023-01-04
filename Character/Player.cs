@@ -24,6 +24,7 @@ namespace ConsoleDungeonCrawler.Character
         public Armor DefaultArmor { get; private set; }
         public Weapon EquippedWeapon { get; private set; }
         public Weapon DefaultWeapon { get; private set; }
+        public int Coins { get; private set; }
         public Player(string name, int hp)
         {
             Name = name;
@@ -83,7 +84,7 @@ namespace ConsoleDungeonCrawler.Character
         public void Action(Level level)
         {
             ConsoleKey key = Console.ReadKey(true).Key;
-            OpenInventory(key);
+            OpenInventory(key, level);
             Move(key);
             switch (level.Map[Pos.Y, Pos.X])
             {
@@ -104,6 +105,10 @@ namespace ConsoleDungeonCrawler.Character
                     break;
                 case Tile.Chest:
                     OpenChest(level);
+                    DontMove(key);
+                    break;
+                case Tile.Coin:
+                    GetCoin(level);
                     DontMove(key);
                     break;
                 case Tile.Exit:
@@ -230,10 +235,21 @@ namespace ConsoleDungeonCrawler.Character
                     HUD.GotArmorLog(armor);
                     break;
                 case ItemType.Coin:
-                    break;
-                default:
+                    int coinBag = chest.CoinBagReward();
+                    Coins += coinBag;
+                    HUD.GotCoinLog(coinBag);
                     break;
             }
+        }
+        private void GetCoin(Level level)
+        {
+            int amount = 0;
+            level.Map[Pos.Y, Pos.X] = Tile.Empty;
+            float rand = Random.Shared.NextSingle();
+            if (rand > 0.7f) amount++;
+            amount++;
+            HUD.GotCoinLog(amount);
+            Coins += amount;
         }
         private void GetKey(Level level)
         {
@@ -268,11 +284,11 @@ namespace ConsoleDungeonCrawler.Character
                 }
             }
         }
-        private void OpenInventory(ConsoleKey key)
+        private void OpenInventory(ConsoleKey key, Level level)
         {
             if (key == ConsoleKey.I)
             {
-                Inventory.MenuNav(this);
+                Inventory.MenuNav(this, level);
             }
         }
         public void EquipWeapon(Weapon weapon)

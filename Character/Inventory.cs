@@ -1,8 +1,10 @@
-﻿using ConsoleDungeonCrawler.Printer;
+﻿using ConsoleDungeonCrawler.Level_Elements;
+using ConsoleDungeonCrawler.Printer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,7 +15,7 @@ namespace ConsoleDungeonCrawler.Character
         public static int MenuIndicator { get; private set; }
         public static int SubMenuIndicator { get; private set; }
         public static bool InventoryOpened { get; private set; } 
-        public static void MenuNav(Player player)
+        public static void MenuNav(Player player, Level level)
         {
             Open();
             while (InventoryOpened)
@@ -35,22 +37,23 @@ namespace ConsoleDungeonCrawler.Character
                         switch (MenuIndicator)
                         {
                             case 0:
-                                SubMenuWeaponsNav(player, key);
+                                SubMenuWeaponsNav(player, level, key);
                                 break;
                             case 1:
-                                SubMenuPotionsNav(player, key);
+                                SubMenuPotionsNav(player, level, key);
                                 break;
                             case 2:
-                                SubMenuArmorNav(player, key);
+                                SubMenuArmorNav(player, level, key);
                                 break;
                         }
                         break;
                 }
                 if (MenuIndicator < 0) MenuIndicator = 0;
                 if (MenuIndicator > 2) MenuIndicator = 2;
+                NoPause(level,player);
             }
         }
-        public static void SubMenuWeaponsNav(Player player, ConsoleKey key)
+        public static void SubMenuWeaponsNav(Player player, Level level, ConsoleKey key)
         {
                 switch (key)
                 {
@@ -76,8 +79,9 @@ namespace ConsoleDungeonCrawler.Character
                 if (SubMenuIndicator < 1) SubMenuIndicator = 1;
                 if (SubMenuIndicator > player.PlayerWeapons.Count-1) SubMenuIndicator = player.PlayerWeapons.Count-1;
                 HUD.WeaponNav(player);
+                NoPause(level, player);
         }
-        public static void SubMenuPotionsNav(Player player, ConsoleKey key)
+        public static void SubMenuPotionsNav(Player player, Level level, ConsoleKey key)
         {
             switch (key)
             {
@@ -103,8 +107,9 @@ namespace ConsoleDungeonCrawler.Character
             if (SubMenuIndicator < 0) SubMenuIndicator = 0;
             if (SubMenuIndicator > player.PlayerPotions.Count - 1) SubMenuIndicator = player.PlayerPotions.Count - 1;
             HUD.PotionNav(player);
+            NoPause(level, player);
         }
-        public static void SubMenuArmorNav(Player player, ConsoleKey key)
+        public static void SubMenuArmorNav(Player player, Level level, ConsoleKey key)
         {
             switch (key)
             {
@@ -130,6 +135,16 @@ namespace ConsoleDungeonCrawler.Character
             if (SubMenuIndicator < 1) SubMenuIndicator = 1;
             if (SubMenuIndicator > player.PlayerArmors.Count-1) SubMenuIndicator = player.PlayerArmors.Count-1;
             HUD.ArmorNav(player);
+            NoPause(level, player);
+        }
+        private static void NoPause(Level level, Player player)
+        {
+            if (Game.NoPause)
+            {
+                Game.EnemiesActions(level, player);
+                level.UpdateGrid();
+                Printer.HUD.GameState(level, player);
+            }
         }
         private static void Open()
         {

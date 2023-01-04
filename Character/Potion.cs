@@ -10,13 +10,15 @@ namespace ConsoleDungeonCrawler.Character
     {
         public string Name { get; private set; }
         public bool Used { get; private set; }
-        public ConsoleColor Color { get; private set; }
         public int Heal { get; private set; }
-        public Potion(ConsoleColor color, int heal)
+        public float RareChance { get; private set; }
+        public ConsoleColor Color { get; private set; }
+        public Potion(ConsoleColor color, int heal, float rareChance)
         {
             Used = false;
             Color = color;
             Heal = heal;
+            RareChance = rareChance;
             AssignName(color);
         }
         public Potion(Potion potion)
@@ -24,6 +26,7 @@ namespace ConsoleDungeonCrawler.Character
             Used = false;
             Color = potion.Color;
             Heal = potion.Heal;
+            RareChance = potion.RareChance;
             AssignName(potion.Color);
         }
         public void Use()

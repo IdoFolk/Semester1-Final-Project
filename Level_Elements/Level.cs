@@ -17,6 +17,7 @@ namespace ConsoleDungeonCrawler.Level_Elements
         Player,
         Enemy,
         Chest,
+        Coin,
         Trap,
         Key,
         Door,
@@ -86,6 +87,9 @@ namespace ConsoleDungeonCrawler.Level_Elements
                         case '■':
                             map[i, j] = Tile.Wall;
                             break;
+                        case '♣':
+                            map[i, j] = Tile.Coin;
+                            break;
                         case 'E':
                             map[i, j] = Tile.Entry;
                             EntryPos.Y = i;
@@ -134,6 +138,7 @@ namespace ConsoleDungeonCrawler.Level_Elements
                     if (Map[i, j] == Tile.Wall) Map[i, j] = Tile.Wall;
                     else if (Map[i, j] == Tile.Entry) Map[i, j] = Tile.Entry;
                     else if (Map[i, j] == Tile.Exit) Map[i, j] = Tile.Exit;
+                    else if (Map[i, j] == Tile.Coin) Map[i, j] = Tile.Coin;
                     else if (_player.Pos.Y == i && _player.Pos.X == j) Map[i, j] = Tile.Player;
                     else Map[i, j] = Tile.Empty;
                     CheckInstances(Keys, i, j);

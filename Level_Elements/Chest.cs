@@ -21,65 +21,51 @@ namespace ConsoleDungeonCrawler.Level_Elements
         
         public ItemType RewardType()
         {
-            int rand = Random.Shared.Next(1, 4);
-            switch (rand)
-            {
-                case 1:
-                    return ItemType.Weapon;
-                case 2:
-                    return ItemType.Potion;
-                case 3:
-                    return ItemType.Armor;
-                case 4:
-                    return ItemType.Coin;
-                default:
-                    break;
-            }
-            return ItemType.Coin;
+            float random = Random.Shared.NextSingle();
+            if (random < 0.4f) return ItemType.Coin;
+            else if (random < 0.7f) return ItemType.Weapon;
+            else if (random < 0.9f) return ItemType.Armor;
+            else return ItemType.Potion;
         }
         public Weapon WeaponReward()
         {
-            int rand = Random.Shared.Next(1, 6);
-            switch (rand)
+            float random = Random.Shared.NextSingle();
+            for (int i = 0; i < Game.Weapons.Count; i++)
             {
-                case 1:
-                    return Game.Weapons[1];
-                case 2:
-                    return Game.Weapons[2];
-                case 3:
-                    return Game.Weapons[3];
-                case 4:
-                    return Game.Weapons[4];
-                case 5:
-                    return Game.Weapons[5];
-                default:
-                    return Game.Weapons[1];
+                if (random < Game.Weapons[i].RareChance)
+                    return Game.Weapons[i];
             }
+            throw new Exception("Weapon reward error");
         }
         public Potion PotionReward()
         {
-            int rand = Random.Shared.Next(1, 4);
-            switch (rand)
+            float random = Random.Shared.NextSingle();
+            for (int i = 0; i < Game.Potions.Count; i++)
             {
-                case 1:
-                    return Game.Potions[0];
-                case 2:
-                    return Game.Potions[1];
-                case 3:
-                    return Game.Potions[2];
-                default:
-                    return Game.Potions[0];
+                if (random < Game.Potions[i].RareChance)
+                    return Game.Potions[i];
             }
+            throw new Exception("Potion reward error");
         }
         public Armor ArmorReward()
         {
-            float rand = Random.Shared.NextSingle();
+            float random = Random.Shared.NextSingle();
             for (int i = 0; i < Game.Armors.Count; i++)
             {
-                if (rand < Game.Armors[i].RareChance) 
+                if (random < Game.Armors[i].RareChance) 
                     return Game.Armors[i];
             }
             throw new Exception("Armor reward error");
+        }
+        public int CoinBagReward()
+        {
+            int coinAmount = 0;
+            float random = Random.Shared.NextSingle();
+            if (random < 0.4f) coinAmount = 10;
+            else if (random < 0.7f) coinAmount = 15;
+            else if (random < 0.9f) coinAmount = 20;
+            else if (random < 1f) coinAmount = 25;
+            return coinAmount;
         }
     }
 }

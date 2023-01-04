@@ -36,6 +36,7 @@ namespace ConsoleDungeonCrawler
         public static List<Potion> Potions = new List<Potion>();
         public static List<Armor> Armors = new List<Armor>();
         public static Range FogOfWar;
+        public static bool NoPause { get; private set; } = false;
         public static void Start()
         {
             LoadItems();
@@ -63,7 +64,7 @@ namespace ConsoleDungeonCrawler
                 level.UpdateGrid();
             }
         }
-        private static void EnemiesActions(Level level, Player player)
+        public static void EnemiesActions(Level level, Player player)
         {
             foreach (Enemy enemy in level.Enemies)
             {
@@ -87,18 +88,18 @@ namespace ConsoleDungeonCrawler
         }
         private static void LoadWeapons()
         {
-            Weapons.Add(new Weapon("Fists", 1, 0.6f, 0));
-            Weapons.Add(new Weapon("Dagger", 2, 0.7f, 2));
-            Weapons.Add(new Weapon("Sword", 2, 0.8f, 4));
-            Weapons.Add(new Weapon("Spear", 3, 0.9f, 3));
-            Weapons.Add(new Weapon("Mace", 4, 0.5f, 5));
-            Weapons.Add(new Weapon("GreatAxe", 5, 0.4f, 5));
+            Weapons.Add(new Weapon("Fists", 1, 0.6f, 0,0));
+            Weapons.Add(new Weapon("Dagger", 2, 0.7f, 2,0.3f));
+            Weapons.Add(new Weapon("Sword", 2, 0.8f, 4,0.55f));
+            Weapons.Add(new Weapon("Spear", 3, 0.9f, 3,0.75f));
+            Weapons.Add(new Weapon("Mace", 4, 0.5f, 5,0.9f));
+            Weapons.Add(new Weapon("GreatAxe", 5, 0.4f, 5,1f));
         }
         private static void LoadPotions()
         {
-            Potions.Add(new Potion(ConsoleColor.Green, 2));
-            Potions.Add(new Potion(ConsoleColor.Blue, 4));
-            Potions.Add(new Potion(ConsoleColor.Magenta, 6));
+            Potions.Add(new Potion(ConsoleColor.Green, 2, 0.5f));
+            Potions.Add(new Potion(ConsoleColor.Blue, 4, 0.8f));
+            Potions.Add(new Potion(ConsoleColor.Magenta, 6, 1f));
         }
         private static void LoadArmors()
         {

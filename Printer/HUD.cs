@@ -86,6 +86,14 @@ namespace ConsoleDungeonCrawler.Printer
             Console.ForegroundColor = DefaultForeground;
             Log();
         }
+        public static void GotCoinLog(int amount)
+        {
+            Log();
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write($"You got {amount} Clover!");
+            Console.ForegroundColor = DefaultForeground;
+            Log();
+        }
         public static void OpenChestLog()
         {
             Log();
@@ -325,6 +333,7 @@ namespace ConsoleDungeonCrawler.Printer
             OwnedPotions(player);
             OwnedArmor(player);
             OwnedKeys(level);
+            OwnedCoins(player);
         }
         public static void InventoryMenu()
         {
@@ -391,7 +400,6 @@ namespace ConsoleDungeonCrawler.Printer
         }
         public static void OwnedKeys(Level level)
         {
-            
             Console.SetCursorPosition(UI.InventoryBox.PosX+1, UI.InventoryBox.PosY+16);
             Console.Write("KEYS:");
             Console.SetCursorPosition(UI.InventoryBox.PosX+1, UI.InventoryBox.PosY+17);
@@ -416,6 +424,16 @@ namespace ConsoleDungeonCrawler.Printer
             
             Console.BackgroundColor = DefaultBackground;
             Console.ForegroundColor = DefaultForeground;
+        }
+        public static void OwnedCoins(Player player)
+        {
+            Console.SetCursorPosition(UI.InventoryBox.PosX + 1, UI.InventoryBox.PosY + 19);
+            Console.Write("CLOVERS:");
+            Console.SetCursorPosition(UI.InventoryBox.PosX + 1, UI.InventoryBox.PosY + 20);
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write("♣");
+            Console.ForegroundColor = DefaultForeground;
+            Console.Write($"x{player.Coins}");
         }
         public static void InventoryNav()
         {

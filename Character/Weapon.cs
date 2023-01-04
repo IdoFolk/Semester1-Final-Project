@@ -14,13 +14,15 @@ namespace ConsoleDungeonCrawler.Character
         public int Damage { get; private set; }
         public int Durability { get; private set; }
         public float HitChance { get; private set; }
+        public float RareChance { get; private set; }
         public bool IsEquipped { get; private set; } = false;
-        public Weapon(string name, int damage, float hitChance, int durability)
+        public Weapon(string name, int damage, float hitChance, int durability, float rareChance)
         {
             Name = name;
             Damage = damage;
             HitChance = hitChance;
             Durability = durability;
+            RareChance = rareChance;
         }
         public Weapon(Weapon weapon)
         {
@@ -28,6 +30,7 @@ namespace ConsoleDungeonCrawler.Character
             Damage = weapon.Damage;
             HitChance = weapon.HitChance;
             Durability = weapon.Durability;
+            RareChance = weapon.RareChance;
         }
         public int Attack()
         {
