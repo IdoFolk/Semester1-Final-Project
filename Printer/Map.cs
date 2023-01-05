@@ -11,8 +11,8 @@ namespace ConsoleDungeonCrawler.Printer
 {
     static class Map
     {
-        private const ConsoleColor TextColor = ConsoleColor.Gray;
-        private const ConsoleColor BackgroundColor = ConsoleColor.Black;
+        private const ConsoleColor DefaultForeground = ConsoleColor.Gray;
+        private const ConsoleColor DefaultBackground = ConsoleColor.Black;
         public static void PrintMap(Level level, Player player)
         {
             if (Game.FogOfWar.On)
@@ -26,7 +26,7 @@ namespace ConsoleDungeonCrawler.Printer
                         {
                             if (player.Pos.X - Game.FogOfWar.Width < j && j < player.Pos.X + Game.FogOfWar.Width)
                             {
-                                MapLayout(level, i, j);
+                                MapLayout(level, player, i, j);
                             }
                         }
 
@@ -39,13 +39,13 @@ namespace ConsoleDungeonCrawler.Printer
                 {
                     for (int j = 0; j < level.MapLength.X; j++)
                     {
-                        MapLayout(level, i, j);
+                        MapLayout(level, player, i, j);
                     }
                     Console.WriteLine();
                 }
             }
         }
-        public static void MapLayout(Level level, int i, int j)
+        public static void MapLayout(Level level, Player player, int i, int j)
         {
             Console.SetCursorPosition(UI.MapBox.PosX + 2 + j, UI.MapBox.PosY + 1 + i);
             switch (level.Map[i, j])
@@ -53,18 +53,30 @@ namespace ConsoleDungeonCrawler.Printer
                 case Tile.Wall:
                     Wall();
                     break;
-                case Tile.Player:
-                    Avatar();
-                    break;
                 case Tile.Enemy:
                     foreach (Enemy enemy in level.Enemies)
                     {
                         if(enemy.Pos.X == j && enemy.Pos.Y == i)
-                            Enemy(enemy);
+                        {
+                            if (player.Pos.X == j && player.Pos.Y == i)
+                                Avatar();
+                            else
+                                Enemy(enemy);
+                        }
                     }
+                    break;
+                case Tile.Player:
+                    Avatar();
                     break;
                 case Tile.Chest:
                     Chest();
+                    break;
+                case Tile.Trap:
+                    foreach (Trap trap in level.Traps)
+                    {
+                        if (trap.Pos.X == j && trap.Pos.Y == i)
+                            Trap(trap);
+                    }
                     break;
                 case Tile.Coin:
                     Coin();
@@ -122,57 +134,74 @@ namespace ConsoleDungeonCrawler.Printer
             Console.BackgroundColor = ConsoleColor.DarkGray;
             Console.ForegroundColor = ConsoleColor.DarkGray;
             Console.Write("■");
-            Console.BackgroundColor = BackgroundColor;
-            Console.ForegroundColor = TextColor;
+            Console.BackgroundColor = DefaultBackground;
+            Console.ForegroundColor = DefaultForeground;
         }
         public static void Avatar()
         {
+            Console.BackgroundColor = DefaultBackground;
             Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.Write("@");
-            Console.ForegroundColor = TextColor;
+            Console.ForegroundColor = DefaultForeground;
 
         }
         public static void Enemy(Enemy enemy)
         {
+            if (enemy.IsDead())
+            {
+                Console.BackgroundColor = ConsoleColor.DarkRed;
+                Console.WriteLine(" ");
+                Console.BackgroundColor = DefaultBackground;
+                return;
+            }
             Console.ForegroundColor = enemy.Color;
             Console.Write("☻");
-            Console.ForegroundColor = TextColor;
+            Console.ForegroundColor = DefaultForeground;
         }
         public static void Entry()
         {
             Console.ForegroundColor = ConsoleColor.White;
             Console.Write("E");
-            Console.ForegroundColor = TextColor;
+            Console.ForegroundColor = DefaultForeground;
+        }
+        public static void Trap(Trap trap)
+        {
+            if (trap.Activated)
+            {
+                Console.ForegroundColor = ConsoleColor.Magenta;
+                Console.Write("#");
+                Console.ForegroundColor = DefaultForeground;
+            }
         }
         public static void Chest()
         {
             Console.ForegroundColor = ConsoleColor.White;
             Console.Write("$");
-            Console.ForegroundColor = TextColor;
+            Console.ForegroundColor = DefaultForeground;
         }
         public static void Coin()
         {
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Write("♣");
-            Console.ForegroundColor = TextColor;
+            Console.ForegroundColor = DefaultForeground;
         }
         public static void Key(Key key)
         {
             Console.ForegroundColor = key.Color;
             Console.Write("¶");
-            Console.ForegroundColor = TextColor;
+            Console.ForegroundColor = DefaultForeground;
         }
         public static void Door(Door door)
         {
             Console.ForegroundColor = door.Color;
             Console.Write("▓");
-            Console.ForegroundColor = TextColor;
+            Console.ForegroundColor = DefaultForeground;
         }
         public static void Exit()
         {
             Console.ForegroundColor = ConsoleColor.White;
             Console.Write("X");
-            Console.ForegroundColor = TextColor;
+            Console.ForegroundColor = DefaultForeground;
         }
         public static void Empty()
         {

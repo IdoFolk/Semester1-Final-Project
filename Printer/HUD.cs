@@ -86,6 +86,16 @@ namespace ConsoleDungeonCrawler.Printer
             Console.ForegroundColor = DefaultForeground;
             Log();
         }
+        public static void SteppedOnTrapLog(Trap trap)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Log();
+            Console.Write("You stepped on a trap and");
+            Log();
+            Console.Write($"received {trap.Damage} damage");
+            Log();
+            Console.ForegroundColor = DefaultForeground;
+        }
         public static void GotCoinLog(int amount)
         {
             Log();

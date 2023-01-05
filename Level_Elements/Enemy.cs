@@ -118,7 +118,7 @@ namespace ConsoleDungeonCrawler.Level_Elements
                     DontMove((Direction)direction);
                     break;
                 case Tile.Player:
-                    //FightPlayer(level, player);
+                    FightPlayer(level,player);
                     DontMove((Direction)direction);
                     break;
                 case Tile.Chest:
@@ -166,6 +166,14 @@ namespace ConsoleDungeonCrawler.Level_Elements
                 case Direction.Right:
                     Pos.X -= 1;
                     break;
+            }
+        }
+        private void FightPlayer(Level level, Player player)
+        {
+            if (Pos.X == player.Pos.X && Pos.Y == player.Pos.Y)
+            {
+                if (Inventory.IsOpen)
+                    level.Combat(this);
             }
         }
         

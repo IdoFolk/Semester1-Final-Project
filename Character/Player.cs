@@ -40,6 +40,7 @@ namespace ConsoleDungeonCrawler.Character
         }
         public int Attack()
         {
+            if (Inventory.IsOpen) return 0;
             int attack = EquippedWeapon.Attack();
             if (attack == 0) return attack;
             if (EquippedWeapon.Durability == 0)
@@ -99,7 +100,12 @@ namespace ConsoleDungeonCrawler.Character
                     GetKey(level);
                     DontMove(key);
                     break;
+                case Tile.Trap:
+                    StepOnTrap(level);
+                    DontMove(key);
+                    break;
                 case Tile.Enemy:
+                    if(EnemyIsDead(level)) break;
                     FightEnemy(level);
                     DontMove(key);
                     break;
@@ -177,13 +183,37 @@ namespace ConsoleDungeonCrawler.Character
                     break;
             }
         }
-
+        private bool EnemyIsDead(Level level)
+        {
+            bool isDead = false;
+            foreach (Enemy enemy in level.Enemies)
+            {
+                if (enemy.Pos.Y == Pos.Y && enemy.Pos.X == Pos.X)
+                {
+                    if (enemy.IsDead()) isDead = true;
+                    else isDead = false;
+                }
+            }
+            return isDead;
+        }
         private void FightEnemy(Level level)
         {
             for(int enemyNum = 0; enemyNum < level.Enemies.Count; enemyNum++)
             {
                 if (level.Enemies[enemyNum].Pos.Y == Pos.Y && level.Enemies[enemyNum].Pos.X == Pos.X)
-                    level.Combat(level.Enemies[enemyNum], enemyNum);
+                    level.Combat(level.Enemies[enemyNum]);
+            }
+        }
+        private void StepOnTrap(Level level)
+        {
+            foreach (Trap trap in level.Traps)
+            {
+                if (trap.Pos.X == Pos.X && trap.Pos.Y == Pos.Y)
+                {
+                    trap.Activate();
+                    TakeDamage(trap.Damage);
+                    HUD.SteppedOnTrapLog(trap);
+                }
             }
         }
         private void OpenChest(Level level)

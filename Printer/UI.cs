@@ -28,8 +28,8 @@ namespace ConsoleDungeonCrawler.Printer
     }
     static class UI
     {
-        private const ConsoleColor TextColor = ConsoleColor.Gray;
-        private const ConsoleColor BackgroundColor = ConsoleColor.Black;
+        private const ConsoleColor DefaultForeground = ConsoleColor.Gray;
+        private const ConsoleColor DefaultBackground = ConsoleColor.Black;
         public static UIBox MapBox;
         public static UIBox LogBox;
         public static UIBox LevelBox;
@@ -49,12 +49,12 @@ namespace ConsoleDungeonCrawler.Printer
         }
         public static void SetBoxes()
         {
-            MapBox = new UIBox("Map", 30, 6, 53, 21,BackgroundColor,TextColor);
-            LogBox = new UIBox("Log", 84, 6, 35, 32, BackgroundColor, TextColor);
-            LevelBox = new UIBox("Level", 0, 28, 29, 10, BackgroundColor, TextColor);
-            InventoryBox = new UIBox("Inventory", 0, 6, 29, 21, BackgroundColor, TextColor);
-            PlayerStatBox = new UIBox("Player Stats", 30, 28, 26, 10, BackgroundColor, TextColor);
-            EnemyStatBox = new UIBox("Enemy Stats", 57, 28, 26, 10, BackgroundColor, TextColor);
+            MapBox = new UIBox("Map", 30, 6, 53, 21,DefaultBackground,DefaultForeground);
+            LogBox = new UIBox("Log", 84, 6, 35, 32, DefaultBackground, DefaultForeground);
+            LevelBox = new UIBox("Level", 0, 28, 29, 10, DefaultBackground, DefaultForeground);
+            InventoryBox = new UIBox("Inventory", 0, 6, 29, 21, DefaultBackground, DefaultForeground);
+            PlayerStatBox = new UIBox("Player Stats", 30, 28, 26, 10, DefaultBackground, DefaultForeground);
+            EnemyStatBox = new UIBox("Enemy Stats", 57, 28, 26, 10, DefaultBackground, DefaultForeground);
         }
 
         public static void Box(UIBox box)
@@ -67,8 +67,8 @@ namespace ConsoleDungeonCrawler.Printer
             Console.WriteLine($"{box.Name}:");
             Console.SetCursorPosition(box.PosX + 1, box.PosY + 2);
             Dash(box.Width - 1);
-            Console.ForegroundColor = TextColor;
-            Console.BackgroundColor = BackgroundColor;
+            Console.ForegroundColor = DefaultForeground;
+            Console.BackgroundColor = DefaultBackground;
         }
         public static void BoxOutline(int posX, int posY, int width, int height, ConsoleColor color)
         {
@@ -89,7 +89,7 @@ namespace ConsoleDungeonCrawler.Printer
                     {
                         Console.BackgroundColor = color;
                         Console.Write(' ');
-                        Console.BackgroundColor = BackgroundColor;
+                        Console.BackgroundColor = DefaultBackground;
                     }
                 }
                 Console.WriteLine();

@@ -9,6 +9,7 @@ namespace ConsoleDungeonCrawler
         {
             Console.CursorVisible = false;
             Console.SetWindowSize(120, 40);
+            //Menu.MainMenu();
             Game.Start();
         }
     }

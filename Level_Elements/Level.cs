@@ -39,6 +39,7 @@ namespace ConsoleDungeonCrawler.Level_Elements
         public bool IsComplete { get; private set; } = false;
         public List<Enemy> Enemies { get; private set; }
         public List<Chest> Chests { get; private set; }
+        public List<Trap> Traps { get; private set; }
         public List<Door> Doors { get; private set; }
         public List<Key> Keys { get; private set; }
         public List<Key> PlayerKeys { get; private set; }
@@ -50,6 +51,7 @@ namespace ConsoleDungeonCrawler.Level_Elements
             _player = player;
             Enemies = new List<Enemy>();
             Chests = new List<Chest>();
+            Traps = new List<Trap>();
             Doors = new List<Door>();
             Keys = new List<Key>();
             PlayerKeys = new List<Key>();
@@ -100,6 +102,12 @@ namespace ConsoleDungeonCrawler.Level_Elements
                             ExitPos.Y = i;
                             ExitPos.X = j;
                             break;
+                        case '#':
+                            map[i, j] = Tile.Trap;
+                            Traps.Add(new Trap());
+                            Traps[Traps.Count - 1].Pos.Y = i;
+                            Traps[Traps.Count - 1].Pos.X = j;
+                            break;
                         case '$':
                             map[i, j] = Tile.Chest;
                             Chests.Add(new Chest());
@@ -138,6 +146,7 @@ namespace ConsoleDungeonCrawler.Level_Elements
                     if (Map[i, j] == Tile.Wall) Map[i, j] = Tile.Wall;
                     else if (Map[i, j] == Tile.Entry) Map[i, j] = Tile.Entry;
                     else if (Map[i, j] == Tile.Exit) Map[i, j] = Tile.Exit;
+                    else if (Map[i, j] == Tile.Trap) Map[i, j] = Tile.Trap;
                     else if (Map[i, j] == Tile.Coin) Map[i, j] = Tile.Coin;
                     else if (_player.Pos.Y == i && _player.Pos.X == j) Map[i, j] = Tile.Player;
                     else Map[i, j] = Tile.Empty;
@@ -195,7 +204,7 @@ namespace ConsoleDungeonCrawler.Level_Elements
         {
             IsComplete = true;
         }
-        public void Combat(Enemy enemy, int enemyNum)
+        public void Combat(Enemy enemy)
         {
             int playersAttack = _player.Attack();
             int enemysAttack = enemy.Attack(_player);
@@ -204,12 +213,7 @@ namespace ConsoleDungeonCrawler.Level_Elements
             Printer.HUD.CombatLog(_player, enemy, playersAttack);
             Printer.HUD.CombatLog(enemy, _player, enemysAttack);
             Printer.HUD.EnemyStats(enemy);
-            if (enemy.IsDead())
-            {
-                Map[enemy.Pos.Y, enemy.Pos.X] = Tile.Empty;
-                Enemies.RemoveAt(enemyNum);
-                EnemiesKilled++;
-            }
+            if (enemy.IsDead()) EnemiesKilled++;
         }
         public void OpenDoor(Door door, int doorNum)
         {

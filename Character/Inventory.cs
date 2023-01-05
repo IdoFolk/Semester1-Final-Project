@@ -14,12 +14,13 @@ namespace ConsoleDungeonCrawler.Character
     {
         public static int MenuIndicator { get; private set; }
         public static int SubMenuIndicator { get; private set; }
-        public static bool InventoryOpened { get; private set; } 
+        public static bool IsOpen { get; private set; } 
         public static void MenuNav(Player player, Level level)
         {
             Open();
-            while (InventoryOpened)
+            while (IsOpen)
             {
+                if (player.IsDead()) return;
                 HUD.InventoryNav();
                 ConsoleKey key = Console.ReadKey(true).Key;
                 switch (key)
@@ -148,11 +149,11 @@ namespace ConsoleDungeonCrawler.Character
         }
         private static void Open()
         {
-            InventoryOpened = true;
+            IsOpen = true;
         }
         private static void Close()
         {
-            InventoryOpened = false;
+            IsOpen = false;
         }
     }
 }

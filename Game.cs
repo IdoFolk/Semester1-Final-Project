@@ -36,7 +36,7 @@ namespace ConsoleDungeonCrawler
         public static List<Potion> Potions = new List<Potion>();
         public static List<Armor> Armors = new List<Armor>();
         public static Range FogOfWar;
-        public static bool NoPause { get; private set; } = false;
+        public static bool NoPause { get; private set; } = true;
         public static void Start()
         {
             LoadItems();
@@ -68,6 +68,7 @@ namespace ConsoleDungeonCrawler
         {
             foreach (Enemy enemy in level.Enemies)
             {
+                if (enemy.IsDead()) continue;
                 if (enemy.IsClose(player))
                 {
                     Direction direction = enemy.MovePattern(level, player);
@@ -77,6 +78,7 @@ namespace ConsoleDungeonCrawler
                         else if (enemy.Pos.X == enemy1.Pos.X && enemy.Pos.Y == enemy1.Pos.Y)
                             enemy.DontMove(direction);
                     }
+                    
                 }
             }
         }
