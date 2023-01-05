@@ -2,13 +2,16 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <StartupObject>ConsoleDungeonCrawler.Program</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Printer\Templates\" />
+    <Compile Remove="Printer\Templates\**" />
+    <EmbeddedResource Remove="Printer\Templates\**" />
+    <None Remove="Printer\Templates\**" />
   </ItemGroup>
 
 </Project>

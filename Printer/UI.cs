@@ -49,12 +49,12 @@ namespace ConsoleDungeonCrawler.Printer
         }
         public static void SetBoxes()
         {
-            MapBox = new UIBox("Map", 30, 6, 53, 21,DefaultBackground,DefaultForeground);
-            LogBox = new UIBox("Log", 84, 6, 35, 32, DefaultBackground, DefaultForeground);
-            LevelBox = new UIBox("Level", 0, 28, 29, 10, DefaultBackground, DefaultForeground);
-            InventoryBox = new UIBox("Inventory", 0, 6, 29, 21, DefaultBackground, DefaultForeground);
-            PlayerStatBox = new UIBox("Player Stats", 30, 28, 26, 10, DefaultBackground, DefaultForeground);
-            EnemyStatBox = new UIBox("Enemy Stats", 57, 28, 26, 10, DefaultBackground, DefaultForeground);
+            MapBox = new UIBox("Map", 70, 6, 53, 21,DefaultBackground,DefaultForeground);
+            LogBox = new UIBox("Log", 124, 6, 35, 32, DefaultBackground, DefaultForeground);
+            LevelBox = new UIBox("Level", 40, 28, 29, 10, DefaultBackground, DefaultForeground);
+            InventoryBox = new UIBox("Inventory", 40, 6, 29, 21, DefaultBackground, DefaultForeground);
+            PlayerStatBox = new UIBox("Player Stats", 70, 28, 26, 10, DefaultBackground, DefaultForeground);
+            EnemyStatBox = new UIBox("Enemy Stats", 97, 28, 26, 10, DefaultBackground, DefaultForeground);
         }
 
         public static void Box(UIBox box)
@@ -105,15 +105,15 @@ namespace ConsoleDungeonCrawler.Printer
         }
         public static void GameTitle()
         {
-            TextReader(20, 0, "C:\\Users\\עידו פולקמן\\Documents\\Tiltan\\Courses\\C# basics\\ConsoleDungeonCrawler\\Printer\\Templates\\GameTitle.txt");
+            TextReader(60, 0, "Templates\\GameTitle.txt");
         }
         public static void YouWin()
         {
-            TextReader(25, 10, "C:\\Users\\עידו פולקמן\\Documents\\Tiltan\\Courses\\C# basics\\ConsoleDungeonCrawler\\Printer\\Templates\\YouWin.txt");
+            TextReader(25, 10, "Templates\\YouWin.txt");
         }
         public static void YouDied()
         {
-            TextReader(25, 10, "C:\\Users\\עידו פולקמן\\Documents\\Tiltan\\Courses\\C# basics\\ConsoleDungeonCrawler\\Printer\\Templates\\YouDied.txt");
+            TextReader(25, 10, "Templates\\YouDied.txt");
         }
         public static void TextReader(int posX, int posY, string path)
         {

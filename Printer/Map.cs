@@ -149,9 +149,11 @@ namespace ConsoleDungeonCrawler.Printer
         {
             if (enemy.IsDead())
             {
+                Console.ForegroundColor = ConsoleColor.Black;
                 Console.BackgroundColor = ConsoleColor.DarkRed;
-                Console.WriteLine(" ");
+                Console.WriteLine("☻");
                 Console.BackgroundColor = DefaultBackground;
+                Console.ForegroundColor = DefaultForeground;
                 return;
             }
             Console.ForegroundColor = enemy.Color;

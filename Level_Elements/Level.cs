@@ -59,11 +59,11 @@ namespace ConsoleDungeonCrawler.Level_Elements
             switch (levelNum)
             {
                 case 1:
-                    char[,] mapSeed1 = MapBuilder.ReadTextFile("C:\\Users\\עידו פולקמן\\Documents\\Tiltan\\Courses\\C# basics\\ConsoleDungeonCrawler\\Level_Elements\\Level_Presets\\Level_1.txt");
+                    char[,] mapSeed1 = MapBuilder.ReadTextFile("Level_Presets\\Level_1.txt");
                     SetLevel(mapSeed1);
                     break;
                 case 2:
-                    char[,] mapSeed2 = MapBuilder.ReadTextFile("C:\\Users\\עידו פולקמן\\Documents\\Tiltan\\Courses\\C# basics\\ConsoleDungeonCrawler\\Level_Elements\\Level_Presets\\Level_2.txt");
+                    char[,] mapSeed2 = MapBuilder.ReadTextFile("Level_Presets\\Level_2.txt");
                     SetLevel(mapSeed2);
                     
                     break;

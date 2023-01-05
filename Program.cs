@@ -1,4 +1,5 @@
 ﻿using ConsoleDungeonCrawler.Printer;
+using System.Runtime.InteropServices;
 
 namespace ConsoleDungeonCrawler
 {
@@ -7,11 +8,12 @@ namespace ConsoleDungeonCrawler
 
         static void Main(string[] args)
         {
-            Console.CursorVisible = false;
-            Console.SetWindowSize(120, 40);
+            Console.SetWindowSize(Console.LargestWindowWidth, Console.LargestWindowHeight);
+            Console.SetWindowPosition(0,0);
             //Menu.MainMenu();
             Game.Start();
         }
     }
 }
+
 

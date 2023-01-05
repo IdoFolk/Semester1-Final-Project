@@ -57,6 +57,7 @@ namespace ConsoleDungeonCrawler
         {
             while (!(level.IsComplete || player.IsDead()))
             {
+                Console.CursorVisible = false;
                 Printer.HUD.GameState(level, player);
                 EnemiesActions(level, player);
                 level.UpdateGrid();
