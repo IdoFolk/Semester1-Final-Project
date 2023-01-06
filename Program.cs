@@ -8,12 +8,14 @@ namespace ConsoleDungeonCrawler
 
         static void Main(string[] args)
         {
-            Console.SetWindowSize(Console.LargestWindowWidth, Console.LargestWindowHeight);
             Console.SetWindowPosition(0,0);
-            //Menu.MainMenu();
-            Game.Start();
+            Console.SetBufferSize(200, 41);
+            Console.SetWindowSize(Console.LargestWindowWidth, Console.LargestWindowHeight);
+            while (true)
+            {
+                Menu.MainMenu();
+            }
         }
     }
+
 }
-
-

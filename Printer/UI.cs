@@ -28,17 +28,19 @@ namespace ConsoleDungeonCrawler.Printer
     }
     static class UI
     {
-        private const ConsoleColor DefaultForeground = ConsoleColor.Gray;
-        private const ConsoleColor DefaultBackground = ConsoleColor.Black;
+        private static ConsoleColor DefaultForeground = ConsoleColor.Gray;
+        private static ConsoleColor DefaultBackground = ConsoleColor.Black;
         public static UIBox MapBox;
         public static UIBox LogBox;
         public static UIBox LevelBox;
         public static UIBox PlayerStatBox;
         public static UIBox EnemyStatBox;
         public static UIBox InventoryBox;
+        public static int StartingPosX { get; private set; } = 50;
+        public static int StartingPosY { get; private set; } = 3;
         public static void GameUI()
         {
-            GameTitle();
+            UI.GameTitle(UI.StartingPosX+2, 3);
             SetBoxes();
             Box(MapBox);
             Box(LogBox);
@@ -49,12 +51,12 @@ namespace ConsoleDungeonCrawler.Printer
         }
         public static void SetBoxes()
         {
-            MapBox = new UIBox("Map", 70, 6, 53, 21,DefaultBackground,DefaultForeground);
-            LogBox = new UIBox("Log", 124, 6, 35, 32, DefaultBackground, DefaultForeground);
-            LevelBox = new UIBox("Level", 40, 28, 29, 10, DefaultBackground, DefaultForeground);
-            InventoryBox = new UIBox("Inventory", 40, 6, 29, 21, DefaultBackground, DefaultForeground);
-            PlayerStatBox = new UIBox("Player Stats", 70, 28, 26, 10, DefaultBackground, DefaultForeground);
-            EnemyStatBox = new UIBox("Enemy Stats", 97, 28, 26, 10, DefaultBackground, DefaultForeground);
+            MapBox = new UIBox("Map", 30 + StartingPosX, 6+ StartingPosY, 53, 21,DefaultBackground,DefaultForeground);
+            LogBox = new UIBox("Log", 84 + StartingPosX, 6+ StartingPosY, 40, 32, DefaultBackground, DefaultForeground);
+            LevelBox = new UIBox("Level", 0 + StartingPosX , 28+ StartingPosY, 29, 10, DefaultBackground, DefaultForeground);
+            InventoryBox = new UIBox("Inventory", 0 + StartingPosX, 6+ StartingPosY, 29, 21, DefaultBackground, DefaultForeground);
+            PlayerStatBox = new UIBox($"{Game.PlayersName} Stats", 30 + StartingPosX, 28+ StartingPosY, 26, 10, DefaultBackground, DefaultForeground);
+            EnemyStatBox = new UIBox("Enemy Stats", 57 + StartingPosX, 28+ StartingPosY, 26, 10, DefaultBackground, DefaultForeground);
         }
 
         public static void Box(UIBox box)
@@ -103,17 +105,17 @@ namespace ConsoleDungeonCrawler.Printer
             }
             Console.WriteLine();
         }
-        public static void GameTitle()
+        public static void GameTitle(int posX, int posY)
         {
-            TextReader(60, 0, "Templates\\GameTitle.txt");
+            TextReader(posX, posY, "Templates\\GameTitle.txt");
         }
-        public static void YouWin()
+        public static void YouWin(int posX, int posY)
         {
-            TextReader(25, 10, "Templates\\YouWin.txt");
+            TextReader(posX, posY, "Templates\\YouWin.txt");
         }
-        public static void YouDied()
+        public static void YouDied(int posX, int posY)
         {
-            TextReader(25, 10, "Templates\\YouDied.txt");
+            TextReader(posX, posY, "Templates\\YouDied.txt");
         }
         public static void TextReader(int posX, int posY, string path)
         {

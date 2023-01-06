@@ -11,12 +11,19 @@ namespace ConsoleDungeonCrawler.Printer
 {
     static class HUD
     {
-        private const ConsoleColor DefaultForeground = ConsoleColor.Gray;
-        private const ConsoleColor DefaultBackground = ConsoleColor.Black;
+        private static ConsoleColor DefaultForeground = ConsoleColor.Gray;
+        private static ConsoleColor DefaultBackground = ConsoleColor.Black;
         private static int _logIndicator;
+        private static bool _skipCutscene;
         public static void GameState(Level level, Player player)
         {
             Map.PrintMap(level, player);
+            LevelStats(level);
+            PlayerStats(player);
+            PrintInventory(player, level);
+        }
+        public static void GameStatePaused(Level level, Player player)
+        {
             LevelStats(level);
             PlayerStats(player);
             PrintInventory(player, level);
@@ -70,6 +77,38 @@ namespace ConsoleDungeonCrawler.Printer
             Log();
 
         }
+        public static void CombatLog(Player player, DBD dor, int attack)
+        {
+            if (attack == 0)
+            {
+                Log();
+                Console.Write($"{player.Name} Misses...");
+                return;
+
+            }
+            Console.ForegroundColor = ConsoleColor.Red;
+            Log();
+            Console.Write($"{player.Name} attacks {dor.Name} for {attack} damage.");
+            Console.ForegroundColor = DefaultForeground;
+
+        }
+        public static void CombatLog(DBD dor, Player player, int attack)
+        {
+            if (attack == 0)
+            {
+                Log();
+                Console.Write($"{dor.Name} Misses...");
+                Log();
+                return;
+            }
+            Console.ForegroundColor = ConsoleColor.Red;
+            Log();
+            Console.Write($"{dor.Name} attacks {player.Name} for {attack} damage.");
+            Console.ForegroundColor = DefaultForeground;
+            Log();
+
+        }
+
         public static void OpenDoorLog(Door door)
         {
             Log();
@@ -90,7 +129,7 @@ namespace ConsoleDungeonCrawler.Printer
         {
             Console.ForegroundColor = ConsoleColor.Red;
             Log();
-            Console.Write("You stepped on a trap and");
+            Console.Write($"{Game.PlayersName} stepped on a piece of art and");
             Log();
             Console.Write($"received {trap.Damage} damage");
             Log();
@@ -107,7 +146,7 @@ namespace ConsoleDungeonCrawler.Printer
         public static void OpenChestLog()
         {
             Log();
-            Console.Write("You have opened a chest and got:");
+            Console.Write("You have opened a bag and got:");
         }
         public static void GotWeaponLog(Weapon weapon)
         {
@@ -120,7 +159,9 @@ namespace ConsoleDungeonCrawler.Printer
         {
             Log();
             Console.ForegroundColor = potion.Color;
-            Console.Write($"A {potion.Name} Potion!");
+            if (potion.Name == "Water")
+                Console.Write($"A bottle of {potion.Name}!");
+            else Console.Write($"A {potion.Name}!");
             Console.ForegroundColor = DefaultForeground;
             Log();
 
@@ -135,6 +176,27 @@ namespace ConsoleDungeonCrawler.Printer
         {
             Log();
             Console.Write($"{weapon.Name} broke...");
+            Log();
+        }
+        public static void UsePotionLog(Potion potion)
+        {
+            Log();
+            Console.ForegroundColor = potion.Color;
+            switch (potion.Name)
+            {
+                case "Water":
+                    Console.Write("You drank some water and healed for");
+                    break;
+                case "Snack":
+                    Console.Write("You ate a snack and healed for");
+                    break;
+                case "Sandwich":
+                    Console.Write("You ate a sandwich and healed for");
+                    break;
+            }
+            Log();
+            Console.Write($"{potion.Heal} Hearts");
+            Console.ForegroundColor = DefaultForeground;
             Log();
         }
         public static void DropWeaponLog(Weapon weapon)
@@ -182,10 +244,29 @@ namespace ConsoleDungeonCrawler.Printer
             Console.Write("Limit Reached...");
             Log();
         }
+        public static void ChangeCode(Player player)
+        {
+            if (player.HasScript)
+            {
+                Log();
+                Console.Write("Success! You changed the code!");
+                Log();
+                Console.Write("Dors HP is now 10");
+
+            }
+            else
+            {
+                Log();
+                Console.Write("You dont have the necessary Script");
+                Log();
+                Console.Write("in order to change the code");
+            }
+            Log();
+        }
         public static void LevelStats(Level level)
         {
             Console.SetCursorPosition(UI.LevelBox.PosX + 1, UI.LevelBox.PosY + 3);
-            Console.WriteLine($"Level: {level.Number}");
+            Console.WriteLine($"Level: {level.Name}");
             Console.SetCursorPosition(UI.LevelBox.PosX + 1, UI.LevelBox.PosY + 4);
             Console.WriteLine($"Enemies Killed: {level.EnemiesKilled}");
         }
@@ -335,6 +416,33 @@ namespace ConsoleDungeonCrawler.Printer
             }
             Console.ForegroundColor = DefaultForeground;
 
+        }
+        public static void EnemyStats(DBD dor)
+        {
+
+
+            Console.SetCursorPosition(UI.EnemyStatBox.PosX + 1, UI.EnemyStatBox.PosY + 3);
+            Console.Write("Dors HP: ");
+            Console.ForegroundColor = ConsoleColor.Black;
+            Console.Write("♥♥♥♥♥♥♥♥♥♥");
+            Console.SetCursorPosition(UI.EnemyStatBox.PosX + 10, UI.EnemyStatBox.PosY + 3);
+            Console.ForegroundColor = ConsoleColor.Red;
+            
+            if (dor.CurrentHP > 10)
+            {
+                Console.Write("♥");
+                Console.ForegroundColor = DefaultForeground;
+                Console.Write($"x{ dor.CurrentHP}"); 
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                for (int i = 0; i < dor.CurrentHP; i++)
+                {
+                    Console.Write("♥");
+                }
+            } 
+            Console.ForegroundColor = DefaultForeground;
         }
         public static void PrintInventory(Player player, Level level)
         {
@@ -562,6 +670,56 @@ namespace ConsoleDungeonCrawler.Printer
                     Console.Write(" ");
                 }
             }
+        }
+        public static void StartingCutscene()
+        {
+            Console.Clear();
+            _skipCutscene = false;
+            bool starting = true;
+            CutsceneDialog("Once Upon A Time...", starting);
+            CutsceneDialog("Tiltan Hosted Her Annual Global GameJam", starting);
+            CutsceneDialog($"{Game.PlayersName} Was So Exited To Finally Participate", starting);
+            CutsceneDialog("That He Could Not Sleep All Night", starting);
+            CutsceneDialog("And When The GameJam Finally Started", starting);
+            CutsceneDialog($"{Game.PlayersName} Fell Asleep After 2 Hours of Work", starting);
+            CutsceneDialog("Only Then...", starting);
+            CutsceneDialog("He Woke Up Into His Worst Nightmare", starting);
+            CutsceneDialog("All of The Students Turned Into Zombies!", starting);
+            CutsceneDialog("You Have To Escape The College NOW!", starting);
+        }
+        public static void EndingCutscene(DBD dor)
+        {
+            _skipCutscene = false;
+            bool ending = false;
+            Console.SetCursorPosition(UI.MapBox.PosX + 26, UI.MapBox.PosY + 17);
+            Map.Enemy(dor);
+            Console.SetCursorPosition(47 + UI.StartingPosX, PrintMenu.ButtonPosY - 3);
+            Console.Write("Dor Ben Dor:");
+            CutsceneDialog("Ha Ha Ha", ending);
+            CutsceneDialog("You Fool!", ending);
+            CutsceneDialog("You Can't Escape Me!", ending);
+            
+        }
+        private static void CutsceneDialog(string text, bool starting)
+        {
+            if (_skipCutscene) return;
+            if (starting) Console.Clear();
+            if (starting) Console.SetCursorPosition(40 + UI.StartingPosX, PrintMenu.ButtonPosY - 2);
+            else Console.SetCursorPosition(47 + UI.StartingPosX, PrintMenu.ButtonPosY - 2);
+            Console.Write(text);
+            if (SkipCutsceneDialog()) return;
+        }
+        private static bool SkipCutsceneDialog()
+        {
+            while (!_skipCutscene)
+            {
+                ConsoleKey key = Console.ReadKey(true).Key;
+                if (key == ConsoleKey.Enter) return true;
+                else if (key == ConsoleKey.Escape) _skipCutscene = true;
+                Console.SetCursorPosition(47 + UI.StartingPosX, PrintMenu.ButtonPosY + 4);
+                Console.Write("Press Enter To Skip");
+            }
+            return true;
         }
 
     }

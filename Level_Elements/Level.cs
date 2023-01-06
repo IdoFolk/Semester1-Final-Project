@@ -21,6 +21,7 @@ namespace ConsoleDungeonCrawler.Level_Elements
         Trap,
         Key,
         Door,
+        Computer,
         Entry,
         Exit
     }
@@ -31,7 +32,7 @@ namespace ConsoleDungeonCrawler.Level_Elements
     }
     class Level
     {
-        public int Number { get; private set; }
+        public string Name { get; private set; }
         public Vector2 MapLength;
         public Vector2 EntryPos = new Vector2();
         public Vector2 ExitPos = new Vector2();
@@ -43,11 +44,12 @@ namespace ConsoleDungeonCrawler.Level_Elements
         public List<Door> Doors { get; private set; }
         public List<Key> Keys { get; private set; }
         public List<Key> PlayerKeys { get; private set; }
+        public DBD Dor { get; private set; }
         public int EnemiesKilled { get; private set; }
         private Player _player;
         public Level(int levelNum, Player player)
         {
-            Number = levelNum;
+            SetLevelName(levelNum);
             _player = player;
             Enemies = new List<Enemy>();
             Chests = new List<Chest>();
@@ -65,7 +67,11 @@ namespace ConsoleDungeonCrawler.Level_Elements
                 case 2:
                     char[,] mapSeed2 = MapBuilder.ReadTextFile("Level_Presets\\Level_2.txt");
                     SetLevel(mapSeed2);
-                    
+                    break;
+                case 10:
+                    Dor = new DBD(ConsoleColor.Cyan,3,10000);
+                    char[,] mapSeed10 = MapBuilder.ReadTextFile("Level_Presets\\Level_10.txt");
+                    SetLevel(mapSeed10);
                     break;
                 default:
                     Console.WriteLine("level not loaded...");
@@ -114,7 +120,7 @@ namespace ConsoleDungeonCrawler.Level_Elements
                             Chests[Chests.Count - 1].Pos.Y = i;
                             Chests[Chests.Count - 1].Pos.X = j;
                             break;
-                        case '▓':
+                        case 'D':
                             map[i, j] = Tile.Door;
                             Doors.Add(new Door());
                             Doors[Doors.Count - 1].Pos.Y = i;
@@ -132,6 +138,15 @@ namespace ConsoleDungeonCrawler.Level_Elements
                             Enemies[Enemies.Count - 1].Pos.Y = i;
                             Enemies[Enemies.Count - 1].Pos.X = j;
                             break;
+                        case 'B':
+                            map[i, j] = Tile.Enemy;
+                            Dor.Pos.Y = i;
+                            Dor.Pos.X = j;
+                            break;
+                        case 'C':
+                            map[i, j] = Tile.Computer;
+                            break;
+
                     }
                 }
             }
@@ -148,12 +163,14 @@ namespace ConsoleDungeonCrawler.Level_Elements
                     else if (Map[i, j] == Tile.Exit) Map[i, j] = Tile.Exit;
                     else if (Map[i, j] == Tile.Trap) Map[i, j] = Tile.Trap;
                     else if (Map[i, j] == Tile.Coin) Map[i, j] = Tile.Coin;
+                    else if (Map[i, j] == Tile.Computer) Map[i, j] = Tile.Computer;
                     else if (_player.Pos.Y == i && _player.Pos.X == j) Map[i, j] = Tile.Player;
                     else Map[i, j] = Tile.Empty;
                     CheckInstances(Keys, i, j);
                     CheckInstances(Doors, i, j);
                     CheckInstances(Enemies, i, j);
                     CheckInstances(Chests, i, j);
+                    CheckInstances(Dor, i, j);
                 }
             }
 
@@ -165,6 +182,11 @@ namespace ConsoleDungeonCrawler.Level_Elements
                 if (enemy.Pos.Y == i && enemy.Pos.X == j)
                     Map[i, j] = Tile.Enemy;
             }
+        }
+        public void CheckInstances(DBD dor, int i, int j)
+        {
+                if (dor.Pos.Y == i && dor.Pos.X == j)
+                    Map[i, j] = Tile.Enemy;
         }
         public void CheckInstances(List<Chest> chests, int i, int j)
         {
@@ -215,11 +237,57 @@ namespace ConsoleDungeonCrawler.Level_Elements
             Printer.HUD.EnemyStats(enemy);
             if (enemy.IsDead()) EnemiesKilled++;
         }
+        public void Combat(DBD dor)
+        {
+            int playersAttack = _player.Attack();
+            int enemysAttack = dor.Attack(_player);
+            dor.TakeDamage(playersAttack);
+            _player.TakeDamage(enemysAttack);
+            Printer.HUD.CombatLog(_player, dor, playersAttack);
+            Printer.HUD.CombatLog(dor, _player, enemysAttack);
+            Printer.HUD.EnemyStats(dor);
+            if (dor.IsDead()) EnemiesKilled++;
+        }
         public void OpenDoor(Door door, int doorNum)
         {
             Map[door.Pos.Y, door.Pos.X] = Tile.Empty;
             Doors.RemoveAt(doorNum);
         }
-        
+        private void SetLevelName(int levelNum)
+        {
+            switch (levelNum)
+            {
+                case 1:
+                    Name = "1 - Roof";
+                    break;
+                case 2:
+                    Name = "2 - Library";
+                    break;
+                case 3:
+                    Name = "3 - Magenta Class";
+                    break;
+                case 4:
+                    Name = "4 - Yellow Class";
+                    break;
+                case 5:
+                    Name = "5 - Vending Machine";
+                    break;
+                case 6:
+                    Name = "6 - pedagogi";
+                    break;
+                case 7:
+                    Name = "7 - Classroom Studio";
+                    break;
+                case 8:
+                    Name = "8 - CloverBite Studios";
+                    break;
+                case 9:
+                    Name = "9 - Forgotten Cafeteria";
+                    break;
+                case 10:
+                    Name = "10 - Ground Floor";
+                    break;
+            }
+        }
     }
 }

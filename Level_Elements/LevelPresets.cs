@@ -13,8 +13,9 @@ namespace ConsoleDungeonCrawler.Level_Elements
 {
     enum EnemyType
     {
-        Goblin,
-        Orc
+        Freshmen,
+        Junior,
+        Senior
     }
     static class LevelPresets
     {
@@ -33,8 +34,8 @@ namespace ConsoleDungeonCrawler.Level_Elements
             switch (levelNum)
             {
                 case 1:
-                    SetEnemies(EnemyType.Goblin, 3);
-                    SetEnemies(EnemyType.Orc, 2);
+                    SetEnemies(EnemyType.Freshmen, 3);
+                    SetEnemies(EnemyType.Junior, 2);
                     SetDoor(ConsoleColor.Blue);
                     SetDoor(ConsoleColor.Red);
                     SetDoor(ConsoleColor.Yellow);
@@ -44,8 +45,13 @@ namespace ConsoleDungeonCrawler.Level_Elements
                     ResetIndicator();
                     break;
                 case 2:
-                    SetEnemies(EnemyType.Goblin, 2);
-                    SetEnemies(EnemyType.Orc, 2);
+                    SetEnemies(EnemyType.Freshmen, 2);
+                    SetEnemies(EnemyType.Junior, 2);
+                    ResetIndicator();
+                    break;
+                case 10:
+                    SetDoor(ConsoleColor.Red);
+                    SetKey(ConsoleColor.Red);
                     ResetIndicator();
                     break;
             }
@@ -75,8 +81,8 @@ namespace ConsoleDungeonCrawler.Level_Elements
             {
                 switch (enemyType)
                 {
-                    case EnemyType.Goblin:
-                        _level.Enemies[enemy].Name = "Goblin";
+                    case EnemyType.Freshmen:
+                        _level.Enemies[enemy].Name = "Freshmen";
                         _level.Enemies[enemy].Id = enemy;
                         _level.Enemies[enemy].Color = ConsoleColor.DarkGreen;
                         _level.Enemies[enemy].MaxHP = 2;
@@ -84,17 +90,25 @@ namespace ConsoleDungeonCrawler.Level_Elements
                         _level.Enemies[enemy].Damage = 1;
                         _level.Enemies[enemy].ChaseChance = 0.9f;
                         break;
-                    case EnemyType.Orc:
-                        _level.Enemies[enemy].Name = "Orc";
+                    case EnemyType.Junior:
+                        _level.Enemies[enemy].Name = "Junior";
                         _level.Enemies[enemy].Id = enemy;
-                        _level.Enemies[enemy].Color = ConsoleColor.DarkRed;
+                        _level.Enemies[enemy].Color = ConsoleColor.DarkYellow;
                         _level.Enemies[enemy].MaxHP = 4;
                         _level.Enemies[enemy].CurrentHP = _level.Enemies[enemy].MaxHP;
-                        _level.Enemies[enemy].Damage = 1;
+                        _level.Enemies[enemy].Damage = 2;
                         _level.Enemies[enemy].ChaseChance = 0.9f;
                         break;
-                    default:
+                    case EnemyType.Senior:
+                        _level.Enemies[enemy].Name = "Senior";
+                        _level.Enemies[enemy].Id = enemy;
+                        _level.Enemies[enemy].Color = ConsoleColor.DarkRed;
+                        _level.Enemies[enemy].MaxHP = 6;
+                        _level.Enemies[enemy].CurrentHP = _level.Enemies[enemy].MaxHP;
+                        _level.Enemies[enemy].Damage = 2;
+                        _level.Enemies[enemy].ChaseChance = 0.9f;
                         break;
+
                 }
                 _enemyIndicator++;
             }

@@ -14,6 +14,7 @@ namespace ConsoleDungeonCrawler.Character
         public Vector2 Pos = new Vector2();
         public Range AgroRange { get; private set; }
         public string Name { get; private set; }
+        public ConsoleColor Color { get; private set; }
         public int MaxHP { get; private set; }
         public int CurrentHP { get; private set; }
         //Inventory:
@@ -25,9 +26,11 @@ namespace ConsoleDungeonCrawler.Character
         public Weapon EquippedWeapon { get; private set; }
         public Weapon DefaultWeapon { get; private set; }
         public int Coins { get; private set; }
-        public Player(string name, int hp)
+        public bool HasScript { get; private set; }
+        public Player(string name,ConsoleColor color, int hp)
         {
             Name = name;
+            Color = color;
             MaxHP = hp;
             CurrentHP = MaxHP;
             DefaultWeapon = Game.Weapons[0];
@@ -85,6 +88,7 @@ namespace ConsoleDungeonCrawler.Character
         public void Action(Level level)
         {
             ConsoleKey key = Console.ReadKey(true).Key;
+            Pause(key, level);
             OpenInventory(key, level);
             Move(key);
             switch (level.Map[Pos.Y, Pos.X])
@@ -115,6 +119,10 @@ namespace ConsoleDungeonCrawler.Character
                     break;
                 case Tile.Coin:
                     GetCoin(level);
+                    DontMove(key);
+                    break;
+                case Tile.Computer:
+                    TryToChangeCode(level);
                     DontMove(key);
                     break;
                 case Tile.Exit:
@@ -202,6 +210,14 @@ namespace ConsoleDungeonCrawler.Character
             {
                 if (level.Enemies[enemyNum].Pos.Y == Pos.Y && level.Enemies[enemyNum].Pos.X == Pos.X)
                     level.Combat(level.Enemies[enemyNum]);
+            }
+            if (level.Dor != null)
+            {
+                if (level.Dor.Pos.Y == Pos.Y && level.Dor.Pos.X == Pos.X)
+                {
+                    level.Dor.Activate();
+                    level.Combat(level.Dor);
+                }
             }
         }
         private void StepOnTrap(Level level)
@@ -356,6 +372,7 @@ namespace ConsoleDungeonCrawler.Character
         public void UsePotion(Potion potion)
         {
             Heal(potion.Heal);
+            HUD.UsePotionLog(potion);
             PlayerPotions.Remove(potion);
         }
         public void DropWeapon(Weapon weapon)
@@ -372,6 +389,21 @@ namespace ConsoleDungeonCrawler.Character
         {
             PlayerArmors.Remove(armor);
             HUD.DropArmorLog(armor);
+        }
+        private void Pause(ConsoleKey key, Level level)
+        {
+            if(key == ConsoleKey.Escape)
+                Menu.PauseMenu(level,this);
+        }
+        private void TryToChangeCode(Level level)
+        {
+            if (HasScript)
+            {
+                HUD.ChangeCode(this);
+                level.Dor.CurrentHP = 10;
+            }
+            else
+                HUD.ChangeCode(this);
         }
 
     }

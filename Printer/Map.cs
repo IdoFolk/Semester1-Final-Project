@@ -11,8 +11,8 @@ namespace ConsoleDungeonCrawler.Printer
 {
     static class Map
     {
-        private const ConsoleColor DefaultForeground = ConsoleColor.Gray;
-        private const ConsoleColor DefaultBackground = ConsoleColor.Black;
+        private static ConsoleColor DefaultForeground = ConsoleColor.Gray;
+        private static ConsoleColor DefaultBackground = ConsoleColor.Black;
         public static void PrintMap(Level level, Player player)
         {
             if (Game.FogOfWar.On)
@@ -54,19 +54,21 @@ namespace ConsoleDungeonCrawler.Printer
                     Wall();
                     break;
                 case Tile.Enemy:
+                    if (level.Dor.Pos.Y == i && level.Dor.Pos.X == j)
+                        Enemy(level.Dor);
                     foreach (Enemy enemy in level.Enemies)
                     {
                         if(enemy.Pos.X == j && enemy.Pos.Y == i)
                         {
                             if (player.Pos.X == j && player.Pos.Y == i)
-                                Avatar();
+                                Avatar(player);
                             else
                                 Enemy(enemy);
                         }
                     }
                     break;
                 case Tile.Player:
-                    Avatar();
+                    Avatar(player);
                     break;
                 case Tile.Chest:
                     Chest();
@@ -80,6 +82,9 @@ namespace ConsoleDungeonCrawler.Printer
                     break;
                 case Tile.Coin:
                     Coin();
+                    break;
+                case Tile.Computer:
+                    Computer();
                     break;
                 case Tile.Key:
                     foreach (Key key in level.Keys)
@@ -137,10 +142,10 @@ namespace ConsoleDungeonCrawler.Printer
             Console.BackgroundColor = DefaultBackground;
             Console.ForegroundColor = DefaultForeground;
         }
-        public static void Avatar()
+        public static void Avatar(Player player)
         {
             Console.BackgroundColor = DefaultBackground;
-            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.ForegroundColor = player.Color;
             Console.Write("@");
             Console.ForegroundColor = DefaultForeground;
 
@@ -159,6 +164,24 @@ namespace ConsoleDungeonCrawler.Printer
             Console.ForegroundColor = enemy.Color;
             Console.Write("☻");
             Console.ForegroundColor = DefaultForeground;
+        }
+        public static void Enemy(DBD dor)
+        {
+            if (dor.Activated)
+            {
+                if (dor.IsDead())
+                {
+                    Console.ForegroundColor = ConsoleColor.Black;
+                    Console.BackgroundColor = ConsoleColor.DarkRed;
+                    Console.WriteLine("☻");
+                    Console.BackgroundColor = DefaultBackground;
+                    Console.ForegroundColor = DefaultForeground;
+                    return;
+                }
+                Console.ForegroundColor = dor.Color;
+                Console.Write("☻");
+                Console.ForegroundColor = DefaultForeground;
+            }
         }
         public static void Entry()
         {
@@ -185,6 +208,12 @@ namespace ConsoleDungeonCrawler.Printer
         {
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Write("♣");
+            Console.ForegroundColor = DefaultForeground;
+        }
+        public static void Computer()
+        {
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
+            Console.Write("■");
             Console.ForegroundColor = DefaultForeground;
         }
         public static void Key(Key key)
