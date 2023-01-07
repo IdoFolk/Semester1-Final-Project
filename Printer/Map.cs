@@ -54,8 +54,11 @@ namespace ConsoleDungeonCrawler.Printer
                     Wall();
                     break;
                 case Tile.Enemy:
-                    if (level.Dor.Pos.Y == i && level.Dor.Pos.X == j)
+                    if (level.Dor != null)
+                    {
+                        if (level.Dor.Pos.Y == i && level.Dor.Pos.X == j)
                         Enemy(level.Dor);
+                    }
                     foreach (Enemy enemy in level.Enemies)
                     {
                         if(enemy.Pos.X == j && enemy.Pos.Y == i)

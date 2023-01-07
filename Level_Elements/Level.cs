@@ -185,8 +185,11 @@ namespace ConsoleDungeonCrawler.Level_Elements
         }
         public void CheckInstances(DBD dor, int i, int j)
         {
+            if (Dor != null)
+            {
                 if (dor.Pos.Y == i && dor.Pos.X == j)
                     Map[i, j] = Tile.Enemy;
+            }
         }
         public void CheckInstances(List<Chest> chests, int i, int j)
         {

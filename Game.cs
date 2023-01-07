@@ -54,7 +54,7 @@ namespace ConsoleDungeonCrawler
             HUD.StartingCutscene();
             LoadItems();
             Player player = new Player(PlayersName,AvatarsColor, 10);
-            for (int i = 9; i < LevelNumber.Length; i++) //Level Gameplay
+            for (int i = 0; i < LevelNumber.Length; i++) //Level Gameplay
             {
                 if (Menu.CloseGame) return;
                 Level level = LevelPresets.SetLevel(LevelNumber[i], player);
