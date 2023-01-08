@@ -40,7 +40,7 @@ namespace ConsoleDungeonCrawler
     {
         public static string PlayersName { get; private set; } = "Student";
         public static ConsoleColor AvatarsColor { get; private set; } = ConsoleColor.DarkYellow;
-        public static readonly int[] LevelNumber = new int[10] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+        public static readonly int[] LevelNumber = new int[] { 1,2, 10};
         public static List<Weapon> Weapons = new List<Weapon>();
         public static List<Potion> Potions = new List<Potion>();
         public static List<Armor> Armors = new List<Armor>();
@@ -143,7 +143,15 @@ namespace ConsoleDungeonCrawler
             else
             {
                 Console.Clear();
-                Printer.UI.YouWin(20 + UI.StartingPosX, 10);
+                PrintMenu.Clover(37 + UI.StartingPosX, 10);
+                Printer.UI.YouWin(34 + UI.StartingPosX, 32);
+                Console.SetCursorPosition(45 + UI.StartingPosX, 7);
+                Console.Write("Press Enter To Return To Main Menu...");
+                while (true)
+                {
+                    ConsoleKey key = Console.ReadKey(true).Key;
+                    if (key == ConsoleKey.Enter) return;
+                }
             }
         }
         public static void ChangePlayerName()

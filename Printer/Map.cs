@@ -56,7 +56,9 @@ namespace ConsoleDungeonCrawler.Printer
                 case Tile.Enemy:
                     if (level.Dor != null)
                     {
-                        if (level.Dor.Pos.Y == i && level.Dor.Pos.X == j)
+                        if (player.Pos.X == j && player.Pos.Y == i)
+                            Avatar(player);
+                        else if (level.Dor.Pos.Y == i && level.Dor.Pos.X == j)
                         Enemy(level.Dor);
                     }
                     foreach (Enemy enemy in level.Enemies)

@@ -26,7 +26,7 @@ namespace ConsoleDungeonCrawler.Character
         public Weapon EquippedWeapon { get; private set; }
         public Weapon DefaultWeapon { get; private set; }
         public int Coins { get; private set; }
-        public bool HasScript { get; private set; }
+        public bool HasScript { get; private set; } = true;
         public Player(string name,ConsoleColor color, int hp)
         {
             Name = name;
@@ -39,7 +39,7 @@ namespace ConsoleDungeonCrawler.Character
             DefaultArmor = Game.Armors[0];
             PlayerArmors.Add(DefaultArmor); //starting armor
             EquipArmor(DefaultArmor);
-            AgroRange = new Range(10,5);
+            AgroRange = new Range(7,4);
         }
         public int Attack()
         {
@@ -114,7 +114,7 @@ namespace ConsoleDungeonCrawler.Character
                     DontMove(key);
                     break;
                 case Tile.Chest:
-                    OpenChest(level);
+                    level.OpenChest();
                     DontMove(key);
                     break;
                 case Tile.Coin:
@@ -194,6 +194,14 @@ namespace ConsoleDungeonCrawler.Character
         private bool EnemyIsDead(Level level)
         {
             bool isDead = false;
+            if (level.Dor != null)
+            {
+                if (level.Dor.Pos.Y == Pos.Y && level.Dor.Pos.X == Pos.X)
+                {
+                    if (level.Dor.IsDead()) isDead = true;
+                    else isDead = false;
+                }
+            }
             foreach (Enemy enemy in level.Enemies)
             {
                 if (enemy.Pos.Y == Pos.Y && enemy.Pos.X == Pos.X)
@@ -215,7 +223,7 @@ namespace ConsoleDungeonCrawler.Character
             {
                 if (level.Dor.Pos.Y == Pos.Y && level.Dor.Pos.X == Pos.X)
                 {
-                    level.Dor.Activate();
+                    if(!level.Dor.Activated) level.Dor.Activate();
                     level.Combat(level.Dor);
                 }
             }
@@ -232,20 +240,7 @@ namespace ConsoleDungeonCrawler.Character
                 }
             }
         }
-        private void OpenChest(Level level)
-        {
-            for (int chestNum = 0; chestNum < level.Chests.Count; chestNum++)
-            {
-                Chest chest = level.Chests[chestNum]; 
-                if (level.Chests[chestNum].Pos.Y == Pos.Y && level.Chests[chestNum].Pos.X == Pos.X)
-                {
-                    Printer.HUD.OpenChestLog();
-                    GetReward(chest);
-                    level.Chests.RemoveAt(chestNum);
-                }
-            }
-        }
-        private void GetReward(Chest chest)
+        public void GetReward(Chest chest)
         {
             ItemType item = chest.RewardType();
             switch (item)

@@ -249,9 +249,9 @@ namespace ConsoleDungeonCrawler.Printer
             if (player.HasScript)
             {
                 Log();
-                Console.Write("Success! You changed the code!");
+                Console.Write("Success! You've changed the code!");
                 Log();
-                Console.Write("Dors HP is now 10");
+                Console.Write("Dor's HP is now 10");
 
             }
             else
@@ -268,7 +268,9 @@ namespace ConsoleDungeonCrawler.Printer
             Console.SetCursorPosition(UI.LevelBox.PosX + 1, UI.LevelBox.PosY + 3);
             Console.WriteLine($"Level: {level.Name}");
             Console.SetCursorPosition(UI.LevelBox.PosX + 1, UI.LevelBox.PosY + 4);
-            Console.WriteLine($"Enemies Killed: {level.EnemiesKilled}");
+            Console.WriteLine($"Enemies Killed: {level.EnemiesKilled} / {level.EnemiesAmount}");
+            Console.SetCursorPosition(UI.LevelBox.PosX + 1, UI.LevelBox.PosY + 5);
+            Console.WriteLine($"Chests Opened: {level.ChestsOpened} / {level.ChestAmount}");
         }
         public static void PlayerStats(Player player)
         {

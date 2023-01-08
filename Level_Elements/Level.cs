@@ -46,6 +46,9 @@ namespace ConsoleDungeonCrawler.Level_Elements
         public List<Key> PlayerKeys { get; private set; }
         public DBD Dor { get; private set; }
         public int EnemiesKilled { get; private set; }
+        public int EnemiesAmount { get; private set; }
+        public int ChestAmount { get; private set; }
+        public int ChestsOpened { get; private set; }
         private Player _player;
         public Level(int levelNum, Player player)
         {
@@ -78,7 +81,8 @@ namespace ConsoleDungeonCrawler.Level_Elements
                     Environment.Exit(0);
                     break;
             }
-
+            ChestAmount = Chests.Count;
+            EnemiesAmount = Enemies.Count;
         }
         public Tile[,] LoadMap(char[,] mapSeed)
         {
@@ -95,7 +99,7 @@ namespace ConsoleDungeonCrawler.Level_Elements
                         case '■':
                             map[i, j] = Tile.Wall;
                             break;
-                        case '♣':
+                        case '*':
                             map[i, j] = Tile.Coin;
                             break;
                         case 'E':
@@ -126,13 +130,13 @@ namespace ConsoleDungeonCrawler.Level_Elements
                             Doors[Doors.Count - 1].Pos.Y = i;
                             Doors[Doors.Count - 1].Pos.X = j;
                             break;
-                        case '¶':
+                        case 'K':
                             map[i, j] = Tile.Key;
                             Keys.Add(new Key(ConsoleColor.White));
                             Keys[Keys.Count - 1].Pos.Y = i;
                             Keys[Keys.Count - 1].Pos.X = j;
                             break;
-                        case '☻':
+                        case 'O':
                             map[i, j] = Tile.Enemy;
                             Enemies.Add(new Enemy());
                             Enemies[Enemies.Count - 1].Pos.Y = i;
@@ -255,6 +259,20 @@ namespace ConsoleDungeonCrawler.Level_Elements
         {
             Map[door.Pos.Y, door.Pos.X] = Tile.Empty;
             Doors.RemoveAt(doorNum);
+        }
+        public void OpenChest()
+        {
+            for (int chestNum = 0; chestNum < Chests.Count; chestNum++)
+            {
+                Chest chest = Chests[chestNum];
+                if (Chests[chestNum].Pos.Y == _player.Pos.Y && Chests[chestNum].Pos.X == _player.Pos.X)
+                {
+                    Printer.HUD.OpenChestLog();
+                    _player.GetReward(chest);
+                    Chests.RemoveAt(chestNum);
+                    ChestsOpened++;
+                }
+            }
         }
         private void SetLevelName(int levelNum)
         {

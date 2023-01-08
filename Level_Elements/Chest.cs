@@ -22,9 +22,9 @@ namespace ConsoleDungeonCrawler.Level_Elements
         public ItemType RewardType()
         {
             float random = Random.Shared.NextSingle();
-            if (random < 0.3f) return ItemType.Coin;
-            else if (random < 0.6f) return ItemType.Weapon;
-            else if (random < 0.8f) return ItemType.Armor;
+            if (random < 0.1f) return ItemType.Coin;
+            else if (random < 0.45f) return ItemType.Weapon;
+            else if (random < 0.75f) return ItemType.Armor;
             else return ItemType.Potion;
         }
         public Weapon WeaponReward()

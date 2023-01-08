@@ -124,6 +124,9 @@ namespace ConsoleDungeonCrawler.Level_Elements
                 case Tile.Chest:
                     DontMove((Direction)direction);
                     break;
+                case Tile.Trap:
+                    DontMove((Direction)direction);
+                    break;
                 case Tile.Entry:
                     DontMove((Direction)direction);
                     break;

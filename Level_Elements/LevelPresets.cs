@@ -35,18 +35,11 @@ namespace ConsoleDungeonCrawler.Level_Elements
             {
                 case 1:
                     SetEnemies(EnemyType.Freshmen, 3);
-                    SetEnemies(EnemyType.Junior, 2);
                     SetDoor(ConsoleColor.Blue);
-                    SetDoor(ConsoleColor.Red);
-                    SetDoor(ConsoleColor.Yellow);
-                    SetKey(ConsoleColor.Red);
-                    SetKey(ConsoleColor.Yellow);
                     SetKey(ConsoleColor.Blue);
                     ResetIndicator();
                     break;
                 case 2:
-                    SetEnemies(EnemyType.Freshmen, 2);
-                    SetEnemies(EnemyType.Junior, 2);
                     ResetIndicator();
                     break;
                 case 10:
