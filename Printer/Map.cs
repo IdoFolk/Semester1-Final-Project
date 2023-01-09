@@ -17,117 +17,213 @@ namespace ConsoleDungeonCrawler.Printer
         {
             if (Game.FogOfWar.On)
             {
-                //MapClear();
-                for (int i = 0; i < level.MapLength.Y; i++)
-                {
-                    for (int j = 0; j < level.MapLength.X; j++)
-                    {
-                        if (player.Pos.Y - Game.FogOfWar.Height < i && i < player.Pos.Y + Game.FogOfWar.Height)
-                        {
-                            if (player.Pos.X - Game.FogOfWar.Width < j && j < player.Pos.X + Game.FogOfWar.Width)
-                            {
-                                MapLayout(level, player, i, j);
-                            }
-                        }
-
-                    }
-                }
+                MapLayoutFOW(level, player);
             }
             else
             {
-                for (int i = 0; i < level.MapLength.Y; i++)
-                {
-                    for (int j = 0; j < level.MapLength.X; j++)
-                    {
-                        MapLayout(level, player, i, j);
-                    }
-                    Console.WriteLine();
-                }
+                MapLayout(level, player);
             }
         }
-        public static void MapLayout(Level level, Player player, int i, int j)
+        public static void MapLayout(Level level, Player player)
         {
-            Console.SetCursorPosition(UI.MapBox.PosX + 2 + j, UI.MapBox.PosY + 1 + i);
-            switch (level.Map[i, j])
+            for (int i = 0; i < level.MapLength.Y; i++)
             {
-                case Tile.Wall:
-                    Wall();
-                    break;
-                case Tile.Enemy:
-                    if (level.Dor != null)
+                for (int j = 0; j < level.MapLength.X; j++)
+                {
+                    Console.SetCursorPosition(UI.MapBox.PosX + 2 + j, UI.MapBox.PosY + 1 + i);
+                    switch (level.Map[i, j])
                     {
-                        if (player.Pos.X == j && player.Pos.Y == i)
+                        case Tile.Wall:
+                            Wall();
+                            break;
+                        case Tile.Enemy:
+                            if (level.Dor != null)
+                            {
+                                if (player.Pos.X == j && player.Pos.Y == i)
+                                    Avatar(player);
+                                else if (level.Dor.Pos.Y == i && level.Dor.Pos.X == j)
+                                    Enemy(level.Dor);
+                            }
+                            foreach (Enemy enemy in level.Enemies)
+                            {
+                                if (enemy.Pos.X == j && enemy.Pos.Y == i)
+                                {
+                                    if (player.Pos.X == j && player.Pos.Y == i)
+                                        Avatar(player);
+                                    else
+                                        Enemy(enemy);
+                                }
+                            }
+                            break;
+                        case Tile.Player:
                             Avatar(player);
-                        else if (level.Dor.Pos.Y == i && level.Dor.Pos.X == j)
-                        Enemy(level.Dor);
+                            break;
+                        case Tile.Chest:
+                            Chest();
+                            break;
+                        case Tile.Trap:
+                            foreach (Trap trap in level.Traps)
+                            {
+                                if (trap.Pos.X == j && trap.Pos.Y == i)
+                                    Trap(trap);
+                            }
+                            break;
+                        case Tile.Coin:
+                            Coin();
+                            break;
+                        case Tile.Computer:
+                            Computer();
+                            break;
+                        case Tile.Key:
+                            foreach (Key key in level.Keys)
+                            {
+                                if (key.Pos.X == j && key.Pos.Y == i)
+                                    Key(key);
+                            }
+                            break;
+                        case Tile.Door:
+                            foreach (Door door in level.Doors)
+                            {
+                                if (door.Pos.X == j && door.Pos.Y == i)
+                                    Door(door);
+                            }
+                            break;
+                        case Tile.Entry:
+                            Entry();
+                            break;
+                        case Tile.Exit:
+                            Exit();
+                            break;
+                        case Tile.Empty:
+                            Empty();
+                            break;
                     }
-                    foreach (Enemy enemy in level.Enemies)
-                    {
-                        if(enemy.Pos.X == j && enemy.Pos.Y == i)
-                        {
-                            if (player.Pos.X == j && player.Pos.Y == i)
-                                Avatar(player);
-                            else
-                                Enemy(enemy);
-                        }
-                    }
-                    break;
-                case Tile.Player:
-                    Avatar(player);
-                    break;
-                case Tile.Chest:
-                    Chest();
-                    break;
-                case Tile.Trap:
-                    foreach (Trap trap in level.Traps)
-                    {
-                        if (trap.Pos.X == j && trap.Pos.Y == i)
-                            Trap(trap);
-                    }
-                    break;
-                case Tile.Coin:
-                    Coin();
-                    break;
-                case Tile.Computer:
-                    Computer();
-                    break;
-                case Tile.Key:
-                    foreach (Key key in level.Keys)
-                    {
-                        if (key.Pos.X == j && key.Pos.Y == i)
-                            Key(key);
-                    }
-                    break;
-                case Tile.Door:
-                    foreach (Door door in level.Doors)
-                    {
-                        if (door.Pos.X == j && door.Pos.Y == i)
-                            Door(door);
-                    }
-                    break;
-                case Tile.Entry:
-                    Entry();
-                    break;
-                case Tile.Exit:
-                    Exit();
-                    break;
-                case Tile.Empty:
-                    Empty();
-                    break;
+                }
+                Console.WriteLine();
             }
+            
         }
-        //public static void PrintOuterWalls(Level level)
-        //{
-        //    for (int i = 0; i < level.MapLength.Y; i++)
-        //    {
-        //        for (int j = 0; j < level.MapLength.X; j++)
-        //        {
-        //            Console.SetCursorPosition(UI.MapBox.PosX + 2 + j, UI.MapBox.PosY + 1 + i);
-        //            if (i == 0 || j == 0) Wall();
-        //            if (i ==level.MapLength.Y-1 || j == level.MapLength.X-1) Wall();
-        //        }
-        //    }
-        //}
+        public static void MapLayoutFOW(Level level, Player player)
+        {
+            for (int i = 0; i < level.MapLength.Y; i++)
+            {
+                for (int j = 0; j < level.MapLength.X; j++)
+                {
+                    Console.SetCursorPosition(UI.MapBox.PosX + 2 + j, UI.MapBox.PosY + 1 + i);
+                    switch (level.Map[i, j])
+                    {
+                        case Tile.Wall:
+                            if (InRange(player, i, j))
+                                Wall();
+                            break;
+                        case Tile.Enemy:
+                            if (level.Dor != null)
+                            {
+                                if (InRange(player, i, j))
+                                {
+                                    if (player.Pos.X == j && player.Pos.Y == i)
+                                        Avatar(player);
+                                    else if (level.Dor.Pos.Y == i && level.Dor.Pos.X == j)
+                                        Enemy(level.Dor);
+                                }
+                            }
+                            foreach (Enemy enemy in level.Enemies)
+                            {
+                                if (enemy.Pos.X == j && enemy.Pos.Y == i)
+                                {
+                                    if (InRange(player, i, j))
+                                    {
+                                        if (player.Pos.X == j && player.Pos.Y == i)
+                                            Avatar(player);
+                                        else
+                                            Enemy(enemy);
+                                    }
+                                    else 
+                                        Empty();
+                                }
+                            }
+                            break;
+                        case Tile.Player:
+                            Avatar(player);
+                            break;
+                        case Tile.Chest:
+                            if (InRange(player, i, j))
+                                Chest();
+                            else
+                                Empty();
+                            break;
+                        case Tile.Trap:
+                            foreach (Trap trap in level.Traps)
+                            {
+                                if (trap.Pos.X == j && trap.Pos.Y == i)
+                                {
+                                    if (InRange(player, i, j))
+                                        Trap(trap);
+                                    else
+                                        Empty();
+                                }
+                            }
+                            break;
+                        case Tile.Coin:
+                            if (InRange(player, i, j))
+                                Coin();
+                            else
+                                Empty();
+                            break;
+                        case Tile.Computer:
+                            if (InRange(player, i, j))
+                                Computer();
+                            else
+                                Empty();
+                            break;
+                        case Tile.Key:
+                            foreach (Key key in level.Keys)
+                            {
+                                if (key.Pos.X == j && key.Pos.Y == i)
+                                {
+                                    if (InRange(player, i, j))
+                                        Key(key);
+                                    else
+                                        Empty();
+                                }
+                            }
+                            break;
+                        case Tile.Door:
+                            foreach (Door door in level.Doors)
+                            {
+                                if (door.Pos.X == j && door.Pos.Y == i)
+                                {
+                                    if (InRange(player, i, j))
+                                        Door(door);
+                                    else
+                                        Empty();
+                                }
+                            }
+                            break;
+                        case Tile.Entry:
+                            if (InRange(player, i, j))
+                                Entry();
+                            else
+                                Empty();
+                            break;
+                        case Tile.Exit:
+                            if (InRange(player, i, j))
+                                Exit();
+                            else
+                                Empty();
+                            break;
+                        case Tile.Empty:
+                            if (InRange(player, i, j))
+                                EmptyVisible();
+                            else
+                                Empty();
+                            break;
+                    }
+                }
+                Console.WriteLine();
+            }
+
+        }
         public static void MapClear()
         {
             for (int i = 0; i < UI.MapBox.Height-1; i++)
@@ -138,6 +234,17 @@ namespace ConsoleDungeonCrawler.Printer
                     Console.Write(" ");
                 }
             }
+        }
+        public static bool InRange(Player player, int i, int j)
+        {
+            if (player.Pos.Y - Game.FogOfWar.Height < i && i < player.Pos.Y + Game.FogOfWar.Height)
+            {
+                if (player.Pos.X - Game.FogOfWar.Width < j && j < player.Pos.X + Game.FogOfWar.Width)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
         public static void Wall()
         {
@@ -242,6 +349,10 @@ namespace ConsoleDungeonCrawler.Printer
         public static void Empty()
         {
             Console.Write(" ");
+        }
+        public static void EmptyVisible()
+        {
+            Console.Write(".");
         }
     }
 }
