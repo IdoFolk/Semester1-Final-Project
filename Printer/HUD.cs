@@ -268,9 +268,9 @@ namespace ConsoleDungeonCrawler.Printer
             Console.SetCursorPosition(UI.LevelBox.PosX + 1, UI.LevelBox.PosY + 3);
             Console.WriteLine($"Level: {level.Name}");
             Console.SetCursorPosition(UI.LevelBox.PosX + 1, UI.LevelBox.PosY + 4);
-            Console.WriteLine($"Enemies Killed: {level.EnemiesKilled} / {level.EnemiesAmount}");
+            Console.WriteLine($"Students Killed: {level.EnemiesKilled} / {level.EnemiesAmount}");
             Console.SetCursorPosition(UI.LevelBox.PosX + 1, UI.LevelBox.PosY + 5);
-            Console.WriteLine($"Chests Opened: {level.ChestsOpened} / {level.ChestAmount}");
+            Console.WriteLine($"Bags Opened: {level.ChestsOpened} / {level.ChestAmount}");
         }
         public static void PlayerStats(Player player)
         {

@@ -40,7 +40,7 @@ namespace ConsoleDungeonCrawler
     {
         public static string PlayersName { get; private set; } = "Student";
         public static ConsoleColor AvatarsColor { get; private set; } = ConsoleColor.DarkYellow;
-        public static readonly int[] LevelNumber = new int[] { 1,2, 10};
+        public static readonly int[] LevelNumber = new int[] {1, 2, 10};
         public static List<Weapon> Weapons = new List<Weapon>();
         public static List<Potion> Potions = new List<Potion>();
         public static List<Armor> Armors = new List<Armor>();

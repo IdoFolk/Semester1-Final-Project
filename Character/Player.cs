@@ -25,6 +25,9 @@ namespace ConsoleDungeonCrawler.Character
         public Armor DefaultArmor { get; private set; }
         public Weapon EquippedWeapon { get; private set; }
         public Weapon DefaultWeapon { get; private set; }
+        public int WeaponCap { get; private set; }
+        public int PotionCap { get; private set; }
+        public int ArmorCap { get; private set; }
         public int Coins { get; private set; }
         public bool HasScript { get; private set; } = true;
         public Player(string name,ConsoleColor color, int hp)
@@ -40,6 +43,9 @@ namespace ConsoleDungeonCrawler.Character
             PlayerArmors.Add(DefaultArmor); //starting armor
             EquipArmor(DefaultArmor);
             AgroRange = new Range(7,4);
+            WeaponCap = 6;
+            PotionCap = 8;
+            ArmorCap = 3;
         }
         public int Attack()
         {
@@ -242,11 +248,11 @@ namespace ConsoleDungeonCrawler.Character
         }
         public void GetReward(Chest chest)
         {
-            ItemType item = chest.RewardType();
+            ItemType item = chest.RewardType(this);
             switch (item)
             {
                 case ItemType.Weapon:
-                    if (PlayerWeapons.Count > 6)
+                    if (PlayerWeapons.Count > WeaponCap)
                     {
                         HUD.ItemCappedLog(item);
                         return;
@@ -256,7 +262,7 @@ namespace ConsoleDungeonCrawler.Character
                     HUD.GotWeaponLog(weapon);
                     break;
                 case ItemType.Potion:
-                    if (PlayerPotions.Count+1 > 8)
+                    if (PlayerPotions.Count+1 > PotionCap)
                     {
                         HUD.ItemCappedLog(item);
                         return;
@@ -266,7 +272,7 @@ namespace ConsoleDungeonCrawler.Character
                     HUD.GotPotionLog(potion);
                     break;
                 case ItemType.Armor:
-                    if (PlayerArmors.Count > 3)
+                    if (PlayerArmors.Count > ArmorCap)
                     {
                         HUD.ItemCappedLog(item);
                         return;

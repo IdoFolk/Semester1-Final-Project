@@ -19,13 +19,97 @@ namespace ConsoleDungeonCrawler.Level_Elements
     {
         public Vector2 Pos = new Vector2();
         
-        public ItemType RewardType()
+        public ItemType RewardType(Player player)
         {
-            float random = Random.Shared.NextSingle();
-            if (random < 0.1f) return ItemType.Coin;
-            else if (random < 0.45f) return ItemType.Weapon;
-            else if (random < 0.75f) return ItemType.Armor;
-            else return ItemType.Potion;
+            if (player.PlayerWeapons.Count == player.WeaponCap)
+            {
+                if (player.PlayerPotions.Count + 1 == player.PotionCap)
+                {
+                    float random = Random.Shared.NextSingle();
+                    if (random < 0.1f) return ItemType.Coin;
+                    else if (random < 0.45f) return ItemType.Armor;
+                    else if (random < 0.75f) return ItemType.Armor;
+                    else return ItemType.Coin;
+                }
+                else if (player.PlayerArmors.Count == player.ArmorCap)
+                {
+                    float random = Random.Shared.NextSingle();
+                    if (random < 0.1f) return ItemType.Coin;
+                    else if (random < 0.45f) return ItemType.Coin;
+                    else if (random < 0.75f) return ItemType.Potion;
+                    else return ItemType.Potion;
+                }
+                else
+                {
+                    float random = Random.Shared.NextSingle();
+                    if (random < 0.1f) return ItemType.Coin;
+                    else if (random < 0.45f) return ItemType.Potion;
+                    else if (random < 0.75f) return ItemType.Armor;
+                    else return ItemType.Potion;
+                }
+            }
+            else if (player.PlayerPotions.Count+1 == player.PotionCap)
+            {
+                if (player.PlayerWeapons.Count == player.WeaponCap)
+                {
+                    float random = Random.Shared.NextSingle();
+                    if (random < 0.1f) return ItemType.Coin;
+                    else if (random < 0.45f) return ItemType.Armor;
+                    else if (random < 0.75f) return ItemType.Armor;
+                    else return ItemType.Coin;
+                }
+                else if (player.PlayerArmors.Count == player.ArmorCap)
+                {
+                    float random = Random.Shared.NextSingle();
+                    if (random < 0.1f) return ItemType.Coin;
+                    else if (random < 0.45f) return ItemType.Weapon;
+                    else if (random < 0.75f) return ItemType.Weapon;
+                    else return ItemType.Coin;
+                }
+                else
+                {
+                    float random = Random.Shared.NextSingle();
+                    if (random < 0.1f) return ItemType.Coin;
+                    else if (random < 0.45f) return ItemType.Weapon;
+                    else if (random < 0.75f) return ItemType.Armor;
+                    else return ItemType.Coin;
+                }
+            }
+            else if (player.PlayerArmors.Count == player.ArmorCap)
+            {
+                if (player.PlayerWeapons.Count == player.WeaponCap)
+                {
+                    float random = Random.Shared.NextSingle();
+                    if (random < 0.1f) return ItemType.Coin;
+                    else if (random < 0.45f) return ItemType.Potion;
+                    else if (random < 0.75f) return ItemType.Potion;
+                    else return ItemType.Coin;
+                }
+                else if (player.PlayerPotions.Count+1 == player.PotionCap)
+                {
+                    float random = Random.Shared.NextSingle();
+                    if (random < 0.1f) return ItemType.Coin;
+                    else if (random < 0.45f) return ItemType.Weapon;
+                    else if (random < 0.75f) return ItemType.Weapon;
+                    else return ItemType.Coin;
+                }
+                else
+                {
+                    float random = Random.Shared.NextSingle();
+                    if (random < 0.1f) return ItemType.Coin;
+                    else if (random < 0.45f) return ItemType.Weapon;
+                    else if (random < 0.75f) return ItemType.Potion;
+                    else return ItemType.Potion;
+                }
+            }
+            else
+            {
+                float random = Random.Shared.NextSingle();
+                if (random < 0.1f) return ItemType.Coin;
+                else if (random < 0.45f) return ItemType.Weapon;
+                else if (random < 0.75f) return ItemType.Armor;
+                else return ItemType.Potion;
+            }
         }
         public Weapon WeaponReward()
         {

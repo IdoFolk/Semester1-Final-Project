@@ -242,7 +242,14 @@ namespace ConsoleDungeonCrawler.Level_Elements
             Printer.HUD.CombatLog(_player, enemy, playersAttack);
             Printer.HUD.CombatLog(enemy, _player, enemysAttack);
             Printer.HUD.EnemyStats(enemy);
-            if (enemy.IsDead()) EnemiesKilled++;
+            if (enemy.IsDead())
+            {
+                Chests.Add(new Chest());
+                Chests[Chests.Count - 1].Pos.Y = enemy.Pos.Y;
+                Chests[Chests.Count - 1].Pos.X = enemy.Pos.X;
+                EnemiesKilled++;
+                ChestAmount++;
+            }
         }
         public void Combat(DBD dor)
         {

@@ -40,6 +40,14 @@ namespace ConsoleDungeonCrawler.Level_Elements
                     ResetIndicator();
                     break;
                 case 2:
+                    SetEnemies(EnemyType.Junior, 2);
+                    SetEnemies(EnemyType.Freshmen, 3);
+                    SetKey(ConsoleColor.Yellow);
+                    SetKey(ConsoleColor.Magenta);
+                    SetKey(ConsoleColor.Blue);
+                    SetDoor(ConsoleColor.Blue);
+                    SetDoor(ConsoleColor.Yellow);
+                    SetDoor(ConsoleColor.Magenta);
                     ResetIndicator();
                     break;
                 case 10:
