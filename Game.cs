@@ -39,13 +39,15 @@ namespace ConsoleDungeonCrawler
     static class Game
     {
         public static string PlayersName { get; private set; } = "Student";
+        public static bool PlayerIsMale { get; private set; } = true;
         public static ConsoleColor AvatarsColor { get; private set; } = ConsoleColor.DarkYellow;
-        public static readonly int[] LevelNumber = new int[] {1, 2, 10};
+        public static readonly int[] LevelNumber = new int[] {1,2,3,10};
         public static List<Weapon> Weapons = new List<Weapon>();
         public static List<Potion> Potions = new List<Potion>();
         public static List<Armor> Armors = new List<Armor>();
-        public static Range FogOfWar = new Range(false, 7, 4);
+        public static Range FogOfWar = new Range(false, 7, 3);
         public static Difficulty Difficulty = Difficulty.Easy;
+        public static bool GameLost { get; private set; } = false;
         public static bool NoPause { get; private set; }
         public static bool SFXon { get; private set; } = true;
         public static bool Musicon { get; private set; } = true;
@@ -53,6 +55,7 @@ namespace ConsoleDungeonCrawler
         {
             HUD.StartingCutscene();
             LoadItems();
+            GameLost = false;
             Player player = new Player(PlayersName,AvatarsColor, 10);
             for (int i = 0; i < LevelNumber.Length; i++) //Level Gameplay
             {
@@ -67,7 +70,7 @@ namespace ConsoleDungeonCrawler
         }
         private static void PlayLevel(Level level, Player player)
         {
-            while (!(level.IsComplete || player.IsDead()))
+            while (!(level.IsComplete || GameLost))
             {
                 if (Menu.CloseGame) return;
                 SetDifficulty(Difficulty);
@@ -128,10 +131,12 @@ namespace ConsoleDungeonCrawler
         }
         private static void Result(Player player)
         {
+            if (Menu.CloseGame) return;
             if (player.IsDead())
             {
                 Console.Clear();
                 Printer.UI.YouDied(20 + UI.StartingPosX, 10);
+                //Sounds.DeadSFX.Play();
                 Console.SetCursorPosition(45 + UI.StartingPosX, 7);
                 Console.Write("Press Enter To Return To Main Menu...");
                 while (true)
@@ -183,6 +188,11 @@ namespace ConsoleDungeonCrawler
                     break;
             }
         }
+        public static void ToggleSEX()
+        {
+            if (PlayerIsMale) PlayerIsMale = false;
+            else PlayerIsMale = true;
+        }
         public static void ToggleSFX()
         {
             if (SFXon) SFXon = false;
@@ -192,6 +202,11 @@ namespace ConsoleDungeonCrawler
         {
             if (Musicon) Musicon = false;
             else Musicon = true;
+        }
+        public static void LoseGame()
+        {
+            if (GameLost) GameLost = false;
+            else GameLost = true;
         }
     }
 }

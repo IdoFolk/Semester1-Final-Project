@@ -71,6 +71,10 @@ namespace ConsoleDungeonCrawler.Level_Elements
                     char[,] mapSeed2 = MapBuilder.ReadTextFile("Level_Presets\\Level_2.txt");
                     SetLevel(mapSeed2);
                     break;
+                case 3:
+                    char[,] mapSeed3 = MapBuilder.ReadTextFile("Level_Presets\\Level_3.txt");
+                    SetLevel(mapSeed3);
+                    break;
                 case 10:
                     Dor = new DBD(ConsoleColor.Cyan,3,10000);
                     char[,] mapSeed10 = MapBuilder.ReadTextFile("Level_Presets\\Level_10.txt");
@@ -239,6 +243,9 @@ namespace ConsoleDungeonCrawler.Level_Elements
             int enemysAttack = enemy.Attack(_player);
             enemy.TakeDamage(playersAttack);
             _player.TakeDamage(enemysAttack);
+            //if (playersAttack == 0 && enemysAttack == 0)
+                //Sounds.MissSFX.Play();
+            //else 
             Printer.HUD.CombatLog(_player, enemy, playersAttack);
             Printer.HUD.CombatLog(enemy, _player, enemysAttack);
             Printer.HUD.EnemyStats(enemy);
@@ -250,6 +257,7 @@ namespace ConsoleDungeonCrawler.Level_Elements
                 EnemiesKilled++;
                 ChestAmount++;
             }
+            //if (_player.IsDead()) Sounds.DyingSFX.Play();
         }
         public void Combat(DBD dor)
         {
@@ -257,10 +265,14 @@ namespace ConsoleDungeonCrawler.Level_Elements
             int enemysAttack = dor.Attack(_player);
             dor.TakeDamage(playersAttack);
             _player.TakeDamage(enemysAttack);
+            //if (playersAttack == 0 && enemysAttack == 0)
+            //Sounds.MissSFX.Play();
+            //else
             Printer.HUD.CombatLog(_player, dor, playersAttack);
             Printer.HUD.CombatLog(dor, _player, enemysAttack);
             Printer.HUD.EnemyStats(dor);
             if (dor.IsDead()) EnemiesKilled++;
+            //if (_player.IsDead()) Sounds.DyingSFX.Play();
         }
         public void OpenDoor(Door door, int doorNum)
         {
@@ -276,6 +288,7 @@ namespace ConsoleDungeonCrawler.Level_Elements
                 {
                     Printer.HUD.OpenChestLog();
                     _player.GetReward(chest);
+                    //Sounds.ChestSFX.Play();
                     Chests.RemoveAt(chestNum);
                     ChestsOpened++;
                 }

@@ -54,9 +54,6 @@ namespace ConsoleDungeonCrawler
                         MenuIndicator = 0;
                         Console.Clear();
                         break;
-                    case ConsoleKey.Escape:
-                        CloseMenu();
-                        break;
                 }
                 if (MenuIndicator < 0) MenuIndicator = 0;
                 if (MenuIndicator > 3) MenuIndicator = 3;
@@ -131,6 +128,9 @@ namespace ConsoleDungeonCrawler
                                 ChangeName();
                                 break;
                             case 2:
+                                Game.ToggleSEX();
+                                break;
+                            case 3:
                                 ChangeColor();
                                 break;
                         }
@@ -141,7 +141,7 @@ namespace ConsoleDungeonCrawler
                         break;
                 }
                 if (MenuIndicator < 1) MenuIndicator = 1;
-                if (MenuIndicator > 2) MenuIndicator = 2;
+                if (MenuIndicator > 3) MenuIndicator = 3;
             }
         }
         private static void ChangeName()

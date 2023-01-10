@@ -681,11 +681,17 @@ namespace ConsoleDungeonCrawler.Printer
             CutsceneDialog("Once Upon A Time...", starting);
             CutsceneDialog("Tiltan Hosted Her Annual Global GameJam", starting);
             CutsceneDialog($"{Game.PlayersName} Was So Exited To Finally Participate", starting);
-            CutsceneDialog("That He Could Not Sleep All Night", starting);
+            if (Game.PlayerIsMale)
+                CutsceneDialog("That He Could Not Sleep All Night", starting);
+            else
+                CutsceneDialog("That She Could Not Sleep All Night", starting);
             CutsceneDialog("And When The GameJam Finally Started", starting);
             CutsceneDialog($"{Game.PlayersName} Fell Asleep After 2 Hours of Work", starting);
             CutsceneDialog("Only Then...", starting);
-            CutsceneDialog("He Woke Up Into His Worst Nightmare", starting);
+            if (Game.PlayerIsMale)
+                CutsceneDialog("He Woke Up Into His Worst Nightmare", starting);
+            else
+                CutsceneDialog("She Woke Up Into Her Worst Nightmare", starting);
             CutsceneDialog("All of The Students Turned Into Zombies!", starting);
             CutsceneDialog("You Have To Escape The College NOW!", starting);
         }

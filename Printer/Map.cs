@@ -158,7 +158,12 @@ namespace ConsoleDungeonCrawler.Printer
                                 if (trap.Pos.X == j && trap.Pos.Y == i)
                                 {
                                     if (InRange(player, i, j))
-                                        Trap(trap);
+                                    {
+                                        if (trap.Activated)
+                                            Trap(trap);
+                                        else
+                                            EmptyVisible();
+                                    }
                                     else
                                         Empty();
                                 }
@@ -256,6 +261,15 @@ namespace ConsoleDungeonCrawler.Printer
         }
         public static void Avatar(Player player)
         {
+            if (player.IsDead())
+            {
+                Console.ForegroundColor = ConsoleColor.Black;
+                Console.BackgroundColor = ConsoleColor.DarkRed;
+                Console.WriteLine("@");
+                Console.BackgroundColor = DefaultBackground;
+                Console.ForegroundColor = DefaultForeground;
+                return;
+            }
             Console.BackgroundColor = DefaultBackground;
             Console.ForegroundColor = player.Color;
             Console.Write("@");

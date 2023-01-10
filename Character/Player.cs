@@ -42,7 +42,7 @@ namespace ConsoleDungeonCrawler.Character
             DefaultArmor = Game.Armors[0];
             PlayerArmors.Add(DefaultArmor); //starting armor
             EquipArmor(DefaultArmor);
-            AgroRange = new Range(7,4);
+            AgroRange = new Range(7,3);
             WeaponCap = 6;
             PotionCap = 8;
             ArmorCap = 3;
@@ -94,6 +94,11 @@ namespace ConsoleDungeonCrawler.Character
         public void Action(Level level)
         {
             ConsoleKey key = Console.ReadKey(true).Key;
+            if (IsDead())
+            {
+                Game.LoseGame();
+                return;
+            }
             Pause(key, level);
             OpenInventory(key, level);
             Move(key);
@@ -132,6 +137,7 @@ namespace ConsoleDungeonCrawler.Character
                     DontMove(key);
                     break;
                 case Tile.Exit:
+                    //Sounds.ExitSFX.Play();
                     level.Complete();
                     break;
             }
@@ -242,6 +248,7 @@ namespace ConsoleDungeonCrawler.Character
                 {
                     trap.Activate();
                     TakeDamage(trap.Damage);
+                    //if (IsDead()) Sounds.DyingSFX.Play();
                     HUD.SteppedOnTrapLog(trap);
                 }
             }
@@ -295,6 +302,7 @@ namespace ConsoleDungeonCrawler.Character
             float rand = Random.Shared.NextSingle();
             if (rand > 0.7f) amount++;
             amount++;
+            //Sounds.CoinSFX.Play();
             HUD.GotCoinLog(amount);
             Coins += amount;
         }
@@ -306,6 +314,7 @@ namespace ConsoleDungeonCrawler.Character
                 if (key.Pos.X == Pos.X && key.Pos.Y == Pos.Y)
                 {
                     level.PlayerKeys.Add(new Key(key.Color));
+                    //Sounds.KeySFX.Play();
                     Printer.HUD.GotKeyLog(key);
                     level.Keys.RemoveAt(keyNum);
                 }
@@ -326,6 +335,7 @@ namespace ConsoleDungeonCrawler.Character
                             level.OpenDoor(door, doorNum);
                             key.UseKey();
                             Printer.HUD.OpenDoorLog(door);
+                            //Sounds.DoorSFX.Play();
                         }
                     }
                 }

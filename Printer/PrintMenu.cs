@@ -42,7 +42,8 @@ namespace ConsoleDungeonCrawler.Printer
             PrintBackground();
             AvatarButton(0);
             AvatarName(1);
-            AvatarColor(2);
+            AvatarSex(2);
+            AvatarColor(3);
         }
         public static void AvatarColorOptions()
         {
@@ -51,24 +52,30 @@ namespace ConsoleDungeonCrawler.Printer
             Console.SetCursorPosition(ButtonPosX + UI.StartingPosX, ButtonPosY + 2);
             Console.Write($"NAME: {Game.PlayersName}");
             Console.SetCursorPosition(ButtonPosX + UI.StartingPosX, ButtonPosY + 4);
+            Console.Write("SEX: ");
+            if (Game.PlayerIsMale)
+                Console.Write("MALE");
+            else
+                Console.Write("FEMALE");
+            Console.SetCursorPosition(ButtonPosX + UI.StartingPosX, ButtonPosY + 6);
             Console.Write("COLOR:");
             IfSelectedArrow(Menu.MenuIndicator);
-            Console.SetCursorPosition(ButtonPosX + UI.StartingPosX + 8, ButtonPosY + 4);
+            Console.SetCursorPosition(ButtonPosX + UI.StartingPosX + 8, ButtonPosY + 6);
             Console.ForegroundColor = ConsoleColor.DarkRed;
             Console.Write("@");
-            Console.SetCursorPosition(ButtonPosX + UI.StartingPosX + 8, ButtonPosY + 6);
+            Console.SetCursorPosition(ButtonPosX + UI.StartingPosX + 8, ButtonPosY + 8);
             Console.ForegroundColor = ConsoleColor.DarkGreen;
             Console.Write("@");
-            Console.SetCursorPosition(ButtonPosX + UI.StartingPosX + 8, ButtonPosY + 8);
+            Console.SetCursorPosition(ButtonPosX + UI.StartingPosX + 8, ButtonPosY + 10);
             Console.ForegroundColor = ConsoleColor.DarkBlue;
             Console.Write("@");
-            Console.SetCursorPosition(ButtonPosX + UI.StartingPosX + 8, ButtonPosY + 10);
+            Console.SetCursorPosition(ButtonPosX + UI.StartingPosX + 8, ButtonPosY + 12);
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
             Console.Write("@");
-            Console.SetCursorPosition(ButtonPosX + UI.StartingPosX + 8, ButtonPosY + 12);
+            Console.SetCursorPosition(ButtonPosX + UI.StartingPosX + 8, ButtonPosY + 14);
             Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.Write("@");
-            Console.SetCursorPosition(ButtonPosX + UI.StartingPosX + 8, ButtonPosY + 14);
+            Console.SetCursorPosition(ButtonPosX + UI.StartingPosX + 8, ButtonPosY + 16);
             Console.ForegroundColor = ConsoleColor.DarkCyan;
             Console.Write("@");
             DefaultText();
@@ -126,6 +133,17 @@ namespace ConsoleDungeonCrawler.Printer
             Console.Write("NAME:");
             DefaultText();
             Console.Write($" {Game.PlayersName}");
+        }
+        private static void AvatarSex(int pos)
+        {
+            Console.SetCursorPosition(ButtonPosX + UI.StartingPosX, ButtonPosY + (pos * 2));
+            IfSelected(pos);
+            Console.Write("SEX:");
+            DefaultText();
+            if (Game.PlayerIsMale)
+                Console.Write($" MALE");
+            else
+                Console.Write($" FEMALE");
         }
         private static void StartButton(int pos)
         {
@@ -309,7 +327,7 @@ namespace ConsoleDungeonCrawler.Printer
             if (Menu.OptionsIsOpen && pos == 0) return;
             if (pos == Menu.MenuIndicator)
             {
-                Console.SetCursorPosition(ButtonPosX + UI.StartingPosX + 7,2 + ButtonPosY + (pos * 2));
+                Console.SetCursorPosition(ButtonPosX + UI.StartingPosX + 7,4 + ButtonPosY + (pos * 2));
                 Console.Write('>');
             }
         }

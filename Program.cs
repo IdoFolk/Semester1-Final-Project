@@ -1,5 +1,6 @@
 ﻿using ConsoleDungeonCrawler.Printer;
 using System.Runtime.InteropServices;
+using System.Media;
 
 namespace ConsoleDungeonCrawler
 {
