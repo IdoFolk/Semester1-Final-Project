@@ -74,6 +74,9 @@ namespace ConsoleDungeonCrawler.Printer
                         case Tile.Computer:
                             Computer();
                             break;
+                        case Tile.Script:
+                            Script();
+                            break;
                         case Tile.Key:
                             foreach (Key key in level.Keys)
                             {
@@ -178,6 +181,12 @@ namespace ConsoleDungeonCrawler.Printer
                         case Tile.Computer:
                             if (InRange(player, i, j))
                                 Computer();
+                            else
+                                Empty();
+                            break;
+                        case Tile.Script:
+                            if (InRange(player, i, j))
+                                Script();
                             else
                                 Empty();
                             break;
@@ -340,6 +349,12 @@ namespace ConsoleDungeonCrawler.Printer
         {
             Console.ForegroundColor = ConsoleColor.DarkCyan;
             Console.Write("■");
+            Console.ForegroundColor = DefaultForeground;
+        }
+        public static void Script()
+        {
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
+            Console.Write(";");
             Console.ForegroundColor = DefaultForeground;
         }
         public static void Key(Key key)

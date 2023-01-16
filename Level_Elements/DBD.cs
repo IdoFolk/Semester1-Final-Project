@@ -45,7 +45,7 @@ namespace ConsoleDungeonCrawler.Level_Elements
         public void Activate()
         {
             Activated = true;
-            HUD.EndingCutscene(this);
+            HUD.BossCutscene(this);
         }
     }
 }

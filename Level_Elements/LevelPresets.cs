@@ -63,6 +63,28 @@ namespace ConsoleDungeonCrawler.Level_Elements
                     SetKey(ConsoleColor.Yellow);
                     ResetIndicator();
                     break;
+                case 4:
+                    SetEnemies(EnemyType.Junior, 2);
+                    SetEnemies(EnemyType.Freshmen, 5);
+                    SetEnemies(EnemyType.Junior, 3);
+                    SetDoor(ConsoleColor.Yellow);
+                    SetDoor(ConsoleColor.Green);
+                    SetKey(ConsoleColor.Magenta);
+                    SetKey(ConsoleColor.Yellow);
+                    SetKey(ConsoleColor.Green);
+                    ResetIndicator();
+                    break;
+                case 5:
+                    SetDoor(ConsoleColor.Magenta);
+                    SetDoor(ConsoleColor.Cyan);
+                    SetDoor(ConsoleColor.Blue);
+                    SetDoor(ConsoleColor.Yellow);
+                    SetKeyInShop(ConsoleColor.Cyan,30);
+                    SetKeyInShop(ConsoleColor.Blue,75);
+                    SetKeyInShop(ConsoleColor.Magenta,100);
+                    SetKey(ConsoleColor.Yellow);
+                    ResetIndicator();
+                    break;
                 case 10:
                     SetDoor(ConsoleColor.Red);
                     SetKey(ConsoleColor.Red);
@@ -73,6 +95,13 @@ namespace ConsoleDungeonCrawler.Level_Elements
         }
         private static void SetKey(ConsoleColor color)
         {
+            _level.Keys[_keyIndicator].SetColor(color);
+            _keyIndicator++;
+        }
+        private static void SetKeyInShop(ConsoleColor color, int price)
+        {
+            _level.Keys[_keyIndicator].KeyInShop();
+            _level.Keys[_keyIndicator].SetPrice(price);
             _level.Keys[_keyIndicator].SetColor(color);
             _keyIndicator++;
         }

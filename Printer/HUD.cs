@@ -108,7 +108,6 @@ namespace ConsoleDungeonCrawler.Printer
             Log();
 
         }
-
         public static void OpenDoorLog(Door door)
         {
             Log();
@@ -123,6 +122,75 @@ namespace ConsoleDungeonCrawler.Printer
             Console.ForegroundColor = key.Color;
             Console.Write("You got a key");
             Console.ForegroundColor = DefaultForeground;
+            Log();
+        }
+        public static bool BuyKey(Key key)
+        {
+            int indicator = 0;
+            bool optionChoosen = false;
+            Console.SetCursorPosition(47 + UI.StartingPosX, PrintMenu.ButtonPosY +3);
+            Console.Write($"Key price is {key.Price}");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write($"♣");
+            Console.ForegroundColor = DefaultForeground;
+            Console.SetCursorPosition(42 + UI.StartingPosX, PrintMenu.ButtonPosY +4);
+            Console.Write("Do you want to buy the key?");
+            while (!optionChoosen)
+            {
+                Console.CursorVisible = false;
+                BuyingOptions(indicator);
+                ConsoleKey input = Console.ReadKey(true).Key;
+                switch (input)
+                {
+                    case ConsoleKey.LeftArrow:
+                        indicator--;
+                        break;
+                    case ConsoleKey.RightArrow:
+                        indicator++;
+                        break;
+                    case ConsoleKey.Enter:
+                        switch (indicator)
+                        {
+                            case 0:
+                                return true;
+                            case 1:
+                                return false;
+                        }
+                        break;
+                }
+                if (indicator < 0) indicator = 0;
+                if (indicator > 1) indicator = 1;
+            }
+            return false;
+        }
+        public static void BuyingOptions(int indicator)
+        {
+            IfSelected(0, indicator);
+            Console.SetCursorPosition(52 + UI.StartingPosX, PrintMenu.ButtonPosY +5);
+            Console.Write("YES");
+            IfSelected(1, indicator);
+            Console.SetCursorPosition(57 + UI.StartingPosX, PrintMenu.ButtonPosY +5);
+            Console.Write("NO");
+            Console.BackgroundColor = DefaultBackground;
+            Console.ForegroundColor = DefaultForeground;
+        }
+        private static void IfSelected(int pos, int indicator)
+        {
+            if (indicator == pos)
+            {
+                Console.BackgroundColor = ConsoleColor.White;
+                Console.ForegroundColor = ConsoleColor.Black;
+            }
+            else
+            {
+                Console.BackgroundColor = DefaultBackground;
+                Console.ForegroundColor = DefaultForeground;
+            }
+        }
+        public static void NotEnoughCoinsLog()
+        {
+            Log();
+            Console.Write("You Dont have enough coins...");
             Log();
         }
         public static void SteppedOnTrapLog(Trap trap)
@@ -140,6 +208,14 @@ namespace ConsoleDungeonCrawler.Printer
             Log();
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Write($"You got {amount} Clover!");
+            Console.ForegroundColor = DefaultForeground;
+            Log();
+        }
+        public static void GotScriptLog()
+        {
+            Log();
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.Write($"You got a C# Script!");
             Console.ForegroundColor = DefaultForeground;
             Log();
         }
@@ -244,10 +320,12 @@ namespace ConsoleDungeonCrawler.Printer
             Console.Write("Limit Reached...");
             Log();
         }
-        public static void ChangeCode(Player player)
+        public static void ChangeCodeLog(Player player)
         {
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
             if (player.HasScript)
             {
+
                 Log();
                 Console.Write("Success! You've changed the code!");
                 Log();
@@ -262,6 +340,7 @@ namespace ConsoleDungeonCrawler.Printer
                 Console.Write("in order to change the code");
             }
             Log();
+            Console.ForegroundColor = DefaultForeground;
         }
         public static void LevelStats(Level level)
         {
@@ -454,6 +533,7 @@ namespace ConsoleDungeonCrawler.Printer
             OwnedArmor(player);
             OwnedKeys(level);
             OwnedCoins(player);
+            OwnedScript(player);
         }
         public static void InventoryMenu()
         {
@@ -554,6 +634,26 @@ namespace ConsoleDungeonCrawler.Printer
             Console.Write("♣");
             Console.ForegroundColor = DefaultForeground;
             Console.Write($"x{player.Coins}");
+        }
+        public static void OwnedScript(Player player)
+        {
+            if (player.HasScript)
+            {
+                Console.SetCursorPosition(UI.InventoryBox.PosX + 19, UI.InventoryBox.PosY + 20);
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.Write("C# Script");
+                Console.ForegroundColor = DefaultForeground;
+            }
+            else
+            {
+                Console.SetCursorPosition(UI.InventoryBox.PosX + 19, UI.InventoryBox.PosY + 20);
+                Console.Write("         ");
+            }
+        }
+        public static void ResetCoins()
+        {
+            Console.SetCursorPosition(UI.InventoryBox.PosX + 1, UI.InventoryBox.PosY + 20);
+            Console.Write("        ");
         }
         public static void InventoryNav()
         {
@@ -678,44 +778,65 @@ namespace ConsoleDungeonCrawler.Printer
             Console.Clear();
             _skipCutscene = false;
             bool starting = true;
-            CutsceneDialog("Once Upon A Time...", starting);
-            CutsceneDialog("Tiltan Hosted Her Annual Global GameJam", starting);
-            CutsceneDialog($"{Game.PlayersName} Was So Exited To Finally Participate", starting);
+            CutsceneDialog("Once Upon A Time...", starting,0);
+            CutsceneDialog("Tiltan Hosted Her Annual Global GameJam", starting,-10);
+            CutsceneDialog($"{Game.PlayersName} Was So Exited To Finally Participate", starting,-12);
             if (Game.PlayerIsMale)
-                CutsceneDialog("That He Could Not Sleep All Night", starting);
+                CutsceneDialog("That He Could Not Sleep All Night", starting,-7);
             else
-                CutsceneDialog("That She Could Not Sleep All Night", starting);
-            CutsceneDialog("And When The GameJam Finally Started", starting);
-            CutsceneDialog($"{Game.PlayersName} Fell Asleep After 2 Hours of Work", starting);
-            CutsceneDialog("Only Then...", starting);
+                CutsceneDialog("That She Could Not Sleep All Night", starting,-7);
+            CutsceneDialog("And When The GameJam Finally Started", starting,-9);
+            CutsceneDialog($"{Game.PlayersName} Fell Asleep After 2 Hours of Work", starting,-10);
+            CutsceneDialog("Only Then...", starting,4);
             if (Game.PlayerIsMale)
-                CutsceneDialog("He Woke Up Into His Worst Nightmare", starting);
+                CutsceneDialog("He Woke Up Into His Worst Nightmare", starting,-8);
             else
-                CutsceneDialog("She Woke Up Into Her Worst Nightmare", starting);
-            CutsceneDialog("All of The Students Turned Into Zombies!", starting);
-            CutsceneDialog("You Have To Escape The College NOW!", starting);
+                CutsceneDialog("She Woke Up Into Her Worst Nightmare", starting,-8);
+            CutsceneDialog("All of The Students Turned Into Zombies!", starting,-10);
+            CutsceneDialog("You Have To Escape The College NOW!", starting,-9);
         }
-        public static void EndingCutscene(DBD dor)
+        public static void BossCutscene(DBD dor)
         {
             _skipCutscene = false;
             bool ending = false;
             Console.SetCursorPosition(UI.MapBox.PosX + 26, UI.MapBox.PosY + 17);
             Map.Enemy(dor);
-            Console.SetCursorPosition(47 + UI.StartingPosX, PrintMenu.ButtonPosY - 3);
+            Console.SetCursorPosition(50 + UI.StartingPosX, PrintMenu.ButtonPosY - 2);
             Console.Write("Dor Ben Dor:");
-            CutsceneDialog("Ha Ha Ha", ending);
-            CutsceneDialog("You Fool!", ending);
-            CutsceneDialog("You Can't Escape Me!", ending);
+            CutsceneDialog("Ha Ha Ha", ending, 2);
+            CutsceneDialog("You Fool!", ending, 1);
+            CutsceneDialog("You Can't Escape Me!", ending, -4);
             
         }
-        private static void CutsceneDialog(string text, bool starting)
+        public static void BossDefeatedCutscene()
+        {
+            _skipCutscene = false;
+            bool ending = false;
+            Console.SetCursorPosition(50 + UI.StartingPosX, PrintMenu.ButtonPosY - 2);
+            Console.Write("Dor Ben Dor:");
+            CutsceneDialog("Ahhhhhh!", ending,2);
+            CutsceneDialog("You Defeated Me!", ending, -2);
+            CutsceneDialog("I Guess...", ending,2);
+            CutsceneDialog("You Are a Better Programmer Than i Thought", ending, -14);
+            CutsceneDialog("I Will Give You an A- for the Effort...", ending, -12);
+
+        }
+        private static void CutsceneDialog(string text, bool starting, int posX)
         {
             if (_skipCutscene) return;
-            if (starting) Console.Clear();
-            if (starting) Console.SetCursorPosition(40 + UI.StartingPosX, PrintMenu.ButtonPosY - 2);
-            else Console.SetCursorPosition(47 + UI.StartingPosX, PrintMenu.ButtonPosY - 2);
+            if (starting) Console.SetCursorPosition(47 + posX + UI.StartingPosX, PrintMenu.ButtonPosY - 1);
+            else Console.SetCursorPosition(50 + posX + UI.StartingPosX, PrintMenu.ButtonPosY - 1);
             Console.Write(text);
-            if (SkipCutsceneDialog()) return;
+            if (SkipCutsceneDialog())
+            {
+                if (starting) Console.SetCursorPosition(47 + posX + UI.StartingPosX, PrintMenu.ButtonPosY - 1);
+                else Console.SetCursorPosition(50 + posX + UI.StartingPosX, PrintMenu.ButtonPosY - 1);
+                for (int i = 0; i < text.Length; i++)
+                {
+                    Console.Write(" ");
+                }
+                return;
+            }
         }
         private static bool SkipCutsceneDialog()
         {
@@ -724,7 +845,7 @@ namespace ConsoleDungeonCrawler.Printer
                 ConsoleKey key = Console.ReadKey(true).Key;
                 if (key == ConsoleKey.Enter) return true;
                 else if (key == ConsoleKey.Escape) _skipCutscene = true;
-                Console.SetCursorPosition(47 + UI.StartingPosX, PrintMenu.ButtonPosY + 4);
+                Console.SetCursorPosition(47 + UI.StartingPosX, PrintMenu.ButtonPosY + 5);
                 Console.Write("Press Enter To Skip");
             }
             return true;

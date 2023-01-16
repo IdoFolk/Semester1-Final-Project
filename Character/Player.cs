@@ -28,8 +28,8 @@ namespace ConsoleDungeonCrawler.Character
         public int WeaponCap { get; private set; }
         public int PotionCap { get; private set; }
         public int ArmorCap { get; private set; }
-        public int Coins { get; private set; }
-        public bool HasScript { get; private set; } = true;
+        public int Coins { get; private set; } = 200;
+        public bool HasScript { get; private set; } = false;
         public Player(string name,ConsoleColor color, int hp)
         {
             Name = name;
@@ -134,6 +134,10 @@ namespace ConsoleDungeonCrawler.Character
                     break;
                 case Tile.Computer:
                     TryToChangeCode(level);
+                    DontMove(key);
+                    break;
+                case Tile.Script:
+                    GetScript(level);
                     DontMove(key);
                     break;
                 case Tile.Exit:
@@ -313,6 +317,24 @@ namespace ConsoleDungeonCrawler.Character
                 Key key = level.Keys[keyNum];
                 if (key.Pos.X == Pos.X && key.Pos.Y == Pos.Y)
                 {
+                    if (key.InShop)
+                    {
+                        bool buyKey = HUD.BuyKey(key);
+                        if (buyKey)
+                        {
+                            if (Coins >= key.Price)
+                            {
+                                Coins -= key.Price;
+                                HUD.ResetCoins();
+                            }
+                            else
+                            {
+                                HUD.NotEnoughCoinsLog();
+                                return;
+                            }
+                        }
+                        else return;
+                    }
                     level.PlayerKeys.Add(new Key(key.Color));
                     //Sounds.KeySFX.Play();
                     Printer.HUD.GotKeyLog(key);
@@ -406,15 +428,22 @@ namespace ConsoleDungeonCrawler.Character
             if(key == ConsoleKey.Escape)
                 Menu.PauseMenu(level,this);
         }
+        private void GetScript(Level level)
+        {
+            HasScript = true;
+            level.Map[Pos.Y, Pos.X] = Tile.Empty;
+            HUD.GotScriptLog();
+        }
         private void TryToChangeCode(Level level)
         {
             if (HasScript)
             {
-                HUD.ChangeCode(this);
+                HUD.ChangeCodeLog(this);
                 level.Dor.CurrentHP = 10;
+                HasScript = false;
             }
             else
-                HUD.ChangeCode(this);
+                HUD.ChangeCodeLog(this);
         }
 
     }

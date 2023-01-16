@@ -15,6 +15,8 @@ namespace ConsoleDungeonCrawler
         public ConsoleColor Color { get; private set; }
         public ConsoleColor UsedColor { get; private set; }
         public bool Used { get; private set; } = false;
+        public bool InShop { get; private set; } = false;
+        public int Price { get; private set; } 
         public Key(ConsoleColor color)
         {
             Color = color;
@@ -26,6 +28,15 @@ namespace ConsoleDungeonCrawler
             if (Used) return;
             
             Used = true;
+        }
+        public void KeyInShop()
+        {
+            if (InShop) return;
+            InShop = true;
+        }
+        public void SetPrice(int price)
+        {
+            Price = price;
         }
         public void SetColor(ConsoleColor color)
         {

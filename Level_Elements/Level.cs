@@ -7,6 +7,7 @@ using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 using ConsoleDungeonCrawler.Character;
+using ConsoleDungeonCrawler.Printer;
 
 namespace ConsoleDungeonCrawler.Level_Elements
 {
@@ -22,6 +23,7 @@ namespace ConsoleDungeonCrawler.Level_Elements
         Key,
         Door,
         Computer,
+        Script,
         Entry,
         Exit
     }
@@ -75,8 +77,16 @@ namespace ConsoleDungeonCrawler.Level_Elements
                     char[,] mapSeed3 = MapBuilder.ReadTextFile("Level_Presets\\Level_3.txt");
                     SetLevel(mapSeed3);
                     break;
+                case 4:
+                    char[,] mapSeed4 = MapBuilder.ReadTextFile("Level_Presets\\Level_4.txt");
+                    SetLevel(mapSeed4);
+                    break;
+                case 5:
+                    char[,] mapSeed5 = MapBuilder.ReadTextFile("Level_Presets\\Level_5.txt");
+                    SetLevel(mapSeed5);
+                    break;
                 case 10:
-                    Dor = new DBD(ConsoleColor.Cyan,3,10000);
+                    Dor = new DBD(ConsoleColor.Cyan,3,1000);
                     char[,] mapSeed10 = MapBuilder.ReadTextFile("Level_Presets\\Level_10.txt");
                     SetLevel(mapSeed10);
                     break;
@@ -154,7 +164,9 @@ namespace ConsoleDungeonCrawler.Level_Elements
                         case 'C':
                             map[i, j] = Tile.Computer;
                             break;
-
+                        case 'S':
+                            map[i, j] = Tile.Script;
+                            break;
                     }
                 }
             }
@@ -172,6 +184,7 @@ namespace ConsoleDungeonCrawler.Level_Elements
                     else if (Map[i, j] == Tile.Trap) Map[i, j] = Tile.Trap;
                     else if (Map[i, j] == Tile.Coin) Map[i, j] = Tile.Coin;
                     else if (Map[i, j] == Tile.Computer) Map[i, j] = Tile.Computer;
+                    else if (Map[i, j] == Tile.Script) Map[i, j] = Tile.Script;
                     else if (_player.Pos.Y == i && _player.Pos.X == j) Map[i, j] = Tile.Player;
                     else Map[i, j] = Tile.Empty;
                     CheckInstances(Keys, i, j);
@@ -271,7 +284,11 @@ namespace ConsoleDungeonCrawler.Level_Elements
             Printer.HUD.CombatLog(_player, dor, playersAttack);
             Printer.HUD.CombatLog(dor, _player, enemysAttack);
             Printer.HUD.EnemyStats(dor);
-            if (dor.IsDead()) EnemiesKilled++;
+            if (dor.IsDead())
+            {
+                HUD.BossDefeatedCutscene();
+                EnemiesKilled++;
+            }
             //if (_player.IsDead()) Sounds.DyingSFX.Play();
         }
         public void OpenDoor(Door door, int doorNum)
