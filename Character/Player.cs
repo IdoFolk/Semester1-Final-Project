@@ -28,7 +28,7 @@ namespace ConsoleDungeonCrawler.Character
         public int WeaponCap { get; private set; }
         public int PotionCap { get; private set; }
         public int ArmorCap { get; private set; }
-        public int Coins { get; private set; } = 200;
+        public int Coins { get; private set; }
         public bool HasScript { get; private set; } = false;
         public Player(string name,ConsoleColor color, int hp)
         {
@@ -52,15 +52,14 @@ namespace ConsoleDungeonCrawler.Character
             if (Inventory.IsOpen) return 0;
             int attack = EquippedWeapon.Attack();
             if (attack == 0) return attack;
+            EquippedWeapon.Tear();
             if (EquippedWeapon.Durability == 0)
             {
                 if (EquippedWeapon == DefaultWeapon)
                     return attack;
                 WeaponBreak(EquippedWeapon);
                 HUD.ClearInventory();
-                return 0;
             }
-            EquippedWeapon.Tear();
             return attack;
         }
         public void TakeDamage(int damage)
@@ -304,7 +303,9 @@ namespace ConsoleDungeonCrawler.Character
             int amount = 0;
             level.Map[Pos.Y, Pos.X] = Tile.Empty;
             float rand = Random.Shared.NextSingle();
-            if (rand > 0.7f) amount++;
+            if (rand > 0.3f) amount++;
+            if (rand > 0.6f) amount++;
+            if (rand > 0.9f) amount++;
             amount++;
             //Sounds.CoinSFX.Play();
             HUD.GotCoinLog(amount);

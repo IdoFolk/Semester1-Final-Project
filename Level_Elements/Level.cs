@@ -85,6 +85,10 @@ namespace ConsoleDungeonCrawler.Level_Elements
                     char[,] mapSeed5 = MapBuilder.ReadTextFile("Level_Presets\\Level_5.txt");
                     SetLevel(mapSeed5);
                     break;
+                case 6:
+                    char[,] mapSeed6 = MapBuilder.ReadTextFile("Level_Presets\\Level_6.txt");
+                    SetLevel(mapSeed6);
+                    break;
                 case 10:
                     Dor = new DBD(ConsoleColor.Cyan,3,1000);
                     char[,] mapSeed10 = MapBuilder.ReadTextFile("Level_Presets\\Level_10.txt");
