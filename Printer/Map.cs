@@ -37,12 +37,12 @@ namespace ConsoleDungeonCrawler.Printer
                             Wall();
                             break;
                         case Tile.Enemy:
-                            if (level.Dor != null)
+                            foreach (Boss boss in level.Bosses)
                             {
                                 if (player.Pos.X == j && player.Pos.Y == i)
                                     Avatar(player);
-                                else if (level.Dor.Pos.Y == i && level.Dor.Pos.X == j)
-                                    Enemy(level.Dor);
+                                else if (boss.Pos.Y == i && boss.Pos.X == j)
+                                    Enemy(boss);
                             }
                             foreach (Enemy enemy in level.Enemies)
                             {
@@ -120,14 +120,14 @@ namespace ConsoleDungeonCrawler.Printer
                                 Wall();
                             break;
                         case Tile.Enemy:
-                            if (level.Dor != null)
+                            foreach (Boss boss in level.Bosses)
                             {
                                 if (InRange(player, i, j))
                                 {
                                     if (player.Pos.X == j && player.Pos.Y == i)
                                         Avatar(player);
-                                    else if (level.Dor.Pos.Y == i && level.Dor.Pos.X == j)
-                                        Enemy(level.Dor);
+                                    else if (boss.Pos.Y == i && boss.Pos.X == j)
+                                        Enemy(boss);
                                 }
                             }
                             foreach (Enemy enemy in level.Enemies)
@@ -300,11 +300,11 @@ namespace ConsoleDungeonCrawler.Printer
             Console.Write("☻");
             Console.ForegroundColor = DefaultForeground;
         }
-        public static void Enemy(DBD dor)
+        public static void Enemy(Boss boss)
         {
-            if (dor.Activated)
+            if (boss.Activated)
             {
-                if (dor.IsDead())
+                if (boss.IsDead())
                 {
                     Console.ForegroundColor = ConsoleColor.Black;
                     Console.BackgroundColor = ConsoleColor.DarkRed;
@@ -313,7 +313,7 @@ namespace ConsoleDungeonCrawler.Printer
                     Console.ForegroundColor = DefaultForeground;
                     return;
                 }
-                Console.ForegroundColor = dor.Color;
+                Console.ForegroundColor = boss.Color;
                 Console.Write("☻");
                 Console.ForegroundColor = DefaultForeground;
             }

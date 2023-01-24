@@ -13,6 +13,7 @@ namespace ConsoleDungeonCrawler
     {
         public static int MenuIndicator { get; private set; } 
         public static bool MenuIsOpen { get; private set; } = false;
+        public static bool PauseMenuIsOpen { get; private set; } = false;
         public static bool OptionsIsOpen { get; private set; } = false;
         public static bool SubOptionsIsOpen { get; private set; } = false;
         public static bool SubSubOptionsIsOpen { get; private set; } = false;
@@ -84,6 +85,8 @@ namespace ConsoleDungeonCrawler
                                 AvatarMenu();
                                 break;
                             case 2:
+                                if (PauseMenuIsOpen)
+                                    break;
                                 DifficultyMenu();
                                 break;
                             case 3:
@@ -223,12 +226,15 @@ namespace ConsoleDungeonCrawler
                         {
                             case 1:
                                 Game.Difficulty = Difficulty.Easy;
+                                Game.SetDifficulty(Difficulty.Easy);
                                 break;
                             case 2:
                                 Game.Difficulty = Difficulty.Medium;
+                                Game.SetDifficulty(Difficulty.Medium);
                                 break;
                             case 3:
                                 Game.Difficulty = Difficulty.Hard;
+                                Game.SetDifficulty(Difficulty.Hard);
                                 break;
                         }
                         Console.Clear();
@@ -301,10 +307,6 @@ namespace ConsoleDungeonCrawler
         {
             MenuIsOpen = true;
         }
-        private static void CloseMenu()
-        {
-            MenuIsOpen = false;
-        }
         private static void OpenOptions()
         {
             OptionsIsOpen = true;
@@ -315,9 +317,9 @@ namespace ConsoleDungeonCrawler
         }
         public static void PauseMenu(Level level, Player player)
         {
-            OpenMenu();
+            PauseMenuIsOpen = true;
             Map.MapClear();
-            while (MenuIsOpen)
+            while (PauseMenuIsOpen)
             {
                 Console.CursorVisible = false;
                 PrintMenu.PrintPauseMenu();
@@ -334,17 +336,16 @@ namespace ConsoleDungeonCrawler
                         switch (MenuIndicator)
                         {
                             case 0:
-                                CloseMenu();
+                                PauseMenuIsOpen = false;
                                 break;
                             case 1:
                                 Console.Clear();
                                 OptionsMenu();
                                 break;
                             case 2:
-                                //Starts a new Game?
                                 Console.Clear();
                                 CloseGame = true;
-                                CloseMenu();
+                                PauseMenuIsOpen = false;
                                 return;
                         }
                         Console.Clear();
@@ -353,7 +354,7 @@ namespace ConsoleDungeonCrawler
                         MenuIndicator = 0;
                         break;
                     case ConsoleKey.Escape:
-                        CloseMenu();
+                        PauseMenuIsOpen = false;
                         break;
                 }
                 if (MenuIndicator < 0) MenuIndicator = 0;

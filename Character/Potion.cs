@@ -40,7 +40,7 @@ namespace ConsoleDungeonCrawler.Character
                 case ConsoleColor.Cyan:
                     Name = "Water";
                     break;
-                case ConsoleColor.Green:
+                case ConsoleColor.Yellow:
                     Name = "Snack";
                     break;
                 case ConsoleColor.Magenta:

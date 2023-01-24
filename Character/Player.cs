@@ -28,7 +28,7 @@ namespace ConsoleDungeonCrawler.Character
         public int WeaponCap { get; private set; }
         public int PotionCap { get; private set; }
         public int ArmorCap { get; private set; }
-        public int Coins { get; private set; }
+        public int Coins { get; private set; } = 130;
         public bool HasScript { get; private set; } = false;
         public Player(string name,ConsoleColor color, int hp)
         {
@@ -209,11 +209,11 @@ namespace ConsoleDungeonCrawler.Character
         private bool EnemyIsDead(Level level)
         {
             bool isDead = false;
-            if (level.Dor != null)
+            foreach (Boss boss in level.Bosses)
             {
-                if (level.Dor.Pos.Y == Pos.Y && level.Dor.Pos.X == Pos.X)
+                if (boss.Pos.Y == Pos.Y && boss.Pos.X == Pos.X)
                 {
-                    if (level.Dor.IsDead()) isDead = true;
+                    if (boss.IsDead()) isDead = true;
                     else isDead = false;
                 }
             }
@@ -234,12 +234,12 @@ namespace ConsoleDungeonCrawler.Character
                 if (level.Enemies[enemyNum].Pos.Y == Pos.Y && level.Enemies[enemyNum].Pos.X == Pos.X)
                     level.Combat(level.Enemies[enemyNum]);
             }
-            if (level.Dor != null)
+            foreach (Boss boss in level.Bosses)
             {
-                if (level.Dor.Pos.Y == Pos.Y && level.Dor.Pos.X == Pos.X)
+                if (boss.Pos.Y == Pos.Y && boss.Pos.X == Pos.X)
                 {
-                    if(!level.Dor.Activated) level.Dor.Activate();
-                    level.Combat(level.Dor);
+                    if (!boss.Activated) boss.Activate();
+                    level.Combat(boss);
                 }
             }
         }
@@ -431,6 +431,11 @@ namespace ConsoleDungeonCrawler.Character
         }
         private void GetScript(Level level)
         {
+            if (HasScript)
+            {
+                HUD.AlreadyGotScriptLog();
+                return;
+            }
             HasScript = true;
             level.Map[Pos.Y, Pos.X] = Tile.Empty;
             HUD.GotScriptLog();
@@ -440,7 +445,7 @@ namespace ConsoleDungeonCrawler.Character
             if (HasScript)
             {
                 HUD.ChangeCodeLog(this);
-                level.Dor.CurrentHP = 10;
+                level.Bosses[level.Bosses.Count-1].CurrentHP = 10;
                 HasScript = false;
             }
             else

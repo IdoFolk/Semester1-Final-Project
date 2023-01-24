@@ -41,11 +41,11 @@ namespace ConsoleDungeonCrawler
         public static string PlayersName { get; private set; } = "Student";
         public static bool PlayerIsMale { get; private set; } = true;
         public static ConsoleColor AvatarsColor { get; private set; } = ConsoleColor.DarkYellow;
-        public static readonly int[] LevelNumber = new int[] {1,2,3,4,5,6,10};
+        public static readonly int[] LevelNumber = new int[] {5,6,7,8,9,10};
         public static List<Weapon> Weapons = new List<Weapon>();
         public static List<Potion> Potions = new List<Potion>();
         public static List<Armor> Armors = new List<Armor>();
-        public static Range FogOfWar = new Range(false, 7, 3);
+        public static Range FogOfWar = new Range(false, 6, 3);
         public static Difficulty Difficulty = Difficulty.Easy;
         public static bool GameLost { get; private set; } = false;
         public static bool NoPause { get; private set; }
@@ -73,7 +73,6 @@ namespace ConsoleDungeonCrawler
             while (!(level.IsComplete || GameLost))
             {
                 if (Menu.CloseGame) return;
-                SetDifficulty(Difficulty);
                 Console.CursorVisible = false;
                 Printer.HUD.GameState(level, player);
                 EnemiesActions(level, player);
@@ -108,26 +107,87 @@ namespace ConsoleDungeonCrawler
         }
         private static void LoadWeapons()
         {
-            Weapons.Add(new Weapon("Fists", 1, 0.6f, 0,0));
-            Weapons.Add(new Weapon("Dagger", 2, 0.7f, 2,0.3f));
-            Weapons.Add(new Weapon("Sword", 2, 0.8f, 4,0.55f));
-            Weapons.Add(new Weapon("Spear", 3, 0.9f, 3,0.75f));
-            Weapons.Add(new Weapon("Mace", 4, 0.5f, 5,0.9f));
-            Weapons.Add(new Weapon("GreatAxe", 5, 0.4f, 5,1f));
+            Weapons.Clear();
+            switch (Difficulty)
+            {
+                case Difficulty.Easy:
+                    Weapons.Add(new Weapon("Fists", 1, 0.7f, 0, 0));
+                    Weapons.Add(new Weapon("Dagger", 2, 0.8f, 3, 0.3f));
+                    Weapons.Add(new Weapon("Sword", 2, 0.9f, 4, 0.55f));
+                    Weapons.Add(new Weapon("Spear", 3, 0.95f, 4, 0.75f));
+                    Weapons.Add(new Weapon("Mace", 4, 0.6f, 5, 0.9f));
+                    Weapons.Add(new Weapon("GreatAxe", 5, 0.5f, 5, 1f));
+                    break;
+                case Difficulty.Medium:
+                    Weapons.Add(new Weapon("Fists", 1, 0.6f, 0, 0));
+                    Weapons.Add(new Weapon("Dagger", 2, 0.7f, 2, 0.3f));
+                    Weapons.Add(new Weapon("Sword", 2, 0.8f, 4, 0.55f));
+                    Weapons.Add(new Weapon("Spear", 3, 0.9f, 3, 0.75f));
+                    Weapons.Add(new Weapon("Mace", 4, 0.5f, 5, 0.9f));
+                    Weapons.Add(new Weapon("GreatAxe", 5, 0.4f, 5, 1f));
+                    break;
+                case Difficulty.Hard:
+                    Weapons.Add(new Weapon("Fists", 1, 0.5f, 0, 0));
+                    Weapons.Add(new Weapon("Dagger", 2, 0.6f, 2, 0.3f));
+                    Weapons.Add(new Weapon("Sword", 2, 0.7f, 3, 0.55f));
+                    Weapons.Add(new Weapon("Spear", 3, 0.8f, 3, 0.75f));
+                    Weapons.Add(new Weapon("Mace", 4, 0.5f, 5, 0.9f));
+                    Weapons.Add(new Weapon("GreatAxe", 5, 0.4f, 5, 1f));
+                    break;
+            }
+            
         }
         private static void LoadPotions()
         {
-            Potions.Add(new Potion(ConsoleColor.Cyan, 2, 0.5f));
-            Potions.Add(new Potion(ConsoleColor.Green, 4, 0.8f));
-            Potions.Add(new Potion(ConsoleColor.Magenta, 6, 1f));
+            Potions.Clear();
+            switch (Difficulty)
+            {
+                case Difficulty.Easy:
+                    Potions.Add(new Potion(ConsoleColor.Cyan, 3, 0.5f));
+                    Potions.Add(new Potion(ConsoleColor.Yellow, 5, 0.8f));
+                    Potions.Add(new Potion(ConsoleColor.Magenta, 7, 1f));
+                    break;
+                case Difficulty.Medium:
+                    Potions.Add(new Potion(ConsoleColor.Cyan, 2, 0.5f));
+                    Potions.Add(new Potion(ConsoleColor.Yellow, 4, 0.8f));
+                    Potions.Add(new Potion(ConsoleColor.Magenta, 6, 1f));
+                    break;
+                case Difficulty.Hard:
+                    Potions.Add(new Potion(ConsoleColor.Cyan, 2, 0.5f));
+                    Potions.Add(new Potion(ConsoleColor.Yellow, 3, 0.8f));
+                    Potions.Add(new Potion(ConsoleColor.Magenta, 5, 1f));
+                    break;
+            }
+            
         }
         private static void LoadArmors()
         {
-            Armors.Add(new Armor("Underwear",0,0,0));
-            Armors.Add(new Armor("T-Shirt",0.5f,2,0.4f));
-            Armors.Add(new Armor("Jacket",0.4f,3,0.7f));
-            Armors.Add(new Armor("Coat",0,5,0.9f));
-            Armors.Add(new Armor("Hoodie",0.9f,1,1f));
+            Armors.Clear();
+            switch (Difficulty)
+            {
+                case Difficulty.Easy:
+                    Armors.Add(new Armor("Underwear", 0, 0, 0));
+                    Armors.Add(new Armor("T-Shirt", 0.6f, 3, 0.4f));
+                    Armors.Add(new Armor("Jacket", 0.5f, 4, 0.7f));
+                    Armors.Add(new Armor("Coat", 0.2f, 5, 0.9f));
+                    Armors.Add(new Armor("Hoodie", 0.95f, 1, 1f));
+                    break;
+                case Difficulty.Medium:
+                    Armors.Add(new Armor("Underwear", 0, 0, 0));
+                    Armors.Add(new Armor("T-Shirt", 0.5f, 2, 0.4f));
+                    Armors.Add(new Armor("Jacket", 0.5f, 3, 0.7f));
+                    Armors.Add(new Armor("Coat", 0, 5, 0.9f));
+                    Armors.Add(new Armor("Hoodie", 0.9f, 1, 1f));
+                    break;
+                case Difficulty.Hard:
+                    Armors.Add(new Armor("Underwear", 0, 0, 0));
+                    Armors.Add(new Armor("T-Shirt", 0.5f, 1, 0.4f));
+                    Armors.Add(new Armor("Jacket", 0.5f, 3, 0.7f));
+                    Armors.Add(new Armor("Coat", 0, 5, 0.9f));
+                    Armors.Add(new Armor("Hoodie", 0.9f, 1, 1f));
+                    break;
+            }
+            
         }
         private static void Result(Player player)
         {
@@ -170,7 +230,7 @@ namespace ConsoleDungeonCrawler
         {
             AvatarsColor = color;
         }
-        private static void SetDifficulty(Difficulty difficulty)
+        public static void SetDifficulty(Difficulty difficulty)
         {
             switch (difficulty)
             {

@@ -100,6 +100,44 @@ namespace ConsoleDungeonCrawler.Level_Elements
                     SetEnemies(EnemyType.Junior, 2);
                     ResetIndicator();
                     break;
+                case 7:
+                    SetDoor(ConsoleColor.Yellow);
+                    SetDoor(ConsoleColor.Magenta);
+                    SetDoor(ConsoleColor.Cyan);
+                    SetDoor(ConsoleColor.Red);
+                    SetKey(ConsoleColor.Red);
+                    SetKey(ConsoleColor.Cyan);
+                    SetKey(ConsoleColor.Magenta);
+                    SetKey(ConsoleColor.Yellow);
+                    SetEnemies(EnemyType.Junior, 2);
+                    SetEnemies(EnemyType.Senior, 4);
+                    SetEnemies(EnemyType.Junior, 3);
+                    ResetIndicator();
+                    break;
+                case 8:
+                    SetDoor(ConsoleColor.Yellow);
+                    SetDoor(ConsoleColor.Red);
+                    SetKey(ConsoleColor.Red);
+                    SetKey(ConsoleColor.Yellow);
+                    SetEnemies(EnemyType.Junior, 4);
+                    SetEnemies(EnemyType.Freshmen, 3);
+                    SetEnemies(EnemyType.Junior, 1);
+                    SetEnemies(EnemyType.Freshmen, 1);
+                    SetEnemies(EnemyType.Junior, 1);
+                    SetEnemies(EnemyType.Freshmen, 1);
+                    ResetIndicator();
+                    break;
+                case 9:
+                    SetDoor(ConsoleColor.Magenta);
+                    SetDoor(ConsoleColor.Cyan);
+                    SetDoor(ConsoleColor.Blue);
+                    SetDoor(ConsoleColor.Red);
+                    SetKeyInShop(ConsoleColor.Cyan, 50);
+                    SetKeyInShop(ConsoleColor.Blue, 100);
+                    SetKeyInShop(ConsoleColor.Magenta, 150);
+                    SetKey(ConsoleColor.Red);
+                    ResetIndicator();
+                    break;
                 case 10:
                     SetDoor(ConsoleColor.Red);
                     SetKey(ConsoleColor.Red);

@@ -205,9 +205,20 @@ namespace ConsoleDungeonCrawler.Printer
         }
         private static void DifficultyButton(int pos)
         {
-            Console.SetCursorPosition(ButtonPosX + UI.StartingPosX, ButtonPosY + (pos * 2));
-            IfSelected(pos);
-            Console.Write("DIFFICULTY");
+            if (Menu.PauseMenuIsOpen)
+            {
+                Console.SetCursorPosition(ButtonPosX + UI.StartingPosX, ButtonPosY + (pos * 2));
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                IfSelected(pos);
+                Console.Write("DIFFICULTY");
+
+            }
+            else
+            {
+                Console.SetCursorPosition(ButtonPosX + UI.StartingPosX, ButtonPosY + (pos * 2));
+                IfSelected(pos);
+                Console.Write("DIFFICULTY");
+            }
             if (Menu.SubOptionsIsOpen)
             {
                 Console.Write(": ");

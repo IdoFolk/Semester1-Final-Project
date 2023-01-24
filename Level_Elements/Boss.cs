@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ConsoleDungeonCrawler.Level_Elements
 {
-    class DBD
+    class Boss
     {
         public Vector2 Pos = new Vector2();
         public ConsoleColor Color { get; private set; }
@@ -17,13 +17,14 @@ namespace ConsoleDungeonCrawler.Level_Elements
         public int CurrentHP { get; set; }
         public int Damage { get; private set; }
         public bool Activated { get; private set; }
-        public DBD(ConsoleColor color, int damage, int maxHP)
+        public Boss(ConsoleColor color, string name, int damage, int maxHP, bool activated)
         {
             Color = color;
             MaxHP = maxHP;
             CurrentHP = MaxHP;
             Damage = damage;
-            Name = "Dor";
+            Name = name;
+            Activated = activated;
         }
         public int Attack(Player player)
         {

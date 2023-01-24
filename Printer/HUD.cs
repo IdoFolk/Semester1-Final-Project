@@ -2,6 +2,7 @@
 using ConsoleDungeonCrawler.Level_Elements;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -13,14 +14,16 @@ namespace ConsoleDungeonCrawler.Printer
     {
         private static ConsoleColor DefaultForeground = ConsoleColor.Gray;
         private static ConsoleColor DefaultBackground = ConsoleColor.Black;
-        private static int _logIndicator;
         private static bool _skipCutscene;
+        private static Queue<string> _logs = new Queue<string>();
+        private static Queue<ConsoleColor> _logColors = new Queue<ConsoleColor>();
         public static void GameState(Level level, Player player)
         {
             Map.PrintMap(level, player);
             LevelStats(level);
             PlayerStats(player);
             PrintInventory(player, level);
+            PrintLog();
         }
         public static void GameStatePaused(Level level, Player player)
         {
@@ -28,100 +31,108 @@ namespace ConsoleDungeonCrawler.Printer
             PlayerStats(player);
             PrintInventory(player, level);
         }
+        private static void PrintLog()
+        {
+            int i = 0;
+            foreach (string logText in _logs)
+            {
+                int c = 0;
+                foreach (var color in _logColors)
+                {
+                    if (i == c) Console.ForegroundColor = color;
+                    c++;
+                }
+                Console.SetCursorPosition(UI.LogBox.PosX + 1, UI.LogBox.PosY + 3 + i);
+                Console.WriteLine(logText);
+                i++;
+            }
+            Console.ForegroundColor = DefaultForeground;
+            i = 0;
+            foreach (string logText in _logs)
+            {
+                int posX = UI.LogBox.PosX + 1 + logText.Length;
+                int logBoxEnd = UI.LogBox.PosX + UI.LogBox.Width;
+                Console.SetCursorPosition(posX, UI.LogBox.PosY + 3 + i);
+                for (int j = 0; j < logBoxEnd - posX; j++)
+                {
+                    Console.Write(" ");
+                }
+                i++;
+            }
+        }
+        public static void Log(string logText, ConsoleColor color)
+        {
+            _logs.Enqueue(logText);
+            _logColors.Enqueue(color);
+            if (_logs.Count > 29)
+                _logs.Dequeue();
+            if (_logColors.Count > 29)
+                _logColors.Dequeue();
+        }
         public static void Log()
         {
-            if (_logIndicator > UI.LogBox.Height - 4) LogReset();
-            Console.SetCursorPosition(UI.LogBox.PosX + 1, UI.LogBox.PosY + 3 + _logIndicator);
-            _logIndicator++;
+            _logs.Enqueue("");
+            _logColors.Enqueue(ConsoleColor.White);
+            if (_logs.Count > 29)
+                _logs.Dequeue();
+            if (_logColors.Count > 29)
+                _logColors.Dequeue();
         }
         public static void LogReset()
         {
-            for (int i = 0; i < UI.LogBox.Height - 3; i++)
-            {
-                for (int j = 0; j < UI.LogBox.Width - 1; j++)
-                {
-                    Console.SetCursorPosition(UI.LogBox.PosX + j + 1, UI.LogBox.PosY + i + 3);
-                    Console.Write(' ');
-                }
-            }
-            _logIndicator = 0;
+            _logs.Clear();
+            _logColors.Clear();
         }
         public static void CombatLog(Player player, Enemy enemy, int attack)
         {
             if (attack == 0)
             {
-                Log();
-                Console.Write($"{player.Name} Misses...");
+                Log($"{player.Name} Misses...",DefaultForeground);
                 return;
 
             }
-            Console.ForegroundColor = ConsoleColor.Red;
-            Log();
-            Console.Write($"{player.Name} attacks {enemy.Name} for {attack} damage.");
-            Console.ForegroundColor = DefaultForeground;
-
+            Log($"{player.Name} attacks {enemy.Name} for {attack} damage.", ConsoleColor.Red);
         }
         public static void CombatLog(Enemy enemy, Player player, int attack)
         {
             if (attack == 0)
             {
-                Log();
-                Console.Write($"{enemy.Name} Misses...");
+                Log($"{enemy.Name} Misses...", DefaultForeground);
                 Log();
                 return;
             }
-            Console.ForegroundColor = ConsoleColor.Red;
+            Log($"{enemy.Name} attacks {player.Name} for {attack} damage.", ConsoleColor.Red);
             Log();
-            Console.Write($"{enemy.Name} attacks {player.Name} for {attack} damage.");
-            Console.ForegroundColor = DefaultForeground;
-            Log();
-
         }
-        public static void CombatLog(Player player, DBD dor, int attack)
+        public static void CombatLog(Player player, Boss boss, int attack)
         {
             if (attack == 0)
             {
-                Log();
-                Console.Write($"{player.Name} Misses...");
+                Log($"{player.Name} Misses...", DefaultForeground);
                 return;
 
             }
-            Console.ForegroundColor = ConsoleColor.Red;
-            Log();
-            Console.Write($"{player.Name} attacks {dor.Name} for {attack} damage.");
-            Console.ForegroundColor = DefaultForeground;
-
+            Log($"{player.Name} attacks {boss.Name} for {attack} damage.", ConsoleColor.Red);
         }
-        public static void CombatLog(DBD dor, Player player, int attack)
+        public static void CombatLog(Boss boss, Player player, int attack)
         {
             if (attack == 0)
             {
-                Log();
-                Console.Write($"{dor.Name} Misses...");
+                Log($"{boss.Name} Misses...", DefaultForeground);
                 Log();
                 return;
             }
-            Console.ForegroundColor = ConsoleColor.Red;
+            Log($"{boss.Name} attacks {player.Name} for {attack} damage.", ConsoleColor.Red);
             Log();
-            Console.Write($"{dor.Name} attacks {player.Name} for {attack} damage.");
-            Console.ForegroundColor = DefaultForeground;
-            Log();
-
         }
         public static void OpenDoorLog(Door door)
         {
-            Log();
-            Console.ForegroundColor = door.Color;
-            Console.Write("You have opened a door");
-            Console.ForegroundColor = DefaultForeground;
+            Log("You have opened a door", door.Color);
             Log();
         }
         public static void GotKeyLog(Key key)
         {
-            Log();
-            Console.ForegroundColor = key.Color;
-            Console.Write("You got a key");
-            Console.ForegroundColor = DefaultForeground;
+            Log("You got a key", key.Color);
             Log();
         }
         public static bool BuyKey(Key key)
@@ -189,158 +200,125 @@ namespace ConsoleDungeonCrawler.Printer
         }
         public static void NotEnoughCoinsLog()
         {
-            Log();
-            Console.Write("You Dont have enough coins...");
+            Log("You Dont have enough coins...", DefaultForeground);
             Log();
         }
         public static void SteppedOnTrapLog(Trap trap)
         {
-            Console.ForegroundColor = ConsoleColor.Red;
+            Log($"{Game.PlayersName} stepped on a piece of art and", ConsoleColor.Red);
+            Log($"received {trap.Damage} damage", ConsoleColor.Red);
             Log();
-            Console.Write($"{Game.PlayersName} stepped on a piece of art and");
-            Log();
-            Console.Write($"received {trap.Damage} damage");
-            Log();
-            Console.ForegroundColor = DefaultForeground;
         }
         public static void GotCoinLog(int amount)
         {
-            Log();
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write($"You got {amount} Clover!");
-            Console.ForegroundColor = DefaultForeground;
+            Log($"You got {amount} Clover!", ConsoleColor.Green);
             Log();
         }
         public static void GotScriptLog()
         {
+            Log($"You got a C# Script!", ConsoleColor.Cyan);
             Log();
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.Write($"You got a C# Script!");
-            Console.ForegroundColor = DefaultForeground;
+        }
+        public static void AlreadyGotScriptLog()
+        {
+            Log($"You already have a C# Script ...", ConsoleColor.Cyan);
             Log();
         }
         public static void OpenChestLog()
         {
-            Log();
-            Console.Write("You have opened a bag and got:");
+            Log("You have opened a bag and got:", DefaultForeground);
         }
         public static void GotWeaponLog(Weapon weapon)
         {
+            Log($"A {weapon.Name}!", DefaultForeground);
             Log();
-            Console.Write($"A {weapon.Name}!");
-            Log();
-
         }
         public static void GotPotionLog(Potion potion)
         {
-            Log();
-            Console.ForegroundColor = potion.Color;
             if (potion.Name == "Water")
-                Console.Write($"A bottle of {potion.Name}!");
-            else Console.Write($"A {potion.Name}!");
-            Console.ForegroundColor = DefaultForeground;
+                Log($"A bottle of {potion.Name}!", potion.Color);
+            else Log($"A {potion.Name}!", potion.Color);
             Log();
-
         }
         public static void GotArmorLog(Armor armor)
         {
-            Log();
-            Console.Write($"A {armor.Name}!");
+            Log($"A {armor.Name}!", DefaultForeground);
             Log();
         }
         public static void WeaponBreakLog(Weapon weapon)
         {
-            Log();
-            Console.Write($"{weapon.Name} broke...");
+            Log($"{weapon.Name} broke...", DefaultForeground);
             Log();
         }
         public static void UsePotionLog(Potion potion)
         {
-            Log();
-            Console.ForegroundColor = potion.Color;
             switch (potion.Name)
             {
                 case "Water":
-                    Console.Write("You drank some water and healed for");
+                    Log("You drank some water and healed for", potion.Color);
                     break;
                 case "Snack":
-                    Console.Write("You ate a snack and healed for");
+                    Log("You ate a snack and healed for", potion.Color);
                     break;
                 case "Sandwich":
-                    Console.Write("You ate a sandwich and healed for");
+                    Log("You ate a sandwich and healed for", potion.Color);
                     break;
             }
-            Log();
-            Console.Write($"{potion.Heal} Hearts");
-            Console.ForegroundColor = DefaultForeground;
+            Log($"{potion.Heal} Hearts", potion.Color);
             Log();
         }
         public static void DropWeaponLog(Weapon weapon)
         {
-            Log();
-            Console.Write($"{weapon.Name} Dropped...");
+            Log($"{weapon.Name} Dropped...", DefaultForeground);
             Log();
         }
         public static void ArmorBreakLog(Armor armor)
         {
-            Log();
-            if (armor.Name == "Plate Armor") Console.Write($"{armor.Name} Broke...");
-            else Console.Write($"{armor.Name} Ripped...");
+            if (armor.Name == "Plate Armor") Log($"{armor.Name} Broke...", DefaultForeground);
+            else Log($"{armor.Name} Ripped...", DefaultForeground);
             Log();
         }
         public static void DropArmorLog(Armor armor)
         {
-            Log();
-            Console.Write($"{armor.Name} Dropped...");
+            Log($"{armor.Name} Dropped...", DefaultForeground);
             Log();
         }
         public static void DropPotionLog(Potion potion)
         {
-            Log();
-            Console.Write($"{potion.Name} Potion Dropped...");
+            Log($"{potion.Name} Potion Dropped...", potion.Color);
             Log();
         }
         public static void ItemCappedLog(ItemType itemType)
         {
-            Log();
             switch (itemType)
             {
                 case ItemType.Weapon:
-                    Console.Write("Weapon ");
+                    Log("Weapon Limit Reached...", DefaultForeground);
                     break;
                 case ItemType.Potion:
-                    Console.Write("Potion ");
+                    Log("Potion Limit Reached...", DefaultForeground);
                     break;
                 case ItemType.Armor:
-                    Console.Write("Armor ");
-                    break;
-                case ItemType.Coin:
+                    Log("Armor Limit Reached...", DefaultForeground);
                     break;
             }
-            Console.Write("Limit Reached...");
             Log();
         }
         public static void ChangeCodeLog(Player player)
         {
-            Console.ForegroundColor = ConsoleColor.DarkCyan;
             if (player.HasScript)
             {
 
-                Log();
-                Console.Write("Success! You've changed the code!");
-                Log();
-                Console.Write("Dor's HP is now 10");
+                Log("Success! You've changed the code!", ConsoleColor.DarkCyan);
+                Log("Dor's HP is now 10", ConsoleColor.DarkCyan);
 
             }
             else
             {
-                Log();
-                Console.Write("You dont have the necessary Script");
-                Log();
-                Console.Write("in order to change the code");
+                Log("You dont have the necessary Script", ConsoleColor.DarkCyan);
+                Log("in order to change the code", ConsoleColor.DarkCyan);
             }
             Log();
-            Console.ForegroundColor = DefaultForeground;
         }
         public static void LevelStats(Level level)
         {
@@ -415,7 +393,7 @@ namespace ConsoleDungeonCrawler.Printer
             Console.Write($"{player.EquippedArmor.Name}");
             
             Console.SetCursorPosition(UI.PlayerStatBox.PosX + 14, UI.PlayerStatBox.PosY + 8);
-            Console.Write($"Evasion: {player.EquippedArmor.Evasion*100}%");
+            Console.Write($"Evasion: {(player.EquippedArmor.Evasion*10)*10}%");
 
             Console.SetCursorPosition(UI.PlayerStatBox.PosX + 14, UI.PlayerStatBox.PosY + 9);
             Console.Write($"Status: {player.EquippedArmor.ArmorPoints * 20}%");
@@ -432,93 +410,34 @@ namespace ConsoleDungeonCrawler.Printer
             Console.Write("♥♥♥♥♥♥♥♥♥♥");
             Console.SetCursorPosition(UI.EnemyStatBox.PosX + 5 + enemy.Name.Length, UI.EnemyStatBox.PosY + 3);
             Console.ForegroundColor = ConsoleColor.Red;
-            switch (enemy.CurrentHP)
+            for (int i = 0; i < enemy.CurrentHP; i++)
             {
-                case 1:
-                    for (int i = 0; i < 1; i++)
-                    {
-                        Console.Write('♥');
-                    }
-                    break;
-                case 2:
-                    for (int i = 0; i < 2; i++)
-                    {
-                        Console.Write('♥');
-                    }
-                    break;
-                case 3:
-                    for (int i = 0; i < 3; i++)
-                    {
-                        Console.Write('♥');
-                    }
-                    break;
-                case 4:
-                    for (int i = 0; i < 4; i++)
-                    {
-                        Console.Write('♥');
-                    }
-                    break;
-                case 5:
-                    for (int i = 0; i < 5; i++)
-                    {
-                        Console.Write('♥');
-                    }
-                    break;
-                case 6:
-                    for (int i = 0; i < 6; i++)
-                    {
-                        Console.Write('♥');
-                    }
-                    break;
-                case 7:
-                    for (int i = 0; i < 7; i++)
-                    {
-                        Console.Write('♥');
-                    }
-                    break;
-                case 8:
-                    for (int i = 0; i < 8; i++)
-                    {
-                        Console.Write('♥');
-                    }
-                    break;
-                case 9:
-                    for (int i = 0; i < 9; i++)
-                    {
-                        Console.Write('♥');
-                    }
-                    break;
-                case 10:
-                    for (int i = 0; i < 10; i++)
-                    {
-                        Console.Write('♥');
-                    }
-                    break;
+                Console.Write('♥');
             }
             Console.ForegroundColor = DefaultForeground;
 
         }
-        public static void EnemyStats(DBD dor)
+        public static void EnemyStats(Boss boss)
         {
 
 
             Console.SetCursorPosition(UI.EnemyStatBox.PosX + 1, UI.EnemyStatBox.PosY + 3);
-            Console.Write("Dors HP: ");
+            Console.Write($"{boss.Name} HP: ");
             Console.ForegroundColor = ConsoleColor.Black;
             Console.Write("♥♥♥♥♥♥♥♥♥♥");
-            Console.SetCursorPosition(UI.EnemyStatBox.PosX + 10, UI.EnemyStatBox.PosY + 3);
+            Console.SetCursorPosition(UI.EnemyStatBox.PosX + boss.Name.Length + 5, UI.EnemyStatBox.PosY + 3);
             Console.ForegroundColor = ConsoleColor.Red;
             
-            if (dor.CurrentHP > 10)
+            if (boss.CurrentHP > 10)
             {
                 Console.Write("♥");
                 Console.ForegroundColor = DefaultForeground;
-                Console.Write($"x{ dor.CurrentHP}"); 
+                Console.Write($"x{ boss.CurrentHP}"); 
             }
             else
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                for (int i = 0; i < dor.CurrentHP; i++)
+                for (int i = 0; i < boss.CurrentHP; i++)
                 {
                     Console.Write("♥");
                 }
@@ -795,7 +714,7 @@ namespace ConsoleDungeonCrawler.Printer
             CutsceneDialog("All of The Students Turned Into Zombies!", starting,-10);
             CutsceneDialog("You Have To Escape The College NOW!", starting,-9);
         }
-        public static void BossCutscene(DBD dor)
+        public static void BossCutscene(Boss dor)
         {
             _skipCutscene = false;
             bool ending = false;
