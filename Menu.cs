@@ -21,6 +21,7 @@ namespace ConsoleDungeonCrawler
         public static void MainMenu()
         {
             OpenMenu();
+            Sounds.PlayMusic(Sounds.MenuMusic);
             while (MenuIsOpen)
             {
                 Console.CursorVisible = false;
@@ -40,6 +41,7 @@ namespace ConsoleDungeonCrawler
                         {
                             case 0:
                                 CloseGame = false;
+                                Sounds.StopMusic(Sounds.MenuMusic);
                                 Game.Start();
                                 break;
                             case 1:

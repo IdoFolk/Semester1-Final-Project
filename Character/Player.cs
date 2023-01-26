@@ -28,8 +28,11 @@ namespace ConsoleDungeonCrawler.Character
         public int WeaponCap { get; private set; }
         public int PotionCap { get; private set; }
         public int ArmorCap { get; private set; }
-        public int Coins { get; private set; } = 130;
+        public int Coins { get; private set; }
         public bool HasScript { get; private set; } = false;
+        public bool WeaponBreakState;
+        public bool ArmorBreakState;
+        public bool ItemCapState;
         public Player(string name,ConsoleColor color, int hp)
         {
             Name = name;
@@ -140,7 +143,6 @@ namespace ConsoleDungeonCrawler.Character
                     DontMove(key);
                     break;
                 case Tile.Exit:
-                    //Sounds.ExitSFX.Play();
                     level.Complete();
                     break;
             }
@@ -251,7 +253,9 @@ namespace ConsoleDungeonCrawler.Character
                 {
                     trap.Activate();
                     TakeDamage(trap.Damage);
-                    //if (IsDead()) Sounds.DyingSFX.Play();
+                    if (IsDead()) Sounds.PlaySFX(Sounds.DyingSFX);
+                    else if (!ArmorBreakState) Sounds.PlaySFX(Sounds.HitSFX);
+                    ArmorBreakState = false;
                     HUD.SteppedOnTrapLog(trap);
                 }
             }
@@ -264,6 +268,7 @@ namespace ConsoleDungeonCrawler.Character
                 case ItemType.Weapon:
                     if (PlayerWeapons.Count > WeaponCap)
                     {
+                        ItemCapState = true;
                         HUD.ItemCappedLog(item);
                         return;
                     }
@@ -274,6 +279,7 @@ namespace ConsoleDungeonCrawler.Character
                 case ItemType.Potion:
                     if (PlayerPotions.Count+1 > PotionCap)
                     {
+                        ItemCapState = true;
                         HUD.ItemCappedLog(item);
                         return;
                     }
@@ -284,6 +290,7 @@ namespace ConsoleDungeonCrawler.Character
                 case ItemType.Armor:
                     if (PlayerArmors.Count > ArmorCap)
                     {
+                        ItemCapState = true;
                         HUD.ItemCappedLog(item);
                         return;
                     }
@@ -307,7 +314,7 @@ namespace ConsoleDungeonCrawler.Character
             if (rand > 0.6f) amount++;
             if (rand > 0.9f) amount++;
             amount++;
-            //Sounds.CoinSFX.Play();
+            Sounds.PlaySFX(Sounds.CoinSFX);
             HUD.GotCoinLog(amount);
             Coins += amount;
         }
@@ -318,15 +325,17 @@ namespace ConsoleDungeonCrawler.Character
                 Key key = level.Keys[keyNum];
                 if (key.Pos.X == Pos.X && key.Pos.Y == Pos.Y)
                 {
+                    bool buyKey = false;
                     if (key.InShop)
                     {
-                        bool buyKey = HUD.BuyKey(key);
+                        buyKey = HUD.BuyKey(key);
                         if (buyKey)
                         {
                             if (Coins >= key.Price)
                             {
                                 Coins -= key.Price;
                                 HUD.ResetCoins();
+                                Sounds.PlaySFX(Sounds.BuySFX);
                             }
                             else
                             {
@@ -337,7 +346,7 @@ namespace ConsoleDungeonCrawler.Character
                         else return;
                     }
                     level.PlayerKeys.Add(new Key(key.Color));
-                    //Sounds.KeySFX.Play();
+                    if (!buyKey) Sounds.PlaySFX(Sounds.KeySFX);
                     Printer.HUD.GotKeyLog(key);
                     level.Keys.RemoveAt(keyNum);
                 }
@@ -358,7 +367,7 @@ namespace ConsoleDungeonCrawler.Character
                             level.OpenDoor(door, doorNum);
                             key.UseKey();
                             Printer.HUD.OpenDoorLog(door);
-                            //Sounds.DoorSFX.Play();
+                            Sounds.PlaySFX(Sounds.DoorSFX);
                         }
                     }
                 }
@@ -368,6 +377,7 @@ namespace ConsoleDungeonCrawler.Character
         {
             if (key == ConsoleKey.I)
             {
+                Sounds.PlaySFX(Sounds.OpenInventorySFX);
                 Inventory.MenuNav(this, level);
             }
         }
@@ -386,6 +396,7 @@ namespace ConsoleDungeonCrawler.Character
             EquipWeapon(DefaultWeapon);
             HUD.WeaponBreakLog(weapon);
             PlayerWeapons.Remove(weapon);
+            WeaponBreakState = true;
         }
         public void EquipArmor(Armor armor)
         {
@@ -402,10 +413,12 @@ namespace ConsoleDungeonCrawler.Character
             EquipArmor(DefaultArmor);
             HUD.ArmorBreakLog(armor);
             PlayerArmors.Remove(armor);
+            ArmorBreakState = true;
         }
         public void UsePotion(Potion potion)
         {
             Heal(potion.Heal);
+            Sounds.PlaySFX(Sounds.PotionSFX);
             HUD.UsePotionLog(potion);
             PlayerPotions.Remove(potion);
         }
@@ -439,13 +452,14 @@ namespace ConsoleDungeonCrawler.Character
             HasScript = true;
             level.Map[Pos.Y, Pos.X] = Tile.Empty;
             HUD.GotScriptLog();
+            Sounds.PlaySFX(Sounds.ScriptSFX);
         }
         private void TryToChangeCode(Level level)
         {
             if (HasScript)
             {
                 HUD.ChangeCodeLog(this);
-                level.Bosses[level.Bosses.Count-1].CurrentHP = 10;
+                level.Bosses[level.Bosses.Count-1].CurrentHP = 15;
                 HasScript = false;
             }
             else

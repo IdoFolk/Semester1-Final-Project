@@ -289,21 +289,27 @@ namespace ConsoleDungeonCrawler.Level_Elements
             int enemysAttack = enemy.Attack(_player);
             enemy.TakeDamage(playersAttack);
             _player.TakeDamage(enemysAttack);
-            //if (playersAttack == 0 && enemysAttack == 0)
-                //Sounds.MissSFX.Play();
-            //else 
+            if (playersAttack == 0 && enemysAttack == 0)
+                Sounds.PlaySFX(Sounds.MissSFX);
+            else if (!(_player.WeaponBreakState || _player.ArmorBreakState))
+                Sounds.PlaySFX(Sounds.HitSFX);
+            
             Printer.HUD.CombatLog(_player, enemy, playersAttack);
             Printer.HUD.CombatLog(enemy, _player, enemysAttack);
             Printer.HUD.EnemyStats(enemy);
             if (enemy.IsDead())
             {
+                if (!(_player.WeaponBreakState || _player.ArmorBreakState)) 
+                    Sounds.PlaySFX(Sounds.EnemyDieSFX);
                 Chests.Add(new Chest());
                 Chests[Chests.Count - 1].Pos.Y = enemy.Pos.Y;
                 Chests[Chests.Count - 1].Pos.X = enemy.Pos.X;
                 EnemiesKilled++;
                 ChestAmount++;
             }
-            //if (_player.IsDead()) Sounds.DyingSFX.Play();
+            if (_player.IsDead()) Sounds.PlaySFX(Sounds.DyingSFX);
+            _player.ArmorBreakState = false;
+            _player.WeaponBreakState = false;
         }
         public void Combat(Boss boss)
         {
@@ -311,19 +317,24 @@ namespace ConsoleDungeonCrawler.Level_Elements
             int enemysAttack = boss.Attack(_player);
             boss.TakeDamage(playersAttack);
             _player.TakeDamage(enemysAttack);
-            //if (playersAttack == 0 && enemysAttack == 0)
-            //Sounds.MissSFX.Play();
-            //else
+            if (playersAttack == 0 && enemysAttack == 0)
+                Sounds.PlaySFX(Sounds.MissSFX);
+            else if (!(_player.WeaponBreakState || _player.ArmorBreakState))
+                Sounds.PlaySFX(Sounds.HitSFX);
             Printer.HUD.CombatLog(_player, boss, playersAttack);
             Printer.HUD.CombatLog(boss, _player, enemysAttack);
             Printer.HUD.EnemyStats(boss);
             if (boss.IsDead())
             {
+                if (!(_player.WeaponBreakState || _player.ArmorBreakState))
+                    Sounds.PlaySFX(Sounds.EnemyDieSFX);
                 if (boss.Name == "Dor")
                     HUD.BossDefeatedCutscene();
                 EnemiesKilled++;
             }
-            //if (_player.IsDead()) Sounds.DyingSFX.Play();
+            if (_player.IsDead()) Sounds.PlaySFX(Sounds.DyingSFX);
+            _player.ArmorBreakState = false;
+            _player.WeaponBreakState = false;
         }
         public void OpenDoor(Door door, int doorNum)
         {
@@ -339,9 +350,10 @@ namespace ConsoleDungeonCrawler.Level_Elements
                 {
                     Printer.HUD.OpenChestLog();
                     _player.GetReward(chest);
-                    //Sounds.ChestSFX.Play();
+                    if (!_player.ItemCapState) Sounds.PlaySFX(Sounds.ChestSFX);
                     Chests.RemoveAt(chestNum);
                     ChestsOpened++;
+                    _player.ItemCapState = false;
                 }
             }
         }

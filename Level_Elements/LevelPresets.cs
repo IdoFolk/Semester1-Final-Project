@@ -80,9 +80,9 @@ namespace ConsoleDungeonCrawler.Level_Elements
                     SetDoor(ConsoleColor.Cyan);
                     SetDoor(ConsoleColor.Blue);
                     SetDoor(ConsoleColor.Yellow);
-                    SetKeyInShop(ConsoleColor.Cyan,30);
-                    SetKeyInShop(ConsoleColor.Blue,75);
-                    SetKeyInShop(ConsoleColor.Magenta,100);
+                    SetKeyInShop(ConsoleColor.Cyan,50);
+                    SetKeyInShop(ConsoleColor.Blue,100);
+                    SetKeyInShop(ConsoleColor.Magenta,150);
                     SetKey(ConsoleColor.Yellow);
                     ResetIndicator();
                     break;
@@ -132,9 +132,9 @@ namespace ConsoleDungeonCrawler.Level_Elements
                     SetDoor(ConsoleColor.Cyan);
                     SetDoor(ConsoleColor.Blue);
                     SetDoor(ConsoleColor.Red);
-                    SetKeyInShop(ConsoleColor.Cyan, 50);
-                    SetKeyInShop(ConsoleColor.Blue, 100);
-                    SetKeyInShop(ConsoleColor.Magenta, 150);
+                    SetKeyInShop(ConsoleColor.Cyan, 100);
+                    SetKeyInShop(ConsoleColor.Blue, 150);
+                    SetKeyInShop(ConsoleColor.Magenta, 200);
                     SetKey(ConsoleColor.Red);
                     ResetIndicator();
                     break;

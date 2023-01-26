@@ -200,6 +200,7 @@ namespace ConsoleDungeonCrawler.Printer
         }
         public static void NotEnoughCoinsLog()
         {
+            Sounds.PlaySFX(Sounds.MenuNav3SFX);
             Log("You Dont have enough coins...", DefaultForeground);
             Log();
         }
@@ -221,6 +222,7 @@ namespace ConsoleDungeonCrawler.Printer
         }
         public static void AlreadyGotScriptLog()
         {
+            Sounds.PlaySFX(Sounds.MenuNav3SFX);
             Log($"You already have a C# Script ...", ConsoleColor.Cyan);
             Log();
         }
@@ -247,6 +249,7 @@ namespace ConsoleDungeonCrawler.Printer
         }
         public static void WeaponBreakLog(Weapon weapon)
         {
+            Sounds.PlaySFX(Sounds.WeaponBreakSFX);
             Log($"{weapon.Name} broke...", DefaultForeground);
             Log();
         }
@@ -274,8 +277,8 @@ namespace ConsoleDungeonCrawler.Printer
         }
         public static void ArmorBreakLog(Armor armor)
         {
-            if (armor.Name == "Plate Armor") Log($"{armor.Name} Broke...", DefaultForeground);
-            else Log($"{armor.Name} Ripped...", DefaultForeground);
+            Log($"{armor.Name} Ripped...", DefaultForeground);
+            Sounds.PlaySFX(Sounds.ShirtTearSFX);
             Log();
         }
         public static void DropArmorLog(Armor armor)
@@ -290,6 +293,7 @@ namespace ConsoleDungeonCrawler.Printer
         }
         public static void ItemCappedLog(ItemType itemType)
         {
+            Sounds.PlaySFX(Sounds.MenuNav3SFX);
             switch (itemType)
             {
                 case ItemType.Weapon:
@@ -694,6 +698,7 @@ namespace ConsoleDungeonCrawler.Printer
         }
         public static void StartingCutscene()
         {
+            Sounds.PlayMusic(Sounds.IntroMusic);
             Console.Clear();
             _skipCutscene = false;
             bool starting = true;
@@ -706,6 +711,8 @@ namespace ConsoleDungeonCrawler.Printer
                 CutsceneDialog("That She Could Not Sleep All Night", starting,-7);
             CutsceneDialog("And When The GameJam Finally Started", starting,-9);
             CutsceneDialog($"{Game.PlayersName} Fell Asleep After 2 Hours of Work", starting,-10);
+            Sounds.StopMusic(Sounds.IntroMusic);
+            Sounds.PlayMusic(Sounds.ClimaxMusic);
             CutsceneDialog("Only Then...", starting,4);
             if (Game.PlayerIsMale)
                 CutsceneDialog("He Woke Up Into His Worst Nightmare", starting,-8);
@@ -713,6 +720,7 @@ namespace ConsoleDungeonCrawler.Printer
                 CutsceneDialog("She Woke Up Into Her Worst Nightmare", starting,-8);
             CutsceneDialog("All of The Students Turned Into Zombies!", starting,-10);
             CutsceneDialog("You Have To Escape The College NOW!", starting,-9);
+            Sounds.StopMusic(Sounds.ClimaxMusic);
         }
         public static void BossCutscene(Boss dor)
         {
@@ -720,19 +728,23 @@ namespace ConsoleDungeonCrawler.Printer
             bool ending = false;
             Console.SetCursorPosition(UI.MapBox.PosX + 26, UI.MapBox.PosY + 17);
             Map.Enemy(dor);
+            Sounds.PlaySFX(Sounds.EvilLaughSFX);
             Console.SetCursorPosition(50 + UI.StartingPosX, PrintMenu.ButtonPosY - 2);
             Console.Write("Dor Ben Dor:");
             CutsceneDialog("Ha Ha Ha", ending, 2);
             CutsceneDialog("You Fool!", ending, 1);
             CutsceneDialog("You Can't Escape Me!", ending, -4);
+            Sounds.PlayLevelMusic(Sounds.ClimaxMusic);
             
         }
         public static void BossDefeatedCutscene()
         {
             _skipCutscene = false;
             bool ending = false;
+            Sounds.StopLevelMusic(Sounds.ClimaxMusic);
             Console.SetCursorPosition(50 + UI.StartingPosX, PrintMenu.ButtonPosY - 2);
             Console.Write("Dor Ben Dor:");
+            Sounds.PlaySFX(Sounds.BossDyingSFX);
             CutsceneDialog("Ahhhhhh!", ending,2);
             CutsceneDialog("You Defeated Me!", ending, -2);
             CutsceneDialog("I Guess...", ending,2);

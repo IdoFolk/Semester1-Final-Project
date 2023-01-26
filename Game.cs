@@ -41,7 +41,7 @@ namespace ConsoleDungeonCrawler
         public static string PlayersName { get; private set; } = "Student";
         public static bool PlayerIsMale { get; private set; } = true;
         public static ConsoleColor AvatarsColor { get; private set; } = ConsoleColor.DarkYellow;
-        public static readonly int[] LevelNumber = new int[] {5,6,7,8,9,10};
+        public static readonly int[] LevelNumber = new int[] {1,2,3,4,5,6,7,8,9,10};
         public static List<Weapon> Weapons = new List<Weapon>();
         public static List<Potion> Potions = new List<Potion>();
         public static List<Armor> Armors = new List<Armor>();
@@ -67,9 +67,11 @@ namespace ConsoleDungeonCrawler
                 if (player.IsDead()) break;
             }
             Result(player);
+            Sounds.PlayMusic(Sounds.MenuMusic);
         }
         private static void PlayLevel(Level level, Player player)
         {
+            Sounds.PlaySFX(Sounds.EnterSFX);
             while (!(level.IsComplete || GameLost))
             {
                 if (Menu.CloseGame) return;
@@ -196,7 +198,7 @@ namespace ConsoleDungeonCrawler
             {
                 Console.Clear();
                 Printer.UI.YouDied(20 + UI.StartingPosX, 10);
-                //Sounds.DeadSFX.Play();
+                Sounds.PlaySFX(Sounds.DeadSFX);
                 Console.SetCursorPosition(45 + UI.StartingPosX, 7);
                 Console.Write("Press Enter To Return To Main Menu...");
                 while (true)
@@ -210,6 +212,7 @@ namespace ConsoleDungeonCrawler
                 Console.Clear();
                 PrintMenu.Clover(37 + UI.StartingPosX, 10);
                 Printer.UI.YouWin(34 + UI.StartingPosX, 32);
+                Sounds.PlaySFX(Sounds.WinSFX);
                 Console.SetCursorPosition(45 + UI.StartingPosX, 7);
                 Console.Write("Press Enter To Return To Main Menu...");
                 while (true)
@@ -260,8 +263,16 @@ namespace ConsoleDungeonCrawler
         }
         public static void ToggleMusic()
         {
-            if (Musicon) Musicon = false;
-            else Musicon = true;
+            if (Musicon)
+            {
+                Musicon = false;
+                Sounds.StopAllMusic();
+            }
+            else
+            {
+                Musicon = true;
+                Sounds.PlayMusic(Sounds.MenuMusic);
+            }
         }
         public static void LoseGame()
         {

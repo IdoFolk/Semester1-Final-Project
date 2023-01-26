@@ -26,14 +26,17 @@ namespace ConsoleDungeonCrawler.Character
                 switch (key)
                 {
                     case ConsoleKey.UpArrow:
+                        Sounds.PlaySFX(Sounds.MenuNav1SFX);
                         MenuIndicator--;
                         NoPause(level, player);
                         break;
                     case ConsoleKey.DownArrow:
+                        Sounds.PlaySFX(Sounds.MenuNav1SFX);
                         MenuIndicator++;
                         NoPause(level, player);
                         break;
                     case ConsoleKey.I:
+                        Sounds.PlaySFX(Sounds.CloseInventorySFX);
                         Close();
                         break;
                     default:
@@ -60,24 +63,29 @@ namespace ConsoleDungeonCrawler.Character
                 switch (key)
                 {
                     case ConsoleKey.LeftArrow:
-                        SubMenuIndicator--;
+                    Sounds.PlaySFX(Sounds.MenuNav2SFX);
+                    SubMenuIndicator--;
                         NoPause(level, player);
                         break;
                     case ConsoleKey.RightArrow:
-                        SubMenuIndicator++;
+                    Sounds.PlaySFX(Sounds.MenuNav2SFX);
+                    SubMenuIndicator++;
                         NoPause(level, player);
                         break;
                     case ConsoleKey.Enter:
-                        player.EquipWeapon(player.PlayerWeapons[SubMenuIndicator]);
+                    Sounds.PlaySFX(Sounds.EquipSFX);
+                    player.EquipWeapon(player.PlayerWeapons[SubMenuIndicator]);
                         Close();
                         break;
                     case ConsoleKey.Delete:
-                        player.DropWeapon(player.PlayerWeapons[SubMenuIndicator]);
+                    Sounds.PlaySFX(Sounds.MenuNav3SFX);
+                    player.DropWeapon(player.PlayerWeapons[SubMenuIndicator]);
                         HUD.ClearInventory();
                         Close();
                         break;
                     case ConsoleKey.I:
-                        Close();
+                    Sounds.PlaySFX(Sounds.CloseInventorySFX);
+                    Close();
                         break;
                 }
                 if (SubMenuIndicator < 1) SubMenuIndicator = 1;
@@ -89,10 +97,12 @@ namespace ConsoleDungeonCrawler.Character
             switch (key)
             {
                 case ConsoleKey.LeftArrow:
+                    Sounds.PlaySFX(Sounds.MenuNav2SFX);
                     SubMenuIndicator--;
                     NoPause(level, player);
                     break;
                 case ConsoleKey.RightArrow:
+                    Sounds.PlaySFX(Sounds.MenuNav2SFX);
                     SubMenuIndicator++;
                     NoPause(level, player);
                     break;
@@ -101,11 +111,13 @@ namespace ConsoleDungeonCrawler.Character
                     Close();
                     break;
                 case ConsoleKey.Delete:
+                    Sounds.PlaySFX(Sounds.MenuNav3SFX);
                     player.DropPotion(player.PlayerPotions[SubMenuIndicator]);
                     HUD.ClearInventory();
                     Close();
                     break;
                 case ConsoleKey.I:
+                    Sounds.PlaySFX(Sounds.CloseInventorySFX);
                     Close();
                     break;
             }
@@ -118,23 +130,28 @@ namespace ConsoleDungeonCrawler.Character
             switch (key)
             {
                 case ConsoleKey.LeftArrow:
+                    Sounds.PlaySFX(Sounds.MenuNav2SFX);
                     SubMenuIndicator--;
                     NoPause(level, player);
                     break;
                 case ConsoleKey.RightArrow:
+                    Sounds.PlaySFX(Sounds.MenuNav2SFX);
                     SubMenuIndicator++;
                     NoPause(level, player);
                     break;
                 case ConsoleKey.Enter:
+                    Sounds.PlaySFX(Sounds.EquipSFX);
                     player.EquipArmor(player.PlayerArmors[SubMenuIndicator]);
                     Close();
                     break;
                 case ConsoleKey.Delete:
+                    Sounds.PlaySFX(Sounds.MenuNav3SFX);
                     player.DropArmor(player.PlayerArmors[SubMenuIndicator]);
                     HUD.ClearInventory();
                     Close();
                     break;
                 case ConsoleKey.I:
+                    Sounds.PlaySFX(Sounds.CloseInventorySFX);
                     Close();
                     break;
             }
