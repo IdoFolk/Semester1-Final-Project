@@ -29,10 +29,16 @@ namespace ConsoleDungeonCrawler
                 ConsoleKey key = Console.ReadKey(true).Key;
                 switch (key)
                 {
-                    case ConsoleKey.UpArrow:
+                    case ConsoleKey.UpArrow :
+                        MenuIndicator--;
+                        break;
+                    case  ConsoleKey.W:
                         MenuIndicator--;
                         break;
                     case ConsoleKey.DownArrow:
+                        MenuIndicator++;
+                        break;
+                    case ConsoleKey.S:
                         MenuIndicator++;
                         break;
                     case ConsoleKey.Enter:
@@ -76,7 +82,13 @@ namespace ConsoleDungeonCrawler
                     case ConsoleKey.UpArrow:
                         MenuIndicator--;
                         break;
+                    case ConsoleKey.W:
+                        MenuIndicator--;
+                        break;
                     case ConsoleKey.DownArrow:
+                        MenuIndicator++;
+                        break;
+                    case ConsoleKey.S:
                         MenuIndicator++;
                         break;
                     case ConsoleKey.Enter:
@@ -123,7 +135,13 @@ namespace ConsoleDungeonCrawler
                     case ConsoleKey.UpArrow:
                         MenuIndicator--;
                         break;
+                    case ConsoleKey.W:
+                        MenuIndicator--;
+                        break;
                     case ConsoleKey.DownArrow:
+                        MenuIndicator++;
+                        break;
+                    case ConsoleKey.S:
                         MenuIndicator++;
                         break;
                     case ConsoleKey.Enter:
@@ -170,7 +188,13 @@ namespace ConsoleDungeonCrawler
                     case ConsoleKey.UpArrow:
                         MenuIndicator--;
                         break;
+                    case ConsoleKey.W:
+                        MenuIndicator--;
+                        break;
                     case ConsoleKey.DownArrow:
+                        MenuIndicator++;
+                        break;
+                    case ConsoleKey.S:
                         MenuIndicator++;
                         break;
                     case ConsoleKey.Enter:
@@ -220,7 +244,13 @@ namespace ConsoleDungeonCrawler
                     case ConsoleKey.UpArrow:
                         MenuIndicator--;
                         break;
+                    case ConsoleKey.W:
+                        MenuIndicator--;
+                        break;
                     case ConsoleKey.DownArrow:
+                        MenuIndicator++;
+                        break;
+                    case ConsoleKey.S:
                         MenuIndicator++;
                         break;
                     case ConsoleKey.Enter:
@@ -273,7 +303,13 @@ namespace ConsoleDungeonCrawler
                     case ConsoleKey.UpArrow:
                         MenuIndicator--;
                         break;
+                    case ConsoleKey.W:
+                        MenuIndicator--;
+                        break;
                     case ConsoleKey.DownArrow:
+                        MenuIndicator++;
+                        break;
+                    case ConsoleKey.S:
                         MenuIndicator++;
                         break;
                     case ConsoleKey.Enter:
@@ -305,7 +341,7 @@ namespace ConsoleDungeonCrawler
                 ConsoleKey key = Console.ReadKey(true).Key;
                 if (key == ConsoleKey.Escape)
                 {
-                Sounds.PlayMusic(Sounds.MenuMusic);
+                    Sounds.PlayMusic(Sounds.MenuMusic);
                     return;
                 }
             }
@@ -336,7 +372,13 @@ namespace ConsoleDungeonCrawler
                     case ConsoleKey.UpArrow:
                         MenuIndicator--;
                         break;
+                    case ConsoleKey.W:
+                        MenuIndicator--;
+                        break;
                     case ConsoleKey.DownArrow:
+                        MenuIndicator++;
+                        break;
+                    case ConsoleKey.S:
                         MenuIndicator++;
                         break;
                     case ConsoleKey.Enter:
