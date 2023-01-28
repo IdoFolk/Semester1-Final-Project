@@ -295,9 +295,23 @@ namespace ConsoleDungeonCrawler.Printer
         }
         public static void PrintCredits()
         {
-            PrintBackground();
-            Console.SetCursorPosition(45 + UI.StartingPosX, 20);
-            Console.Write("Everything is made by Me :)");
+            UI.CreditsTitle(UI.StartingPosX + 33, 3);
+            Console.SetCursorPosition(47 + UI.StartingPosX, 13);
+            Console.Write("Developer: Ido Folkman");
+            Console.SetCursorPosition(47 + UI.StartingPosX, 16);
+            Console.Write("Producer: Ido Folkman");
+            Console.SetCursorPosition(47 + UI.StartingPosX, 19);
+            Console.Write("Game Designer: Ido Folkman");
+            Console.SetCursorPosition(47 + UI.StartingPosX, 22);
+            Console.Write("Level Designer: Ido Folkman");
+            Console.SetCursorPosition(47 + UI.StartingPosX, 25);
+            Console.Write("Narrative Writer: Ido Folkman");
+            Console.SetCursorPosition(47 + UI.StartingPosX, 28);
+            Console.Write("UI Designer: Ido Folkman");
+            Console.SetCursorPosition(47 + UI.StartingPosX, 31);
+            Console.Write("Music: Royalty Free Music");
+            Console.SetCursorPosition(47 + UI.StartingPosX, 34);
+            Console.Write("SFX: Royalty Free SFX");
         }
         public static void PrintBackground()
         {

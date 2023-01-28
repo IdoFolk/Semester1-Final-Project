@@ -6,26 +6,7 @@ using System.Threading.Tasks;
 
 namespace ConsoleDungeonCrawler.Printer
 {
-    struct UIBox
-    {
-        public string Name;
-        public int PosX;
-        public int PosY;
-        public int Width;
-        public int Height;
-        public ConsoleColor BackgroundColor;
-        public ConsoleColor TextColor;
-        public UIBox(string name, int x, int y, int width, int height, ConsoleColor backgroundColor, ConsoleColor textColor)
-        {
-            Name = name;
-            PosX = x;
-            PosY = y;
-            Width = width;
-            Height = height;
-            BackgroundColor = backgroundColor;
-            TextColor = textColor;
-        }
-    }
+    
     static class UI
     {
         private static ConsoleColor DefaultForeground = ConsoleColor.Gray;
@@ -109,13 +90,42 @@ namespace ConsoleDungeonCrawler.Printer
         {
             TextReader(posX, posY, "Templates\\GameTitle.txt");
         }
+        public static void CreditsTitle(int posX, int posY)
+        {
+            TextReader(posX, posY, "Templates\\Credits.txt");
+        }
+        public static void GameStatsTitle(int posX, int posY)
+        {
+            TextReader(posX, posY, "Templates\\GameStats.txt");
+        }
         public static void YouWin(int posX, int posY)
         {
             TextReader(posX, posY, "Templates\\YouWin.txt");
+            GameOverStats(25, 23);
+            GameOverStats(165, 23);
         }
         public static void YouDied(int posX, int posY)
         {
             TextReader(posX, posY, "Templates\\YouDied.txt");
+            GameOverStats(25, 23);
+            GameOverStats(165, 23);
+        }
+        public static void GameOverStats(int posX, int posY)
+        {
+            GameStatsTitle(posX-3, posY-6);
+            BoxOutline(posX, posY, 35, 14, DefaultBackground);
+            Console.SetCursorPosition(posX+2, posY + 2);
+            Console.Write($"Zombie Students Killed: {Game.GameStats[StatType.EnemiesKilled]}");
+            Console.SetCursorPosition(posX+2, posY + 4);
+            Console.Write($"Zombie Bosses Killed: {Game.GameStats[StatType.BossesKilled]}");
+            Console.SetCursorPosition(posX + 2, posY + 6);
+            Console.Write($"Bags Opened: {Game.GameStats[StatType.ChestsOpened]}");
+            Console.SetCursorPosition(posX + 2, posY + 8);
+            Console.Write($"Clovers Collected: {Game.GameStats[StatType.CoinsCollected]}");
+            Console.SetCursorPosition(posX + 2, posY + 10);
+            Console.Write($"Pieces of Art Stepped On: {Game.GameStats[StatType.TrapsRevealed]}");
+            Console.SetCursorPosition(posX + 2, posY + 12);
+            Console.Write($"Levels Passed: {Game.GameStats[StatType.LevelsPassed]}");
         }
         public static void TextReader(int posX, int posY, string path)
         {

@@ -251,7 +251,11 @@ namespace ConsoleDungeonCrawler.Character
             {
                 if (trap.Pos.X == Pos.X && trap.Pos.Y == Pos.Y)
                 {
-                    trap.Activate();
+                    if (!trap.Activated)
+                    {
+                        trap.Activate();
+                        Game.AddToStat(StatType.TrapsRevealed);
+                    }
                     TakeDamage(trap.Damage);
                     if (IsDead()) Sounds.PlaySFX(Sounds.DyingSFX);
                     else if (!ArmorBreakState) Sounds.PlaySFX(Sounds.HitSFX);
@@ -277,7 +281,7 @@ namespace ConsoleDungeonCrawler.Character
                     HUD.GotWeaponLog(weapon);
                     break;
                 case ItemType.Potion:
-                    if (PlayerPotions.Count+1 > PotionCap)
+                    if (PlayerPotions.Count > PotionCap)
                     {
                         ItemCapState = true;
                         HUD.ItemCappedLog(item);
@@ -301,6 +305,7 @@ namespace ConsoleDungeonCrawler.Character
                 case ItemType.Coin:
                     int coinBag = chest.CoinBagReward();
                     Coins += coinBag;
+                    Game.AddToStat(coinBag);
                     HUD.GotCoinLog(coinBag);
                     break;
             }
@@ -317,6 +322,7 @@ namespace ConsoleDungeonCrawler.Character
             Sounds.PlaySFX(Sounds.CoinSFX);
             HUD.GotCoinLog(amount);
             Coins += amount;
+            Game.AddToStat(amount);
         }
         private void GetKey(Level level)
         {

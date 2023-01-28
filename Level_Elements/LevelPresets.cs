@@ -11,12 +11,7 @@ using System.Xml.Linq;
 
 namespace ConsoleDungeonCrawler.Level_Elements
 {
-    enum EnemyType
-    {
-        Freshmen,
-        Junior,
-        Senior
-    }
+    
     static class LevelPresets
     {
         static Level _level;
@@ -33,6 +28,9 @@ namespace ConsoleDungeonCrawler.Level_Elements
         {
             switch (levelNum)
             {
+                case 0:
+                    ResetIndicator();
+                    break;
                 case 1:
                     SetEnemies(EnemyType.Freshmen, 3);
                     SetDoor(ConsoleColor.Blue);

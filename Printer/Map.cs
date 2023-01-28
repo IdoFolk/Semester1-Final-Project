@@ -17,7 +17,10 @@ namespace ConsoleDungeonCrawler.Printer
         {
             if (Game.FogOfWar.On)
             {
-                MapLayoutFOW(level, player);
+                if (level.Indicator == 5 || level.Indicator == 9)
+                    MapLayout(level, player);
+                else
+                    MapLayoutFOW(level, player);
             }
             else
             {
@@ -209,8 +212,6 @@ namespace ConsoleDungeonCrawler.Printer
                                 {
                                     if (InRange(player, i, j))
                                         Door(door);
-                                    else
-                                        Empty();
                                 }
                             }
                             break;

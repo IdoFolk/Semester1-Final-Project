@@ -298,10 +298,12 @@ namespace ConsoleDungeonCrawler
         }
         private static void Credits()
         {
+            Sounds.PlayMusic(Sounds.IntroMusic);
             PrintMenu.PrintCredits();
             while (true)
             {
                 ConsoleKey key = Console.ReadKey(true).Key;
+                Sounds.PlayMusic(Sounds.MenuMusic);
                 if (key == ConsoleKey.Escape) return;
             }
         }

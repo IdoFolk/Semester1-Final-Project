@@ -8,22 +8,24 @@ using System.Threading.Tasks;
 
 namespace ConsoleDungeonCrawler.Level_Elements
 {
-    enum ItemType
-    {
-        Weapon = 1,
-        Potion = 2,
-        Armor = 3,
-        Coin = 4
-    }
+    
     class Chest
     {
         public Vector2 Pos = new Vector2();
         
         public ItemType RewardType(Player player)
         {
-            if (player.PlayerWeapons.Count == player.WeaponCap)
+            if (player.PlayerWeapons.Count -1 == player.WeaponCap)
             {
-                if (player.PlayerPotions.Count + 1 == player.PotionCap)
+                if (player.PlayerPotions.Count == player.PotionCap)
+                {
+                    if (player.PlayerArmors.Count - 1 == player.ArmorCap)
+                        return ItemType.Coin;
+                }
+            }
+            if (player.PlayerWeapons.Count -1 == player.WeaponCap)
+            {
+                if (player.PlayerPotions.Count == player.PotionCap)
                 {
                     float random = Random.Shared.NextSingle();
                     if (random < 0.1f) return ItemType.Coin;
@@ -31,7 +33,7 @@ namespace ConsoleDungeonCrawler.Level_Elements
                     else if (random < 0.75f) return ItemType.Armor;
                     else return ItemType.Coin;
                 }
-                else if (player.PlayerArmors.Count == player.ArmorCap)
+                else if (player.PlayerArmors.Count - 1  == player.ArmorCap)
                 {
                     float random = Random.Shared.NextSingle();
                     if (random < 0.1f) return ItemType.Coin;
@@ -48,9 +50,9 @@ namespace ConsoleDungeonCrawler.Level_Elements
                     else return ItemType.Potion;
                 }
             }
-            else if (player.PlayerPotions.Count+1 == player.PotionCap)
+            else if (player.PlayerPotions.Count == player.PotionCap)
             {
-                if (player.PlayerWeapons.Count == player.WeaponCap)
+                if (player.PlayerWeapons.Count - 1 == player.WeaponCap)
                 {
                     float random = Random.Shared.NextSingle();
                     if (random < 0.1f) return ItemType.Coin;
@@ -58,7 +60,7 @@ namespace ConsoleDungeonCrawler.Level_Elements
                     else if (random < 0.75f) return ItemType.Armor;
                     else return ItemType.Coin;
                 }
-                else if (player.PlayerArmors.Count == player.ArmorCap)
+                else if (player.PlayerArmors.Count - 1 == player.ArmorCap)
                 {
                     float random = Random.Shared.NextSingle();
                     if (random < 0.1f) return ItemType.Coin;
@@ -75,9 +77,9 @@ namespace ConsoleDungeonCrawler.Level_Elements
                     else return ItemType.Coin;
                 }
             }
-            else if (player.PlayerArmors.Count == player.ArmorCap)
+            else if (player.PlayerArmors.Count - 1 == player.ArmorCap)
             {
-                if (player.PlayerWeapons.Count == player.WeaponCap)
+                if (player.PlayerWeapons.Count - 1 == player.WeaponCap)
                 {
                     float random = Random.Shared.NextSingle();
                     if (random < 0.1f) return ItemType.Coin;
@@ -85,7 +87,7 @@ namespace ConsoleDungeonCrawler.Level_Elements
                     else if (random < 0.75f) return ItemType.Potion;
                     else return ItemType.Coin;
                 }
-                else if (player.PlayerPotions.Count+1 == player.PotionCap)
+                else if (player.PlayerPotions.Count == player.PotionCap)
                 {
                     float random = Random.Shared.NextSingle();
                     if (random < 0.1f) return ItemType.Coin;

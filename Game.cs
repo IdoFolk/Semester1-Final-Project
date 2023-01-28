@@ -12,49 +12,36 @@ using ConsoleDungeonCrawler.Printer;
 
 namespace ConsoleDungeonCrawler
 {
-    struct Range
-    {
-        public bool On;
-        public int Width { get; private set; }
-        public int Height { get; private set; }
-        public Range(bool on,int rangeWidth, int rangeHeight)
-        {
-            On = on; 
-            Width = rangeWidth;
-            Height = rangeHeight;
-        }
-        public Range(int rangeWidth, int rangeHeight)
-        {
-            Width = rangeWidth;
-            Height = rangeHeight;
-            On = true;
-        }
-    }
-    enum Difficulty
-    {
-        Easy,
-        Medium,
-        Hard
-    }
+    
     static class Game
     {
-        public static string PlayersName { get; private set; } = "Student";
-        public static bool PlayerIsMale { get; private set; } = true;
-        public static ConsoleColor AvatarsColor { get; private set; } = ConsoleColor.DarkYellow;
         public static readonly int[] LevelNumber = new int[] {1,2,3,4,5,6,7,8,9,10};
         public static List<Weapon> Weapons = new List<Weapon>();
         public static List<Potion> Potions = new List<Potion>();
         public static List<Armor> Armors = new List<Armor>();
+        //Settings:
         public static Range FogOfWar = new Range(false, 6, 3);
         public static Difficulty Difficulty = Difficulty.Easy;
+        public static ConsoleColor AvatarsColor { get; private set; } = ConsoleColor.DarkYellow;
+        public static string PlayersName { get; private set; } = "Student";
+        public static bool PlayerIsMale { get; private set; } = true;
         public static bool GameLost { get; private set; } = false;
         public static bool NoPause { get; private set; }
         public static bool SFXon { get; private set; } = true;
         public static bool Musicon { get; private set; } = true;
+        //Stats:
+        public static Dictionary<StatType, int> GameStats = new Dictionary<StatType, int>();
+        public static int TotalEnemiesKilled { get; private set; }
+        public static int TotalBossesKilled { get; private set; }
+        public static int TotalChestsOpened { get; private set; }
+        public static int TotalCoinsCollected { get; private set; }
+        public static int TotalTrapsRevealed { get; private set; }
+        public static int LevelsPassed { get; private set; }
         public static void Start()
         {
             HUD.StartingCutscene();
             LoadItems();
+            LoadStats();
             GameLost = false;
             Player player = new Player(PlayersName,AvatarsColor, 10);
             for (int i = 0; i < LevelNumber.Length; i++) //Level Gameplay
@@ -131,7 +118,7 @@ namespace ConsoleDungeonCrawler
                 case Difficulty.Hard:
                     Weapons.Add(new Weapon("Fists", 1, 0.5f, 0, 0));
                     Weapons.Add(new Weapon("Dagger", 2, 0.6f, 2, 0.3f));
-                    Weapons.Add(new Weapon("Sword", 2, 0.7f, 3, 0.55f));
+                    Weapons.Add(new Weapon("Sword", 2, 0.7f, 4, 0.55f));
                     Weapons.Add(new Weapon("Spear", 3, 0.8f, 3, 0.75f));
                     Weapons.Add(new Weapon("Mace", 4, 0.5f, 5, 0.9f));
                     Weapons.Add(new Weapon("GreatAxe", 5, 0.4f, 5, 1f));
@@ -156,8 +143,8 @@ namespace ConsoleDungeonCrawler
                     break;
                 case Difficulty.Hard:
                     Potions.Add(new Potion(ConsoleColor.Cyan, 2, 0.5f));
-                    Potions.Add(new Potion(ConsoleColor.Yellow, 3, 0.8f));
-                    Potions.Add(new Potion(ConsoleColor.Magenta, 5, 1f));
+                    Potions.Add(new Potion(ConsoleColor.Yellow, 4, 0.8f));
+                    Potions.Add(new Potion(ConsoleColor.Magenta, 6, 1f));
                     break;
             }
             
@@ -179,14 +166,14 @@ namespace ConsoleDungeonCrawler
                     Armors.Add(new Armor("T-Shirt", 0.5f, 2, 0.4f));
                     Armors.Add(new Armor("Jacket", 0.5f, 3, 0.7f));
                     Armors.Add(new Armor("Coat", 0, 5, 0.9f));
-                    Armors.Add(new Armor("Hoodie", 0.9f, 1, 1f));
+                    Armors.Add(new Armor("Hoodie", 0.95f, 1, 1f));
                     break;
                 case Difficulty.Hard:
                     Armors.Add(new Armor("Underwear", 0, 0, 0));
-                    Armors.Add(new Armor("T-Shirt", 0.5f, 1, 0.4f));
+                    Armors.Add(new Armor("T-Shirt", 0.5f, 2, 0.4f));
                     Armors.Add(new Armor("Jacket", 0.5f, 3, 0.7f));
                     Armors.Add(new Armor("Coat", 0, 5, 0.9f));
-                    Armors.Add(new Armor("Hoodie", 0.9f, 1, 1f));
+                    Armors.Add(new Armor("Hoodie", 0.95f, 1, 1f));
                     break;
             }
             
@@ -278,6 +265,41 @@ namespace ConsoleDungeonCrawler
         {
             if (GameLost) GameLost = false;
             else GameLost = true;
+        }
+        public static void LoadStats()
+        {
+            GameStats.Clear();
+            GameStats.Add(StatType.EnemiesKilled, 0);
+            GameStats.Add(StatType.BossesKilled, 0);
+            GameStats.Add(StatType.ChestsOpened, 0);
+            GameStats.Add(StatType.CoinsCollected, 0);
+            GameStats.Add(StatType.TrapsRevealed, 0);
+            GameStats.Add(StatType.LevelsPassed, 0);
+        }
+        public static void AddToStat(StatType statType)
+        {
+            switch (statType)
+            {
+                case StatType.EnemiesKilled:
+                    GameStats[StatType.EnemiesKilled]++;
+                    break;
+                case StatType.BossesKilled:
+                    GameStats[StatType.BossesKilled]++;
+                    break;
+                case StatType.ChestsOpened:
+                    GameStats[StatType.ChestsOpened]++;
+                    break;
+                case StatType.TrapsRevealed:
+                    GameStats[StatType.TrapsRevealed]++;
+                    break;
+                case StatType.LevelsPassed:
+                    GameStats[StatType.LevelsPassed]++;
+                    break;
+            }
+        }
+        public static void AddToStat(int coins)
+        {
+            GameStats[StatType.CoinsCollected] += coins;
         }
     }
 }

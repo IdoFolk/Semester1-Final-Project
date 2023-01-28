@@ -11,27 +11,7 @@ using ConsoleDungeonCrawler.Printer;
 
 namespace ConsoleDungeonCrawler.Level_Elements
 {
-    enum Tile
-    {
-        Empty,
-        Wall,
-        Player,
-        Enemy,
-        Chest,
-        Coin,
-        Trap,
-        Key,
-        Door,
-        Computer,
-        Script,
-        Entry,
-        Exit
-    }
-    struct Vector2
-    {
-        public int X;
-        public int Y;
-    }
+   
     class Level
     {
         public string Name { get; private set; }
@@ -68,6 +48,10 @@ namespace ConsoleDungeonCrawler.Level_Elements
             MapLength = new Vector2();
             switch (levelNum)
             {
+                case 0:
+                    char[,] mapSeed = MapBuilder.ReadTextFile("Level_Presets\\Level_Test.txt");
+                    SetLevel(mapSeed);
+                    break;
                 case 1:
                     char[,] mapSeed1 = MapBuilder.ReadTextFile("Level_Presets\\Level_1.txt");
                     SetLevel(mapSeed1);
@@ -282,6 +266,7 @@ namespace ConsoleDungeonCrawler.Level_Elements
         public void Complete()
         {
             IsComplete = true;
+            Game.AddToStat(StatType.LevelsPassed);
         }
         public void Combat(Enemy enemy)
         {
@@ -306,6 +291,7 @@ namespace ConsoleDungeonCrawler.Level_Elements
                 Chests[Chests.Count - 1].Pos.X = enemy.Pos.X;
                 EnemiesKilled++;
                 ChestAmount++;
+                Game.AddToStat(StatType.EnemiesKilled);
             }
             if (_player.IsDead()) Sounds.PlaySFX(Sounds.DyingSFX);
             _player.ArmorBreakState = false;
@@ -331,8 +317,13 @@ namespace ConsoleDungeonCrawler.Level_Elements
                 if (boss.Name == "Dor")
                     HUD.BossDefeatedCutscene();
                 EnemiesKilled++;
+                Game.AddToStat(StatType.BossesKilled);
             }
-            if (_player.IsDead()) Sounds.PlaySFX(Sounds.DyingSFX);
+            if (_player.IsDead())
+            {
+                Sounds.StopLevelMusic(Sounds.ClimaxMusic);
+                Sounds.PlaySFX(Sounds.DyingSFX);
+            }
             _player.ArmorBreakState = false;
             _player.WeaponBreakState = false;
         }
@@ -353,6 +344,7 @@ namespace ConsoleDungeonCrawler.Level_Elements
                     if (!_player.ItemCapState) Sounds.PlaySFX(Sounds.ChestSFX);
                     Chests.RemoveAt(chestNum);
                     ChestsOpened++;
+                    Game.AddToStat(StatType.ChestsOpened);
                     _player.ItemCapState = false;
                 }
             }

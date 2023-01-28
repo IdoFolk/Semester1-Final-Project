@@ -10,13 +10,7 @@ using System.Threading.Tasks;
 
 namespace ConsoleDungeonCrawler.Level_Elements
 {
-    enum Direction
-    {
-        Up = 1,
-        Down = 2,
-        Left = 3,
-        Right = 4
-    }
+    
     class Enemy
     {
         public Vector2 Pos = new Vector2();
@@ -122,6 +116,9 @@ namespace ConsoleDungeonCrawler.Level_Elements
                     DontMove((Direction)direction);
                     break;
                 case Tile.Chest:
+                    DontMove((Direction)direction);
+                    break;
+                case Tile.Coin:
                     DontMove((Direction)direction);
                     break;
                 case Tile.Trap:
