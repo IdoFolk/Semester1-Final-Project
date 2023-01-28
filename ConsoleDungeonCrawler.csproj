@@ -6,12 +6,17 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <StartupObject>ConsoleDungeonCrawler.Program</StartupObject>
+    <ApplicationIcon>clover-256.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Remove="Printer\Templates\**" />
     <EmbeddedResource Remove="Printer\Templates\**" />
     <None Remove="Printer\Templates\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="clover-256.ico" />
   </ItemGroup>
 
   <ItemGroup>

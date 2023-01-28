@@ -303,8 +303,11 @@ namespace ConsoleDungeonCrawler
             while (true)
             {
                 ConsoleKey key = Console.ReadKey(true).Key;
+                if (key == ConsoleKey.Escape)
+                {
                 Sounds.PlayMusic(Sounds.MenuMusic);
-                if (key == ConsoleKey.Escape) return;
+                    return;
+                }
             }
         }
         private static void OpenMenu()
